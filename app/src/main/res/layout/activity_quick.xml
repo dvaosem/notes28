@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/q_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/quick_card_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qw_title"
+            android:textColor="#c8f135"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/q_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:maxLines="8"
+            android:gravity="top|start"
+            android:background="@null"
+            android:hint="@string/q_hint"
+            android:inputType="textMultiLine|textCapSentences"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="#f2f2f2"
+            android:textColorHint="#8a8a8a"
+            android:textSize="16sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/q_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:background="@null"
+                android:text="@string/q_cancel"
+                android:textColor="#a0a0a0"/>
+
+            <Button
+                android:id="@+id/q_save"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/cfg_btn_bg"
+                android:paddingStart="22dp"
+                android:paddingEnd="22dp"
+                android:text="@string/q_save"
+                android:textColor="#0f0f0f"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

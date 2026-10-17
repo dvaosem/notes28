@@ -42,6 +42,26 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".widget.QuickNoteActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+            android:theme="@style/Theme.Notes28.Quick"/>
+
+        <receiver
+            android:name=".widget.QuickWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_quick"/>
+        </receiver>
+
         <receiver
             android:name=".widget.NoteWidget"
             android:exported="true">

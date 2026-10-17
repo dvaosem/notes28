@@ -35,6 +35,35 @@ object WidgetPrefs {
 
     fun find(c: Context, id: String): NoteItem? = notes(c).firstOrNull { it.id == id }
 
+    // ---- Quick-note inbox: text typed in the widget dialog, delivered to Firestore by the web app on next open ----
+    const val QUICK_ID = "quicknote"
+
+    @Synchronized
+    fun inboxList(c: Context): List<String> = try {
+        val arr = JSONArray(sp(c).getString("inbox", "[]"))
+        (0 until arr.length()).map { arr.getString(it) }
+    } catch (e: Exception) {
+        emptyList()
+    }
+
+    @Synchronized
+    fun addInbox(c: Context, text: String) {
+        val l = inboxList(c) + text
+        sp(c).edit().putString("inbox", JSONArray(l).toString()).apply()
+    }
+
+    @Synchronized
+    fun clearInbox(c: Context, n: Int) {
+        val l = inboxList(c).drop(n)
+        sp(c).edit().putString("inbox", JSONArray(l).toString()).apply()
+    }
+
+    /** Quick note as the widget shows it: synced text + lines not delivered yet. */
+    fun quickText(c: Context): String {
+        val base = find(c, QUICK_ID)?.content.orEmpty().trim()
+        return (listOf(base) + inboxList(c)).filter { it.isNotBlank() }.joinToString("\n")
+    }
+
     fun noteId(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_note", "") ?: ""
     fun style(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_style", STYLE_DARK) ?: STYLE_DARK
     fun opacity(c: Context, widgetId: Int): Int = sp(c).getInt("w${widgetId}_opacity", 90)

@@ -17,4 +17,16 @@
         <item name="android:textColorPrimary">#f2f2f2</item>
         <item name="android:textColorSecondary">#a0a0a0</item>
     </style>
+
+    <style name="Theme.Notes28.Quick" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#c8f135</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.55</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:textColorPrimary">#f2f2f2</item>
+        <item name="android:textColorHint">#8a8a8a</item>
+    </style>
 </resources>

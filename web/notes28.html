@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v65">
+<meta name="n28-build" content="n28-v66">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -731,6 +731,10 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
           <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;">
             <span style="font-size:.85rem;">Widget na plochu</span>
             <button type="button" id="android-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;">
+            <span style="font-size:.85rem;">⚡ Rýchla poznámka na plochu</span>
+            <button type="button" id="android-quick-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
           </div>
         </div>
       </div>
@@ -1885,6 +1889,7 @@ function subscribeNotes() {
         if (_notesReady) return;
         _notesReady = true;
         if (_pendingSharedUrl) { const u = _pendingSharedUrl; _pendingSharedUrl = null; _saveSharedUrl(u); }
+        flushAndroidInbox();
       };
       if (!snap.metadata.fromCache) markReady(); else setTimeout(markReady, 3000);
     }
@@ -1901,7 +1906,7 @@ function subscribeNotes() {
         const compact = raw.filter(n=>!n._trash).slice(0,100).map(n=>({
           id: n.id,
           title: n.title||'',
-          content: _plainForWidget(n.content),
+          content: _plainForWidget(n.content, n.id===QUICKNOTE_ID),
           tab: n.tab||''
         }));
         AndroidBridge.saveNotes(JSON.stringify(compact));
@@ -5222,13 +5227,41 @@ async function _saveSharedUrl(url) {
 }
 
 // text poznámky pre widget: odseky ako riadky, bez HTML
-function _plainForWidget(html) {
-  return String(html || '')
+function _plainForWidget(html, tail) {
+  const out = String(html || '')
     .replace(/<\s*(?:br|\/p|\/div|\/li|\/h[1-6])\b[^>]*>/gi, '\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
-    .replace(/\n{3,}/g, '\n\n').trim().slice(0, 600);
+    .replace(/\n{3,}/g, '\n\n').trim();
+  return tail ? out.slice(-600) : out.slice(0, 600);
 }
+
+// rýchle poznámky napísané vo widgete (appka ich drží, kým sa neotvorí) -> pripíš do rýchlej poznámky
+let _inboxBusy = false;
+async function flushAndroidInbox() {
+  if (!window.AndroidBridge || typeof AndroidBridge.getInbox !== 'function') return;
+  if (!currentUser || !_notesReady || _inboxBusy) return;
+  // pri otvorenej rýchlej poznámke nezasahuj do editora, skúsi sa znova pri ďalšom otvorení
+  if (document.getElementById('modal').classList.contains('open') && typeof editingId !== 'undefined' && editingId === QUICKNOTE_ID) return;
+  _inboxBusy = true;
+  try {
+    let items = [];
+    try { items = JSON.parse(AndroidBridge.getInbox() || '[]'); } catch (e) {}
+    if (!items.length) return;
+    const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    const html = items.map(t => '<div>' + esc(t) + '</div>').join('');
+    const qn = notes.find(n => n.id === QUICKNOTE_ID && !n._trash);
+    const ref = doc(db,'users',currentUser.uid,'notes',QUICKNOTE_ID);
+    if (qn) await updateDoc(ref, { content: (qn.content || '') + html, updatedAt: serverTimestamp() });
+    else await setDoc(ref, { title:'', content: html, pinned:true, sortOrder:-1,
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email }, { merge:true });
+    AndroidBridge.clearInbox(items.length);
+    showToast('⚡ Rýchla poznámka doplnená','ok');
+  } catch (e) {
+    showToast('❌ Rýchla poznámka sa neuložila','warn');
+  } finally { _inboxBusy = false; }
+}
+window.n28FlushInbox = flushAndroidInbox;
 
 // ─── OPEN NOTE BY ID (widget tap) ────────────────────────────────────────────
 function openNoteById(id) {
@@ -5330,6 +5363,10 @@ document.addEventListener('pointerdown', e => {
   };
   if (wbtn) wbtn.onclick = () => {
     try { if (!AB.pinWidget()) showToast('Widget pridaj: podrž plochu → Widgety → N28', 'warn', 5000); } catch (e) {}
+  };
+  const qbtn = document.getElementById('android-quick-widget-btn');
+  if (qbtn) qbtn.onclick = () => {
+    try { if (!AB.pinQuickWidget()) showToast('Widget pridaj: podrž plochu → Widgety → N28 rýchla poznámka', 'warn', 5000); } catch (e) {}
   };
   setTimeout(() => { try { AB.checkUpdate(false); } catch (e) {} }, 4000);
 })();

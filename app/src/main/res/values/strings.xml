@@ -14,4 +14,13 @@
     <string name="cfg_pick">Najprv vyber poznámku</string>
     <string name="w_hint">Ťukni na ⚙ a vyber poznámku</string>
     <string name="w_untitled">Poznámka</string>
+    <string name="q_hint">Rýchla poznámka…</string>
+    <string name="q_save">Uložiť</string>
+    <string name="q_cancel">Zrušiť</string>
+    <string name="q_saved">⚡ Uložené do rýchlej poznámky</string>
+    <string name="qw_title">⚡ Rýchla poznámka</string>
+    <string name="qw_write">✎  Napíš poznámku…</string>
+    <string name="qw_empty">Zatiaľ prázdne</string>
+    <string name="widget_quick_name">N28 rýchla poznámka</string>
+    <string name="widget_quick_desc">Píš do rýchlej poznámky bez otvárania appky</string>
 </resources>

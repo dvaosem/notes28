@@ -26,6 +26,7 @@ class NoteWidget : AppWidgetProvider() {
             val mgr = AppWidgetManager.getInstance(context)
             val ids = mgr.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
             for (id in ids) updateWidget(context, mgr, id)
+            QuickWidget.refreshAll(context)
         }
 
         fun hasWidgets(context: Context): Boolean {
@@ -83,11 +84,10 @@ class NoteWidget : AppWidgetProvider() {
             }
             views.setOnClickPendingIntent(R.id.w_root, PendingIntent.getActivity(context, id * 3, open, flags()))
 
-            // + -> quick note
-            val quick = Intent(context, MainActivity::class.java).apply {
+            // + -> write a quick note right away (small dialog, the app does not open)
+            val quick = Intent(context, QuickNoteActivity::class.java).apply {
                 action = "com.dvaosem.notes28.QUICK_$id"
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                putExtra(MainActivity.EXTRA_QUICK, true)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             views.setOnClickPendingIntent(R.id.w_add, PendingIntent.getActivity(context, id * 3 + 1, quick, flags()))
 

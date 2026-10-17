@@ -245,8 +245,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        /** Texts typed in the quick-note widget dialog (JSON array of strings) waiting to be written to Firestore. */
+        @JavascriptInterface
+        fun getInbox(): String = org.json.JSONArray(WidgetPrefs.inboxList(this@MainActivity)).toString()
+
+        /** The web app wrote the first n inbox texts to Firestore. */
+        @JavascriptInterface
+        fun clearInbox(n: Int) {
+            WidgetPrefs.clearInbox(this@MainActivity, n)
+            NoteWidget.refreshAll(this@MainActivity)
+        }
+
         @JavascriptInterface
         fun hasWidget(): Boolean = NoteWidget.hasWidgets(this@MainActivity)
+
+        @JavascriptInterface
+        fun pinQuickWidget(): Boolean {
+            val mgr = AppWidgetManager.getInstance(this@MainActivity)
+            if (!mgr.isRequestPinAppWidgetSupported) return false
+            runOnUiThread {
+                mgr.requestPinAppWidget(ComponentName(this@MainActivity, com.dvaosem.notes28.widget.QuickWidget::class.java), null, null)
+            }
+            return true
+        }
 
         /** Asks the launcher to pin a new widget (the config screen then lets you pick the note). */
         @JavascriptInterface
@@ -358,7 +379,11 @@ class MainActivity : AppCompatActivity() {
         webView.addJavascriptInterface(AndroidBridge(), "AndroidBridge")
     }
 
-    override fun onResume() { super.onResume(); webView.onResume() }
+    override fun onResume() {
+        super.onResume()
+        webView.onResume()
+        js("window.n28FlushInbox&&window.n28FlushInbox()")
+    }
     override fun onPause() {
         super.onPause()
         CookieManager.getInstance().flush()
