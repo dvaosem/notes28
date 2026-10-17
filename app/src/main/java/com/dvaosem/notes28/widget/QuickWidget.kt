@@ -40,7 +40,7 @@ class QuickWidget : AppWidgetProvider() {
             val open = Intent(context, MainActivity::class.java).apply {
                 action = "com.dvaosem.notes28.QW_OPEN_$id"
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                putExtra(MainActivity.EXTRA_QUICK, true)
+                putExtra(MainActivity.EXTRA_NOTE_ID, WidgetPrefs.QUICK_ID)
             }
             views.setOnClickPendingIntent(R.id.qw_root, PendingIntent.getActivity(context, id * 2 + 1, open, flags()))
 

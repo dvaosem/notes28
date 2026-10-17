@@ -36,7 +36,7 @@ object WidgetPrefs {
     fun find(c: Context, id: String): NoteItem? = notes(c).firstOrNull { it.id == id }
 
     // ---- Quick-note inbox: text typed in the widget dialog, delivered to Firestore by the web app on next open ----
-    const val QUICK_ID = "quicknote"
+    const val QUICK_ID = "widgetnote"
 
     @Synchronized
     fun inboxList(c: Context): List<String> = try {
