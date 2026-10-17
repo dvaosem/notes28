@@ -2,5 +2,5 @@
 <resources>
     <!-- OAuth "Web client ID" of the Firebase project (Firebase console -> Authentication -> Sign-in method -> Google).
          Not a secret. Empty = native Google sign-in is disabled. -->
-    <string name="google_web_client_id" translatable="false"></string>
+    <string name="google_web_client_id" translatable="false">140549823749-a1sqq256c2od0n4hrqoj1j6p7a5bc4i8.apps.googleusercontent.com</string>
 </resources>
