@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v73">
+<meta name="n28-build" content="n28-v74">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -267,7 +267,7 @@ body.logged-out #fab{display:none!important;}
   #tabs .tab,#quicknote-btn{padding-top:.42rem;padding-bottom:.42rem;}
   #add-tab-btn{min-width:40px;min-height:40px;}
   .modal-icon-btn{min-width:40px;min-height:40px;}
-  #modal-save{min-height:40px;padding:.55rem 1rem!important;}
+  #modal-save{min-height:32px;padding:.28rem .8rem!important;font-size:.8rem!important;}
 }
 #fab.fab-hidden{transform:translateY(80px);opacity:0;pointer-events:none;}
 #install-btn{display:none;position:fixed;bottom:1.5rem;left:1.5rem;background:var(--surface2);color:var(--text);border:1px solid var(--accent-default);border-radius:var(--radius-lg);padding:.55rem 1rem;font-size:.82rem;font-family:var(--font-body);cursor:pointer;box-shadow:var(--elev2);z-index:200;}
@@ -632,7 +632,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
         <span id="autosave-status" style="display:none;color:var(--accent-default);" title="Uložené"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
         <button id="meta-more-btn" class="tb" type="button" title="Viac" aria-label="Viac možností"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg></button>
         <button id="modal-share" class="tb" type="button" title="Zdieľať" aria-label="Zdieľať"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.2" y1="13.3" x2="15.8" y2="17.7"/><line x1="15.8" y1="6.3" x2="8.2" y2="10.7"/></svg></button>
-        <button id="modal-save" class="btn btn-primary" style="padding:.4rem .85rem;font-size:.85rem;">Uložiť</button>
+        <button id="modal-save" class="btn btn-primary" style="padding:.3rem .75rem;font-size:.8rem;">Uložiť</button>
       </div>
     </div>
     <div id="meta-more-menu" style="display:none;position:fixed;background:color-mix(in srgb, var(--surface2) 92%, transparent);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border:1px solid var(--border);border-radius:12px;padding:.4rem;box-shadow:0 8px 32px rgba(0,0,0,.4);min-width:190px;z-index:400;">
@@ -2093,7 +2093,7 @@ async function doAutosave() {
   });
   const data = {
     title: inputTitle.value.trim(),
-    content: editor.innerHTML,
+    content: linkifyForSave(editor.innerHTML),
     dueDate: inputDue.value||null,
     color: getSelectedColor(),
     images: pendingImages,
@@ -2164,24 +2164,8 @@ function liveLink() {
     scheduleAutosave(); return;
   }
 
-  // plain URL after space/newline: https:// alebo www.
-  const urlM = text.match(new RegExp('('+_LINK_SRC.replace(/\[\^\\s<>"'\]\+/g,'\\S+')+')\\s$','i'));
-  if (urlM) {
-    const url = urlM[1];
-    const href = _hrefFor(url);
-    const a = document.createElement('a');
-    a.href = href; a.textContent = url; a.target='_blank'; a.rel='noopener';
-    a.style.cssText='color:var(--accent-default);text-decoration:underline;word-break:break-all;';
-    const before = document.createTextNode(text.slice(0, urlM.index));
-    const after  = document.createTextNode('\u00a0');
-    const par = node.parentNode;
-    par.replaceChild(after, node);
-    par.insertBefore(a, after);
-    par.insertBefore(before, a);
-    const r = document.createRange(); r.setStart(after, after.length); r.collapse(true);
-    sel.removeAllRanges(); sel.addRange(r);
-    scheduleAutosave();
-  }
+  // Odkazy (web, e-mail, telefón) sa pri písaní NEvytvárajú — zásah do textu počas písania mätie klávesnicu
+  // (písanie by pokračovalo podčiarknuté). Zmenia sa na odkazy pri uložení, pozri linkifyForSave().
 }
 editor.addEventListener('input', liveLink);
 
@@ -3097,6 +3081,8 @@ function closeModal(fromPop=false) {
   // back-gesto: ak sme pushli stav a zatvárame tlačidlom/uložením, vyhoď ho z histórie
   if (_modalPushed && !fromPop) { _modalPushed = false; try { history.back(); } catch(_) {} }
   else _modalPushed = false;
+  // čo čakalo vo fronte widgetu, kým bola otvorená poznámka Widget, sa zapíše teraz
+  setTimeout(() => { try { flushAndroidInbox(); } catch (e) {} }, 600);
 }
 modalClose.onclick = () => flushAndClose();
 modal.onclick = e => { if (e.target===modal) flushAndClose(); };
@@ -3201,7 +3187,7 @@ modalSave.onclick = async () => {
     editor.querySelectorAll('.check-cb').forEach(cb => {
       if (cb.checked) cb.setAttribute('checked',''); else cb.removeAttribute('checked');
     });
-    const data = { title:inputTitle.value.trim(), content:editor.innerHTML, dueDate:inputDue.value||null, color:getSelectedColor(), images:pendingImages, authorEmail:currentUser.email };
+    const data = { title:inputTitle.value.trim(), content:linkifyForSave(editor.innerHTML), dueDate:inputDue.value||null, color:getSelectedColor(), images:pendingImages, authorEmail:currentUser.email };
     if (activeShareId) {
       if (editingId) updateDoc(doc(db,'sharedTabs',activeShareId,'notes',editingId),{...data,updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000));
       else addDoc(sharedNotesRef(activeShareId),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000));
@@ -5166,6 +5152,7 @@ function _hrefFor(tok) {
 }
 function _hasLinkable(text) { return new RegExp(_LINK_SRC, 'i').test(text); }
 
+function linkifyForSave(html) { try { return linkify(html); } catch (e) { return html; } }
 function linkify(html) {
   if (!html) return html;
   const div=document.createElement('div'); div.innerHTML=html;
@@ -5271,42 +5258,53 @@ function _plainForWidget(html, tail) {
 
 // poznámky napísané vo widgete (appka ich drží, kým sa neotvorí) -> pripíš do samostatnej poznámky „Widget“
 let _inboxBusy = false;
+// vráti nový obsah poznámky (ak sa niečo zapísalo), inak null
 async function flushAndroidInbox() {
-  if (!window.AndroidBridge || typeof AndroidBridge.getInbox !== 'function') return;
-  if (!currentUser || !_notesReady || _inboxBusy) return;
-  if (Date.now() < _openingUntil) { setTimeout(flushAndroidInbox, _openingUntil - Date.now() + 100); return; }
-  // pri otvorenej rýchlej poznámke nezasahuj do editora, skúsi sa znova pri ďalšom otvorení
-  if (document.getElementById('modal').classList.contains('open') && typeof editingId !== 'undefined' && editingId === WIDGETNOTE_ID) return;
+  if (!window.AndroidBridge || typeof AndroidBridge.getInbox !== 'function') return null;
+  if (!currentUser || !_notesReady || _inboxBusy) return null;
+  // pri otvorenej poznámke Widget nezasahuj do editora — zapíše sa hneď po jej zatvorení
+  if (document.getElementById('modal').classList.contains('open') && editingId === WIDGETNOTE_ID) return null;
   _inboxBusy = true;
   try {
     let items = [];
     try { items = JSON.parse(AndroidBridge.getInbox() || '[]'); } catch (e) {}
-    if (!items.length) return;
+    if (!items.length) return null;
     const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
     const html = items.map(t => '<div>' + esc(t) + '</div>').join('');
     const wn = notes.find(n => n.id === WIDGETNOTE_ID);
     const ref = doc(db,'users',currentUser.uid,'notes',WIDGETNOTE_ID);
-    if (wn && !wn._trash) await updateDoc(ref, { content: (wn.content || '') + html, updatedAt: serverTimestamp() });
-    else await setDoc(ref, { title:'Widget', content: html, tab: userTabs[0]||'', pinned:true, color:'#84cc16', images:[], tasks:[],
+    let content;
+    if (wn && !wn._trash) { content = (wn.content || '') + html; await updateDoc(ref, { content, updatedAt: serverTimestamp() }); }
+    else { content = html; await setDoc(ref, { title:'Widget', content, tab: userTabs[0]||'', pinned:true, color:'#84cc16', images:[], tasks:[],
       _trash:false, _trashedAt:null,
-      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email });
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email }); }
     AndroidBridge.clearInbox(items.length);
-    showToast('📱 Widget poznámka doplnená','ok');
+    showToast('Widget poznámka doplnená','ok');
+    return content;
   } catch (e) {
-    showToast('❌ Widget poznámka sa neuložila','warn');
+    showToast('Widget poznámka sa neuložila','warn');
+    return null;
   } finally { _inboxBusy = false; }
 }
 window.n28FlushInbox = flushAndroidInbox;
 
 // ─── OPEN NOTE BY ID (widget tap) ────────────────────────────────────────────
-let _openingUntil = 0;   // kým sa otvára poznámka z widgetu, nepúšťaj zápis fronty (aby sa nebili)
 function openNoteById(id, tries=0) {
   const note = notes.find(n=>n.id===id);
-  if (!note) { if (tries < 12) setTimeout(() => openNoteById(id, tries+1), 300); return; }
-  _openingUntil = Date.now() + 1200;
-  currentTab=note.tab; activeShareId=null; activeFolder=null; renderTabs(); renderFolderBar(); renderNotes();
-  // poznámku vezmi až v okamihu otvorenia — medzitým mohol prísť novší obsah
-  setTimeout(()=>openModal(notes.find(n=>n.id===id) || note), 300);
+  if (!note && id !== WIDGETNOTE_ID) { if (tries < 12) setTimeout(() => openNoteById(id, tries+1), 300); return; }
+  if (!note && tries < 12) {
+    // poznámka z widgetu ešte nemusí existovať — vytvorí ju zápis fronty
+    flushAndroidInbox().then(c => { if (c == null) setTimeout(() => openNoteById(id, tries+1), 300); else setTimeout(() => openNoteById(id, tries+1), 200); });
+    return;
+  }
+  if (!note) return;
+  const show = (n) => {
+    currentTab=n.tab; activeShareId=null; activeFolder=null; renderTabs(); renderFolderBar(); renderNotes();
+    setTimeout(()=>openModal(n), 250);
+  };
+  // text z widgetu najprv doplň do poznámky a až potom ju otvor — inak by editor mal starý obsah
+  if (id === WIDGETNOTE_ID) flushAndroidInbox().then(c => show(c == null ? (notes.find(n=>n.id===id) || note) : { ...note, content: c }));
+  else show(note);
 }
 
 // ─── MATERIAL RIPPLE (delegovaný, funguje aj na dynamicky pridané prvky) ────
