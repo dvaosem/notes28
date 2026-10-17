@@ -47,6 +47,7 @@ class NoteWidget : AppWidgetProvider() {
             val sub: Int
             val muted: Int
             when (style) {
+                WidgetPrefs.STYLE_GRAY -> { bg = Color.rgb(38, 38, 36); fg = Color.rgb(243, 242, 236); sub = Color.rgb(200, 198, 190); muted = Color.rgb(168, 166, 157) }
                 WidgetPrefs.STYLE_LIGHT -> { bg = Color.rgb(250, 250, 250); fg = Color.rgb(26, 26, 26); sub = Color.rgb(60, 60, 60); muted = Color.rgb(120, 120, 120) }
                 WidgetPrefs.STYLE_CLEAR -> { bg = Color.rgb(0, 0, 0); fg = Color.WHITE; sub = Color.rgb(235, 235, 235); muted = Color.rgb(200, 200, 200) }
                 else -> { bg = Color.rgb(15, 15, 15); fg = Color.rgb(242, 242, 242); sub = Color.rgb(216, 216, 216); muted = Color.rgb(160, 160, 160) }
@@ -75,6 +76,7 @@ class NoteWidget : AppWidgetProvider() {
             views.setTextColor(R.id.w_title, fg)
             views.setTextColor(R.id.w_text, sub)
             views.setTextColor(R.id.w_cfg, muted)
+            views.setTextColor(R.id.w_add, if (style == WidgetPrefs.STYLE_GRAY) Color.rgb(176, 132, 99) else Color.rgb(200, 241, 53))
 
             // tap on the widget -> open the note (or the app)
             val open = Intent(context, MainActivity::class.java).apply {

@@ -6,6 +6,7 @@
     <string name="cfg_title">Vyber poznámku</string>
     <string name="cfg_empty">Zatiaľ nemám žiadne poznámky. Otvor appku N28, prihlás sa a počkaj kým sa načítajú, potom widget nastav znova.</string>
     <string name="cfg_style">ŠTÝL</string>
+    <string name="cfg_style_gray">Šedý</string>
     <string name="cfg_style_dark">Tmavý</string>
     <string name="cfg_style_light">Svetlý</string>
     <string name="cfg_style_clear">Priehľadný</string>

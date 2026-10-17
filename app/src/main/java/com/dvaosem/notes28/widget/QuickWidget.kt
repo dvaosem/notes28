@@ -36,6 +36,7 @@ class QuickWidget : AppWidgetProvider() {
             val style = WidgetPrefs.qStyle(context, id)
             val bg: Int; val pill: Int; val title: Int; val fg: Int; val sub: Int; val muted: Int; var pillAlpha = 255
             when (style) {
+                WidgetPrefs.STYLE_GRAY -> { bg = Color.rgb(38, 38, 36); pill = Color.rgb(58, 57, 54); title = Color.rgb(176, 132, 99); fg = Color.rgb(243, 242, 236); sub = Color.rgb(200, 198, 190); muted = Color.rgb(168, 166, 157) }
                 WidgetPrefs.STYLE_LIGHT -> { bg = Color.rgb(250, 250, 250); pill = Color.rgb(232, 232, 232); title = Color.rgb(84, 112, 0); fg = Color.rgb(26, 26, 26); sub = Color.rgb(60, 60, 60); muted = Color.rgb(120, 120, 120) }
                 WidgetPrefs.STYLE_CLEAR -> { bg = Color.BLACK; pill = Color.BLACK; pillAlpha = 110; title = Color.rgb(200, 241, 53); fg = Color.WHITE; sub = Color.rgb(235, 235, 235); muted = Color.rgb(200, 200, 200) }
                 else -> { bg = Color.rgb(15, 15, 15); pill = Color.rgb(38, 38, 38); title = Color.rgb(200, 241, 53); fg = Color.rgb(242, 242, 242); sub = Color.rgb(216, 216, 216); muted = Color.rgb(160, 160, 160) }

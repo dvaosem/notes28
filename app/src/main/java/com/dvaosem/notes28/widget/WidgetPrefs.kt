@@ -5,6 +5,7 @@ import org.json.JSONArray
 
 /** Notes snapshot pushed by the web app (AndroidBridge.saveNotes) + per-widget settings. */
 object WidgetPrefs {
+    const val STYLE_GRAY = "gray"
     const val STYLE_DARK = "dark"
     const val STYLE_LIGHT = "light"
     const val STYLE_CLEAR = "clear"
@@ -65,11 +66,11 @@ object WidgetPrefs {
     }
 
     fun noteId(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_note", "") ?: ""
-    fun style(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_style", STYLE_DARK) ?: STYLE_DARK
+    fun style(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_style", STYLE_GRAY) ?: STYLE_GRAY
     fun opacity(c: Context, widgetId: Int): Int = sp(c).getInt("w${widgetId}_opacity", 90)
 
     // quick-note widget appearance (separate keys, default opacity higher for dark/light)
-    fun qStyle(c: Context, id: Int): String = sp(c).getString("q${id}_style", STYLE_DARK) ?: STYLE_DARK
+    fun qStyle(c: Context, id: Int): String = sp(c).getString("q${id}_style", STYLE_GRAY) ?: STYLE_GRAY
     fun qOpacity(c: Context, id: Int): Int = sp(c).getInt("q${id}_opacity", 95)
     fun saveQuick(c: Context, id: Int, style: String, opacity: Int) {
         sp(c).edit().putString("q${id}_style", style).putInt("q${id}_opacity", opacity).apply()

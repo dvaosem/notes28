@@ -22,6 +22,7 @@ class QuickConfigActivity : AppCompatActivity() {
 
         val styleGroup = findViewById<RadioGroup>(R.id.qcfg_style)
         when (WidgetPrefs.qStyle(this, id)) {
+            WidgetPrefs.STYLE_GRAY -> styleGroup.check(R.id.qcfg_style_gray)
             WidgetPrefs.STYLE_LIGHT -> styleGroup.check(R.id.qcfg_style_light)
             WidgetPrefs.STYLE_CLEAR -> styleGroup.check(R.id.qcfg_style_clear)
             else -> styleGroup.check(R.id.qcfg_style_dark)
@@ -31,6 +32,7 @@ class QuickConfigActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.qcfg_save).setOnClickListener {
             val style = when (styleGroup.checkedRadioButtonId) {
+                R.id.qcfg_style_gray -> WidgetPrefs.STYLE_GRAY
                 R.id.qcfg_style_light -> WidgetPrefs.STYLE_LIGHT
                 R.id.qcfg_style_clear -> WidgetPrefs.STYLE_CLEAR
                 else -> WidgetPrefs.STYLE_DARK

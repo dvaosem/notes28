@@ -9,8 +9,8 @@
     </style>
 
     <style name="Theme.Notes28.Config" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#c8f135</item>
-        <item name="colorOnPrimary">#0f0f0f</item>
+        <item name="colorPrimary">#b08463</item>
+        <item name="colorOnPrimary">#1f1e1d</item>
         <item name="android:windowBackground">#0f0f0f</item>
         <item name="android:statusBarColor">#0f0f0f</item>
         <item name="android:navigationBarColor">#0f0f0f</item>
@@ -19,7 +19,8 @@
     </style>
 
     <style name="Theme.Notes28.Quick" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#c8f135</item>
+        <item name="colorPrimary">#b08463</item>
+        <item name="colorOnPrimary">#1f1e1d</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
