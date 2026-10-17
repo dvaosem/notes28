@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="14dp">
+        android:padding="12dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -28,20 +28,9 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/qw_text"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="6dp"
-            android:ellipsize="end"
-            android:maxLines="6"
-            android:textColor="#d8d8d8"
-            android:textSize="13sp"/>
-
-        <TextView
             android:id="@+id/qw_write"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/pill_bg"
             android:gravity="center_vertical"
@@ -50,5 +39,16 @@
             android:text="@string/qw_write"
             android:textColor="#f2f2f2"
             android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/qw_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="6"
+            android:textColor="#d8d8d8"
+            android:textSize="13sp"/>
+
     </LinearLayout>
 </FrameLayout>
