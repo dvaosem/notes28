@@ -10,6 +10,8 @@
     android:initialLayout="@layout/widget_quick"
     android:previewLayout="@layout/widget_quick"
     android:description="@string/widget_quick_desc"
+    android:configure="com.dvaosem.notes28.widget.QuickConfigActivity"
     android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable"
     android:resizeMode="horizontal|vertical">
 </appwidget-provider>

@@ -68,6 +68,13 @@ object WidgetPrefs {
     fun style(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_style", STYLE_DARK) ?: STYLE_DARK
     fun opacity(c: Context, widgetId: Int): Int = sp(c).getInt("w${widgetId}_opacity", 90)
 
+    // quick-note widget appearance (separate keys, default opacity higher for dark/light)
+    fun qStyle(c: Context, id: Int): String = sp(c).getString("q${id}_style", STYLE_DARK) ?: STYLE_DARK
+    fun qOpacity(c: Context, id: Int): Int = sp(c).getInt("q${id}_opacity", 95)
+    fun saveQuick(c: Context, id: Int, style: String, opacity: Int) {
+        sp(c).edit().putString("q${id}_style", style).putInt("q${id}_opacity", opacity).apply()
+    }
+
     fun saveWidget(c: Context, widgetId: Int, noteId: String, style: String, opacity: Int) {
         sp(c).edit()
             .putString("w${widgetId}_note", noteId)

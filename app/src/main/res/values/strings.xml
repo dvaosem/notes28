@@ -10,6 +10,7 @@
     <string name="cfg_style_light">Svetlý</string>
     <string name="cfg_style_clear">Priehľadný</string>
     <string name="cfg_opacity">NEPRIEHĽADNOSŤ POZADIA</string>
+    <string name="qcfg_title">Vzhľad widgetu</string>
     <string name="cfg_save">Uložiť</string>
     <string name="cfg_pick">Najprv vyber poznámku</string>
     <string name="w_hint">Ťukni na ⚙ a vyber poznámku</string>

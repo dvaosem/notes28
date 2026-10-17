@@ -43,6 +43,15 @@
         </activity>
 
         <activity
+            android:name=".widget.QuickConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Notes28.Config">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".widget.QuickNoteActivity"
             android:exported="false"
             android:excludeFromRecents="true"
