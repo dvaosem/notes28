@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v77">
+<meta name="n28-build" content="n28-v78">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -61,6 +61,15 @@
 [data-theme="gray"] .btn-danger{background:var(--brick-soft);color:var(--brick-text);}
 [data-theme="gray"] #modal-delete{color:var(--brick-text)!important;}
 [data-theme="gray"] .btn-danger:hover{background:var(--brick);color:#f3f2ec;}
+
+/* Hľadanie: len malá lupa, pole sa rozbalí po ťuknutí */
+header .search-wrap{display:none;}
+body.search-open header .search-wrap{display:flex;}
+#search-toggle.on{color:var(--text);}
+/* Kompaktnejšie karty */
+#notes-grid .note-card{min-height:0;}
+#notes-grid .card-body{padding:.6rem .8rem;gap:.2rem;}
+#notes-grid .card-content{-webkit-line-clamp:4;}
 .n28-ripple{position:absolute;border-radius:50%;background:var(--ripple-color);transform:scale(0);animation:n28RippleAnim .55s cubic-bezier(.2,0,0,1);pointer-events:none;z-index:1;}
 @keyframes n28RippleAnim{to{transform:scale(1);opacity:0;}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -563,8 +572,8 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
           <button id="ask-ai-btn" type="button" title="Opýtať sa AI nad poznámkami" aria-label="Opýtať sa AI nad poznámkami"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7Z"/></svg></button>
         </div>
         <div class="header-actions">
+          <button id="search-toggle" title="Hľadať" aria-label="Hľadať"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
           <button id="view-toggle" title="Prepnúť zobrazenie" aria-label="Prepnúť zobrazenie (mriežka/zoznam)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
-          <button id="tag-browser-btn" title="Všetky tagy" aria-label="Prehľadávať tagy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24L4 3a1 1 0 0 0-1 1l.24 5.59a2 2 0 0 0 .59 1.41l9.59 9.59a2 2 0 0 0 2.83 0l4.34-4.34a2 2 0 0 0 0-2.83Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg></button>
           <button id="manage-tabs-btn" title="Záložky" aria-label="Spravovať záložky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
           <button id="settings-btn" title="Nastavenia" aria-label="Nastavenia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
           <span id="theme-icon" style="display:none;"></span>
@@ -778,15 +787,6 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
           <span id="settings-api-key-status" style="font-size:.78rem;color:var(--text2);"></span>
         </div>
         <p style="font-size:.72rem;color:var(--text2);margin-top:.4rem;">Kľúč sa ukladá len v tomto prehliadači (localStorage), nie v kóde.</p>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border)">
-      <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Tagy</p>
-        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;font-size:.85rem;">
-          <span>Navrhnúť tagy po uložení</span>
-          <input type="checkbox" id="settings-autotag-toggle" style="width:38px;height:22px;accent-color:var(--accent-default);cursor:pointer;">
-        </label>
-        <p style="font-size:.72rem;color:var(--text2);margin-top:.4rem;">Po ručnom uložení poznámky bez tagov pošle jej text do AI (model Haiku) a ponúkne 1–3 tagy.</p>
       </div>
       <hr style="border:none;border-top:1px solid var(--border)">
       <div>
@@ -1013,6 +1013,16 @@ const inputDue     = document.getElementById('input-due');
 const inputColor   = document.getElementById('input-color');
 const addTabBtn    = document.getElementById('add-tab-btn');
 const searchInput  = document.getElementById('search-input');
+(function(){
+  const btn = document.getElementById('search-toggle');
+  const sync = () => { const open = document.body.classList.contains('search-open'); if (btn) btn.classList.toggle('on', open); };
+  const openS = () => { document.body.classList.add('search-open'); sync(); setTimeout(()=>searchInput.focus(), 30); };
+  const closeS = () => { if (searchInput.value.trim()) return; document.body.classList.remove('search-open'); sync(); };
+  if (btn) btn.onclick = () => document.body.classList.contains('search-open') && !searchInput.value.trim() ? closeS() : openS();
+  searchInput.addEventListener('blur', () => setTimeout(closeS, 200));
+  searchInput.addEventListener('keydown', e => { if (e.key === 'Escape') { searchInput.value=''; searchInput.dispatchEvent(new Event('input')); closeS(); searchInput.blur(); } });
+  searchInput.addEventListener('search', () => { if (!searchInput.value) closeS(); });
+})();
 const tabsModal    = document.getElementById('tabs-modal');
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
@@ -1595,6 +1605,7 @@ function makeCard(note) {
 
   const tags = extractTags((note.title||'')+(note.content||''));
   const contentIsEmpty = !((note.content||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,'').trim());
+  const _compact = currentTab!==TRASH_TAB && !activeShareId;
   const tagBadges = tags.length ? `<div style="display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.2rem;">${tags.slice(0,3).map(t=>`<span class="tag-badge${activeTag===t?' tag-badge-active':''}">${t.replace(/^#/,'')}</span>`).join('')}${tags.length>3?`<span class="tag-badge">+${tags.length-3}</span>`:''}</div>` : '';
 
   let metaRight = '';
@@ -1620,25 +1631,26 @@ function makeCard(note) {
       : `<div class="card-img" style="display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;" onclick="event.stopPropagation();window.open('${img.url}','_blank')">${'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>'}<span style="font-size:.55rem;color:var(--text2)">${(img.name||'').slice(0,8)}</span></div>`
   ).join('')}${note.images.length>3?`<div class="card-img" style="background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--text2)">+${note.images.length-3}</div>`:''}</div>` : '';
 
+  const metaHtml = _compact
+    ? (dueStr ? `<div class="card-meta"><span class="card-due ${isOverdue?'overdue':''}">${isOverdue?'⚠ ':''}${dueStr}</span></div>` : '')
+    : `<div class="card-meta">
+        <span class="card-created">${createdStr}</span>
+        ${updatedStr?`<span class="card-updated">${updatedStr}</span>`:''}
+        ${dueStr?`<span class="card-due ${isOverdue?'overdue':''}">${isOverdue?'⚠ ':''}${dueStr}</span>`:''}
+        ${folderBadge}
+        ${metaRight}
+      </div>`;
   card.innerHTML = `
     <div class="card-accent-bar"></div>
     <div class="card-body">
       ${note.pinned?`<div style="font-size:.7rem;opacity:.6;margin-bottom:.1rem;display:flex;align-items:center;gap:.25rem;"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M12 17v5"/><path d="M9 10.8V4h6v6.8l2 3.2H7l2-3.2Z"/></svg>pripnuté</div>`:''}
       ${note.title?`<div class="card-title">${escHtml(note.title)}</div>`:''}
       <div class="card-content">${linkify(cardContentPreview(note.content||''))}</div>
-      ${imagesHtml}
-      <div class="card-meta">
-        <span class="card-created">${createdStr}</span>
-        ${updatedStr?`<span class="card-updated">${updatedStr}</span>`:''}
-        ${dueStr?`<span class="card-due ${isOverdue?'overdue':''}">${isOverdue?'⚠ ':''}${dueStr}</span>`:''}
-        
-        ${folderBadge}
-        ${metaRight}
-      </div>
-      ${tagBadges}
+      ${_compact?'':imagesHtml}
+      ${metaHtml}
     </div>`;
 
-  if (currentTab!==LAST_TAB && currentTab!==TRASH_TAB && !activeShareId) {
+  if (currentTab!==LAST_TAB && currentTab!==TRASH_TAB && !activeShareId && card.querySelector('.up-btn')) {
     card.querySelector('.up-btn').onclick = e => {
       e.stopPropagation();
       const arr = notes.filter(n=>n.tab===currentTab && !n._trash);
@@ -2629,6 +2641,7 @@ editor.addEventListener('input', liveMarkdown);
 editor.addEventListener('input', highlightTags);
 
 function highlightTags() {
+  return;  // tagy zrušené
   if (_isComposing) return;
   // only highlight in plain text nodes, skip if inside special elements
   const sel = window.getSelection();
@@ -2941,7 +2954,8 @@ let _isComposing = false;
 editor.addEventListener('compositionstart', () => { _isComposing = true; });
 editor.addEventListener('compositionend',   () => { _isComposing = false; setTimeout(liveMarkdown, 0); });
 
-function extractTags(text) {
+function extractTags(text) { return []; }  // tagy zrušené ako funkcia
+function _extractTagsOld(text) {
   const str = (text||'').replace(/<[^>]+>/g,' ');
   const raw = (str.match(/#[\wÀ-žА-я]+/g)||[]);
   // ignoruj hex farby (#fff, #c8f135...) - nie su to skutocne tagy
@@ -3306,9 +3320,9 @@ modalSave.onclick = async () => {
 // Len pri ručnom Uložiť, len keď poznámka nemá žiadny tag a je dosť dlhá; max 1× na poznámku za reláciu.
 const _tagAsked = new Set();
 let _tagSuggestEl = null, _tagSuggestTimer = null;
-document.getElementById('settings-autotag-toggle')?.addEventListener('change', e => localStorage.setItem('n28-autotag', e.target.checked ? 'on' : 'off'));
 
 async function maybeSuggestTags(id, data) {
+  return;  // tagy zrušené
   try {
     if (!id || id === QUICKNOTE_ID || activeShareId || _tagAsked.has(id)) return;
     if (localStorage.getItem('n28-autotag') === 'off' || !getApiKey()) return;   // tichý návrh — nikdy neotvára Nastavenia
@@ -4624,7 +4638,7 @@ function openSmartEditor() {
     back.remove(); applySmart(f);
   };
   btns.append(cancel, save);
-  box.append(title, nameIn, row('Záložka', selTab), row('Priečinok', selFolder), row('Tag', selTag), row('Upravené', selDays), btns);
+  box.append(title, nameIn, row('Záložka', selTab), row('Priečinok', selFolder), row('Upravené', selDays), btns);
 }
 
 // ─── OPÝTAŤ SA POZNÁMOK (AI nad zoznamom názvov + úvodov) ───────────────────
@@ -4920,7 +4934,6 @@ document.getElementById('settings-btn').onclick = openSettings;
 function openSettings() {
   renderSettingsSharedList();
   document.getElementById('settings-theme-select').value = themeMode;
-  document.getElementById('settings-autotag-toggle').checked = localStorage.getItem('n28-autotag') !== 'off';
   document.getElementById('settings-api-key').value = localStorage.getItem('n28-anthropic-key') || '';
   document.getElementById('settings-api-key-status').textContent = '';
   document.getElementById('settings-modal').classList.add('open');
