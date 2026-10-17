@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v72">
+<meta name="n28-build" content="n28-v73">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -36,6 +36,13 @@
   --elev3:0 4px 8px 2px rgba(0,0,0,.1),0 8px 22px 3px rgba(0,0,0,.12);
   --elev4:0 6px 12px 4px rgba(0,0,0,.1),0 12px 32px 6px rgba(0,0,0,.14);
   --state-hover:rgba(0,0,0,.055); --state-press:rgba(0,0,0,.09); --ripple-color:rgba(0,0,0,.14);
+}
+/* Šedá téma — neutrálna teplá šedá (v štýle Claude), jemný terakotový akcent */
+[data-theme="gray"] {
+  --bg:#262624; --surface:#30302e; --surface2:#3a3936; --border:#4a4945;
+  --text:#f3f2ec; --text2:#a8a69d; --shadow:0 4px 24px rgba(0,0,0,.35);
+  --accent-default:#d97757; --accent-text:#1f1e1d; --dot:rgba(255,255,255,.03);
+  --state-hover:rgba(255,255,255,.07); --state-press:rgba(255,255,255,.11); --ripple-color:rgba(255,255,255,.24);
 }
 .n28-ripple{position:absolute;border-radius:50%;background:var(--ripple-color);transform:scale(0);animation:n28RippleAnim .55s cubic-bezier(.2,0,0,1);pointer-events:none;z-index:1;}
 @keyframes n28RippleAnim{to{transform:scale(1);opacity:0;}}
@@ -715,9 +722,13 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
     <div class="modal-body" style="gap:.8rem">
       <div>
         <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Vzhľad</p>
-        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;font-size:.85rem;">
-          <span>Tmavý režim</span>
-          <input type="checkbox" id="settings-theme-toggle" style="width:38px;height:22px;accent-color:var(--accent-default);cursor:pointer;">
+        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;">
+          <span>Téma</span>
+          <select id="settings-theme-select" class="meta-pill" aria-label="Téma" style="min-width:8.5rem;">
+            <option value="dark">Tmavá</option>
+            <option value="gray">Šedá</option>
+            <option value="light">Svetlá</option>
+          </select>
         </label>
       </div>
       <div id="settings-android" style="display:none;flex-direction:column;gap:.8rem">
@@ -999,19 +1010,23 @@ function showToast(msg, type='info', duration=3500) {
 }
 
 // ─── THEME ───────────────────────────────────────────────────────────────────
-let dark = localStorage.getItem('n28-theme') !== 'light';
-applyTheme();
+let themeMode = (() => { try { const v = localStorage.getItem('n28-theme'); return ['dark','gray','light'].includes(v) ? v : 'dark'; } catch (e) { return 'dark'; } })();
+let dark = themeMode !== 'light';
+const THEME_COLOR = { dark:'#0f0f0f', gray:'#262624', light:'#f8f8f5' };
 function applyTheme() {
-  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  dark = themeMode !== 'light';
+  document.documentElement.setAttribute('data-theme', themeMode);
   const icon = document.getElementById('theme-icon');
   if (icon) icon.innerHTML = dark
     ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>'
     : '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="4.2" y1="4.2" x2="6" y2="6"/><line x1="18" y1="18" x2="19.8" y2="19.8"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.2" y1="19.8" x2="6" y2="18"/><line x1="18" y1="6" x2="19.8" y2="4.2"/></svg>';
-  localStorage.setItem('n28-theme', dark ? 'dark' : 'light');
-  const sw = document.getElementById('settings-theme-toggle');
-  if (sw) sw.checked = dark;
+  try { localStorage.setItem('n28-theme', themeMode); } catch (e) {}
+  document.documentElement.style.background = THEME_COLOR[themeMode];
+  const mt = document.querySelector('meta[name="theme-color"]'); if (mt) mt.setAttribute('content', THEME_COLOR[themeMode]);
+  const sel = document.getElementById('settings-theme-select'); if (sel) sel.value = themeMode;
 }
-document.getElementById('settings-theme-toggle')?.addEventListener('change', e => { dark = e.target.checked; applyTheme(); });
+applyTheme();
+document.getElementById('settings-theme-select')?.addEventListener('change', e => { themeMode = e.target.value; applyTheme(); });
 
 // ─── VIEW (mriežka / zoznam) ─────────────────────────────────────────────────
 let listView = localStorage.getItem('n28-view') === 'list';
@@ -4827,7 +4842,7 @@ tabsModal.addEventListener('click', async e => {
 document.getElementById('settings-btn').onclick = openSettings;
 function openSettings() {
   renderSettingsSharedList();
-  document.getElementById('settings-theme-toggle').checked = dark;
+  document.getElementById('settings-theme-select').value = themeMode;
   document.getElementById('settings-autotag-toggle').checked = localStorage.getItem('n28-autotag') !== 'off';
   document.getElementById('settings-api-key').value = localStorage.getItem('n28-anthropic-key') || '';
   document.getElementById('settings-api-key-status').textContent = '';
