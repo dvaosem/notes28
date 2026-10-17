@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                 pendingUpdateUrl = rel?.apkUrl
                 val json = JSONObject().apply {
                     put("current", cur); put("latest", rel?.build ?: 0)
-                    put("notes", rel?.notes ?: ""); put("manual", manual); put("error", rel == null)
+                    put("notes", rel?.notes ?: ""); put("manual", manual); put("error", rel == null); put("detail", UpdateManager.lastError)
                 }
                 call("n28OnUpdate", json.toString())
             }.start()

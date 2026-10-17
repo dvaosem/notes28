@@ -36,15 +36,26 @@ object UpdateManager {
         return if (Build.VERSION.SDK_INT >= 28) info.longVersionCode.toInt() else @Suppress("DEPRECATION") info.versionCode
     }
 
-    /** Latest published release, or null when it can't be reached (offline, private repo...). */
-    fun latest(): Release? = try {
+    @Volatile var lastError: String = ""
+
+    /** Latest published release, or null when it can't be reached. Tries the API, then the plain github.com redirect (no rate limit). */
+    fun latest(): Release? {
+        lastError = ""
+        viaApi()?.let { return it }
+        val apiErr = lastError
+        viaRedirect()?.let { lastError = ""; return it }
+        lastError = "$apiErr / $lastError".trim(' ', '/')
+        return null
+    }
+
+    private fun viaApi(): Release? = try {
         val req = Request.Builder()
             .url("https://api.github.com/repos/$REPO/releases/latest")
             .header("Accept", "application/vnd.github+json")
             .header("User-Agent", "N28")
             .build()
         client.newCall(req).execute().use { r ->
-            if (!r.isSuccessful) { Log.w(TAG, "latest: HTTP ${r.code}"); return null }
+            if (!r.isSuccessful) { lastError = "API ${r.code}"; return null }
             val j = JSONObject(r.body?.string() ?: return null)
             val build = j.optString("tag_name").removePrefix("build-").toIntOrNull() ?: return null
             val assets = j.optJSONArray("assets") ?: return null
@@ -56,7 +67,22 @@ object UpdateManager {
             Release(build, url ?: return null, j.optString("body").take(300))
         }
     } catch (e: Exception) {
-        Log.e(TAG, "latest failed", e); null
+        Log.e(TAG, "latest failed", e); lastError = "API " + (e.javaClass.simpleName); null
+    }
+
+    private fun viaRedirect(): Release? = try {
+        val noFollow = client.newBuilder().followRedirects(false).build()
+        val req = Request.Builder()
+            .url("https://github.com/$REPO/releases/latest")
+            .header("User-Agent", "N28")
+            .build()
+        noFollow.newCall(req).execute().use { r ->
+            val loc = r.header("Location") ?: run { lastError = "web ${r.code}"; return null }
+            val build = loc.substringAfterLast("/").removePrefix("build-").toIntOrNull() ?: run { lastError = "web tag"; return null }
+            Release(build, "https://github.com/$REPO/releases/latest/download/notes28.apk", "")
+        }
+    } catch (e: Exception) {
+        Log.e(TAG, "redirect failed", e); lastError = "web " + (e.javaClass.simpleName); null
     }
 
     /** Downloads the APK into cache/updates; reports progress 0..100. */
