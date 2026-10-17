@@ -2191,6 +2191,58 @@ function escapeLinkEnd() {
 document.addEventListener('selectionchange', () => { if (document.activeElement === editor) escapeLinkEnd(); });
 editor.addEventListener('beforeinput', escapeLinkEnd);
 
+// Odkazy pri písaní: po medzere sa predchádzajúci e-mail/web/telefón zmení na odkaz a kurzor ostane MIMO odkazu.
+// Text, ktorý by sa napísal do odkazu (za token / za medzeru), sa z odkazu vyberie von.
+const _LINK_STYLE = 'color:var(--accent-default);word-break:break-all;text-decoration:underline;';
+function liveLinkFix() {
+  if (_isComposing) return;
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount || !sel.isCollapsed) return;
+  const r = sel.getRangeAt(0);
+  const node = r.startContainer, off = r.startOffset;
+  if (node.nodeType !== 3 || !editor.contains(node)) return;
+  const setCaret = (n, o) => { const nr = document.createRange(); nr.setStart(n, o); nr.collapse(true); sel.removeAllRanges(); sel.addRange(nr); };
+  const a = node.parentElement && node.parentElement.closest('a');
+
+  if (a && editor.contains(a) && a.childNodes.length === 1 && a.firstChild === node) {
+    const text = node.data;
+    const m = new RegExp('^(?:' + _LINK_SRC + ')', 'i').exec(text);
+    if (!m) {                               // už to nie je odkaz → obyčajný text
+      a.replaceWith(node); setCaret(node, off); return;
+    }
+    if (m[0].length === text.length) { a.setAttribute('href', _hrefFor(text)); return; }
+    const L = m[0].length;
+    node.data = text.slice(0, L);
+    a.setAttribute('href', _hrefFor(node.data));
+    const rest = document.createTextNode(text.slice(L));
+    a.parentNode.insertBefore(rest, a.nextSibling);
+    if (off > L) setCaret(rest, off - L); else setCaret(node, Math.min(off, L));
+    return;
+  }
+  if (a) return;
+
+  // kurzor hneď za medzerou → predchádzajúce slovo je odkaz?
+  const before = node.data.slice(0, off);
+  if (!/\s$/.test(before)) return;
+  const trimmed = before.replace(/\s+$/, '');
+  if (!trimmed) return;
+  const re = new RegExp(_LINK_SRC, 'gi'); let mm, hit = null;
+  while ((mm = re.exec(trimmed))) { if (mm.index + mm[0].length === trimmed.length) { hit = mm; break; } if (mm[0].length === 0) re.lastIndex++; }
+  if (!hit) return;
+  const tok = hit[0], start = hit.index;
+  const pre = node.data.slice(0, start), post = node.data.slice(start + tok.length);
+  const link = document.createElement('a');
+  link.href = _hrefFor(tok); link.textContent = tok; link.target = '_blank'; link.rel = 'noopener'; link.style.cssText = _LINK_STYLE;
+  const par = node.parentNode;
+  const postNode = document.createTextNode(post);
+  par.insertBefore(postNode, node.nextSibling);
+  par.insertBefore(link, postNode);
+  node.data = pre;
+  setCaret(postNode, off - start - tok.length);
+}
+editor.addEventListener('input', () => { try { liveLinkFix(); } catch (e) {} });
+editor.addEventListener('compositionend', () => setTimeout(() => { try { liveLinkFix(); } catch (e) {} }, 0));
+
 // Sanitizácia HTML pri vkladaní (Word/Teams/Docs) — ponechá len zoznamy a základné formátovanie.
 function sanitizePasteHtml(html) {
   const tpl = document.createElement('template');
