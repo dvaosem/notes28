@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v74">
+<meta name="n28-build" content="n28-v77">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -44,6 +44,23 @@
   --accent-default:#d97757; --accent-text:#1f1e1d; --dot:rgba(255,255,255,.03);
   --state-hover:rgba(255,255,255,.07); --state-press:rgba(255,255,255,.11); --ripple-color:rgba(255,255,255,.24);
 }
+/* Šedá téma = minimum farieb: všetko neutrálne, farbu majú len hlavné tlačidlá (nová poznámka, Uložiť, Zmazať) v tlmených zemitých tónoch */
+[data-theme="gray"] {
+  --accent-default:#cfcbc0; --accent-text:#262624;
+  --earth:#b08463; --earth-text:#1f1e1d; --earth-hover:#be9272;
+  --brick:#9a5f52; --brick-soft:rgba(154,95,82,.22); --brick-text:#d29a8c;
+}
+[data-theme="gray"] .tab.active,[data-theme="gray"] .tag-pill-active,[data-theme="gray"] .tab.tab-drop-over{background:var(--state-press)!important;color:var(--text)!important;border-color:var(--border)!important;box-shadow:none;}
+[data-theme="gray"] .tab.tab-colored{border-bottom:1px solid transparent;}
+[data-theme="gray"] .tab.tab-colored.active{background:var(--state-press);color:var(--text);border-color:var(--border);}
+[data-theme="gray"] .tab.tab-shared{border-color:transparent;color:var(--text2);}
+[data-theme="gray"] .tab.tab-shared.active{background:var(--state-press);color:var(--text);border-color:var(--border);}
+[data-theme="gray"] .note-card{border-left-color:var(--border);}
+[data-theme="gray"] .btn-primary,[data-theme="gray"] #fab,[data-theme="gray"] #modal-save,[data-theme="gray"] .btn-email-login{background:var(--earth);color:var(--earth-text);}
+[data-theme="gray"] .btn-primary:hover,[data-theme="gray"] #fab:hover,[data-theme="gray"] .btn-email-login:hover{background:var(--earth-hover);}
+[data-theme="gray"] .btn-danger{background:var(--brick-soft);color:var(--brick-text);}
+[data-theme="gray"] #modal-delete{color:var(--brick-text)!important;}
+[data-theme="gray"] .btn-danger:hover{background:var(--brick);color:#f3f2ec;}
 .n28-ripple{position:absolute;border-radius:50%;background:var(--ripple-color);transform:scale(0);animation:n28RippleAnim .55s cubic-bezier(.2,0,0,1);pointer-events:none;z-index:1;}
 @keyframes n28RippleAnim{to{transform:scale(1);opacity:0;}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
