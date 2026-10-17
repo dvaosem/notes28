@@ -36,7 +36,7 @@ class WidgetConfigActivity : AppCompatActivity() {
             val firstLine = n.content.lineSequence().firstOrNull { it.isNotBlank() }?.trim().orEmpty()
             val label = when {
                 n.title.isNotBlank() -> n.title.trim()
-                n.id == "quicknote" -> "⚡ " + getString(R.string.w_untitled)
+                n.id == "quicknote" -> "Rýchla poznámka"
                 firstLine.isNotEmpty() -> firstLine.take(40)
                 else -> getString(R.string.w_untitled)
             }

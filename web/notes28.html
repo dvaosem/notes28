@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v69">
+<meta name="n28-build" content="n28-v70">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -103,8 +103,8 @@ header{flex-shrink:0;background:none;padding:.6rem .9rem;display:flex;align-item
 /* TABS */
 .tabs-bar{flex-shrink:0;display:flex;align-items:center;gap:.4rem;padding:.35rem 1rem .7rem;overflow-x:auto;scrollbar-width:none;background:none;}
 .tabs-bar::-webkit-scrollbar{display:none;}
-#tabs{display:flex;gap:.4rem;align-items:center;flex-wrap:nowrap;}
-.tab{position:relative;overflow:hidden;flex-shrink:0;background:color-mix(in srgb, var(--surface2) 78%, transparent);border:1px solid transparent;color:var(--text2);padding:.38rem .95rem;border-radius:var(--radius-lg);font-family:var(--font-body);font-size:.82rem;font-weight:600;cursor:pointer;transition:background-color var(--tr),border-color var(--tr),color var(--tr),box-shadow var(--tr);white-space:nowrap;line-height:1.4;}
+#tabs{display:flex;gap:.3rem;align-items:center;flex-wrap:nowrap;}
+.tab{position:relative;overflow:hidden;flex-shrink:0;background:color-mix(in srgb, var(--surface2) 78%, transparent);border:1px solid transparent;color:var(--text2);padding:.26rem .72rem;border-radius:var(--radius-lg);font-family:var(--font-body);font-size:.76rem;font-weight:600;cursor:pointer;transition:background-color var(--tr),border-color var(--tr),color var(--tr),box-shadow var(--tr);white-space:nowrap;line-height:1.4;}
 .tab:hover{color:var(--text);background:var(--state-hover);}
 .tab.active{background:var(--accent-default);color:var(--accent-text);border-color:var(--accent-default);box-shadow:var(--elev1);}
 .tab.tab-colored{border-bottom:2px solid var(--tab-color);}
@@ -220,7 +220,7 @@ header{flex-shrink:0;background:none;padding:.6rem .9rem;display:flex;align-item
 .note-card.card-selected{outline:2px solid var(--accent-default);outline-offset:2px;opacity:.85;}
 .note-card.card-selected::after{content:'✓';position:absolute;top:.4rem;right:.4rem;width:20px;height:20px;background:var(--accent-default);color:var(--accent-text);border-radius:50%;font-size:.7rem;display:flex;align-items:center;justify-content:center;font-weight:700;}
 /* LOCKED card */
-.note-card.card-locked::before{content:'🔒';position:absolute;top:.35rem;right:.4rem;font-size:.7rem;opacity:.6;}
+.note-card.card-locked::before{content:'';position:absolute;top:.4rem;right:.45rem;width:13px;height:13px;opacity:.55;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");}
 /* EDITOR TAG HIGHLIGHT */
 .editor-tag{color:var(--accent-default);font-weight:600;}
 /* TAB BAR FADE EDGES */
@@ -257,7 +257,7 @@ body.logged-out #fab{display:none!important;}
 /* dotykové zariadenia: ovládacie prvky min. 40 px */
 @media(pointer:coarse){
   .header-actions button{width:40px;height:40px;}
-  #tabs .tab,#quicknote-btn{padding-top:.66rem;padding-bottom:.66rem;}
+  #tabs .tab,#quicknote-btn{padding-top:.42rem;padding-bottom:.42rem;}
   #add-tab-btn{min-width:40px;min-height:40px;}
   .modal-icon-btn{min-width:40px;min-height:40px;}
   #modal-save{min-height:40px;padding:.55rem 1rem!important;}
@@ -564,7 +564,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
       <select id="bulk-move-select" class="meta-pill" style="font-size:.78rem;">
         <option value="">Presunúť do…</option>
       </select>
-      <button id="bulk-trash-btn" class="btn btn-danger" style="font-size:.78rem;padding:.3rem .7rem;">🗑 Zmazať</button>
+      <button id="bulk-trash-btn" class="btn btn-danger" style="font-size:.78rem;padding:.3rem .7rem;">Zmazať</button>
       <button id="bulk-cancel-btn" class="btn btn-ghost" style="font-size:.78rem;padding:.3rem .7rem;">✕</button>
     </div>
     <div id="notes-grid"></div>
@@ -629,7 +629,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
       </div>
     </div>
     <div id="meta-more-menu" style="display:none;position:fixed;background:color-mix(in srgb, var(--surface2) 92%, transparent);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border:1px solid var(--border);border-radius:12px;padding:.4rem;box-shadow:0 8px 32px rgba(0,0,0,.4);min-width:190px;z-index:400;">
-      <button id="btn-notelink" class="more-menu-item" type="button" title="Vložiť odkaz na inú poznámku">🔗&nbsp;&nbsp;Odkaz na poznámku</button>
+      <button id="btn-notelink" class="more-menu-item" type="button" title="Vložiť odkaz na inú poznámku">Odkaz na poznámku</button>
       <button id="btn-undo" class="more-menu-item" type="button" title="Späť"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:.4rem;vertical-align:-2px;"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Späť</button>
       <hr style="border:none;border-top:1px solid var(--border);margin:.3rem 0;">
       <div id="tab-select-row" class="more-menu-item" style="cursor:default;justify-content:space-between;"><span>Záložka</span><select id="input-tab" class="meta-pill" title="Záložka" style="padding-left:.5rem;padding-right:1.2rem;"></select></div>
@@ -694,11 +694,11 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
       <p style="font-size:.82rem;color:var(--text2);margin-bottom:.3rem">Drag & drop · klik na názov pre premenovanie</p>
       <div id="tabs-manager-list"></div>
       <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
-        <p style="font-size:.82rem;color:var(--text2);margin-bottom:.6rem">👥 Zdieľané záložky</p>
+        <p style="font-size:.82rem;color:var(--text2);margin-bottom:.6rem">Zdieľané záložky</p>
         <div id="shared-tabs-list"></div>
         <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap;">
           <button class="btn btn-ghost" id="create-shared-btn" style="font-size:.82rem">+ Vytvoriť zdieľanú</button>
-          <button class="btn btn-ghost" id="join-shared-btn" style="font-size:.82rem">🔗 Pripojiť sa</button>
+          <button class="btn btn-ghost" id="join-shared-btn" style="font-size:.82rem">Pripojiť sa</button>
         </div>
       </div>
     </div>
@@ -714,7 +714,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
     </div>
     <div class="modal-body" style="gap:.8rem">
       <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">🎨 Vzhľad</p>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Vzhľad</p>
         <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;font-size:.85rem;">
           <span>Tmavý režim</span>
           <input type="checkbox" id="settings-theme-toggle" style="width:38px;height:22px;accent-color:var(--accent-default);cursor:pointer;">
@@ -723,7 +723,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
       <div id="settings-android" style="display:none;flex-direction:column;gap:.8rem">
         <hr style="border:none;border-top:1px solid var(--border)">
         <div>
-          <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">📱 Android appka</p>
+          <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Android appka</p>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;">
             <span id="android-upd-sub" style="font-size:.8rem;color:var(--text2);">Verzia –</span>
             <button type="button" id="android-upd-btn" class="btn btn-ghost" style="font-size:.82rem">Skontrolovať</button>
@@ -733,17 +733,17 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
             <button type="button" id="android-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;">
-            <span style="font-size:.85rem;">⚡ Rýchla poznámka na plochu</span>
+            <span style="font-size:.85rem;">Rýchla poznámka na plochu</span>
             <button type="button" id="android-quick-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
           </div>
         </div>
       </div>
       <hr style="border:none;border-top:1px solid var(--border)">
       <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">🤖 AI / Anthropic API kľúč</p>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">AI / Anthropic API kľúč</p>
         <div style="display:flex;gap:.4rem;">
           <input type="password" id="settings-api-key" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false" style="flex:1;min-width:0;padding:.45rem .6rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:.82rem;">
-          <button type="button" id="settings-api-key-show" class="btn btn-ghost" style="font-size:.78rem;padding:.4rem .6rem;">👁</button>
+          <button type="button" id="settings-api-key-show" class="btn btn-ghost" style="font-size:.78rem;padding:.4rem .6rem;" aria-label="Zobraziť kľúč"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
         <div style="display:flex;gap:.5rem;margin-top:.5rem;align-items:center;flex-wrap:wrap;">
           <button type="button" id="settings-api-key-test" class="btn btn-ghost" style="font-size:.82rem">✓ Overiť a uložiť</button>
@@ -753,7 +753,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
       </div>
       <hr style="border:none;border-top:1px solid var(--border)">
       <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">🏷 Tagy</p>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Tagy</p>
         <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;cursor:pointer;font-size:.85rem;">
           <span>Navrhnúť tagy po uložení</span>
           <input type="checkbox" id="settings-autotag-toggle" style="width:38px;height:22px;accent-color:var(--accent-default);cursor:pointer;">
@@ -762,19 +762,19 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
       </div>
       <hr style="border:none;border-top:1px solid var(--border)">
       <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">👥 Zdieľané záložky</p>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Zdieľané záložky</p>
         <div id="settings-shared-list"></div>
         <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap;">
           <button class="btn btn-ghost" id="settings-create-shared" style="font-size:.82rem">+ Vytvoriť</button>
-          <button class="btn btn-ghost" id="settings-join-shared" style="font-size:.82rem">🔗 Pripojiť sa</button>
+          <button class="btn btn-ghost" id="settings-join-shared" style="font-size:.82rem">Pripojiť sa</button>
         </div>
       </div>
       <hr style="border:none;border-top:1px solid var(--border)">
       <div style="display:flex;flex-direction:column;gap:.5rem">
-        <button id="settings-export" class="btn btn-ghost" style="justify-content:flex-start">📦 Export všetkých (JSON)</button>
-        <button id="settings-export-zip" class="btn btn-ghost" style="justify-content:flex-start">🗜 Export všetkých (ZIP)</button>
-        <button id="settings-pdf" class="btn btn-ghost" style="justify-content:flex-start">📄 Export záložky (PDF)</button>
-        <button id="settings-word" class="btn btn-ghost" style="justify-content:flex-start">📝 Export záložky (Word)</button>
+        <button id="settings-export" class="btn btn-ghost" style="justify-content:flex-start">Export všetkých (JSON)</button>
+        <button id="settings-export-zip" class="btn btn-ghost" style="justify-content:flex-start">Export všetkých (ZIP)</button>
+        <button id="settings-pdf" class="btn btn-ghost" style="justify-content:flex-start">Export záložky (PDF)</button>
+        <button id="settings-word" class="btn btn-ghost" style="justify-content:flex-start">Export záložky (Word)</button>
       </div>
     </div>
     <div class="modal-footer">
@@ -787,7 +787,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
 <div id="history-modal" class="n28-modal">
   <div class="modal-box" style="max-width:480px">
     <div class="modal-header">
-      <span class="modal-header-title">🕐 História verzií</span>
+      <span class="modal-header-title">História verzií</span>
       <button class="modal-x" onclick="document.getElementById('history-modal').classList.remove('open')">×</button>
     </div>
     <div class="modal-body" id="history-list" style="gap:.4rem;padding:.7rem 1rem;"></div>
@@ -799,7 +799,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
     <button id="draw-close" style="background:none;border:none;color:#aaa;font-size:1.3rem;cursor:pointer;padding:.2rem .4rem;flex-shrink:0;">✕</button>
     <div style="width:1px;height:20px;background:#333;flex-shrink:0;"></div>
     <!-- tools -->
-    <button class="draw-tool active" data-tool="pen" style="background:#222;border:1px solid #444;border-radius:8px;color:#fff;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">✏️ Pero</button>
+    <button class="draw-tool active" data-tool="pen" style="background:#222;border:1px solid #444;border-radius:8px;color:#fff;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">Pero</button>
     <button class="draw-tool" data-tool="eraser" style="background:#222;border:1px solid #333;border-radius:8px;color:#aaa;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">⬜ Guma</button>
     <div style="width:1px;height:20px;background:#333;flex-shrink:0;"></div>
     <!-- colors -->
@@ -818,7 +818,7 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
     <input id="draw-size" type="range" min="1" max="40" value="4" style="width:70px;accent-color:#3b82f6;flex-shrink:0;">
     <div id="draw-size-preview" style="width:12px;height:12px;border-radius:50%;background:#fff;flex-shrink:0;"></div>
     <div style="width:1px;height:20px;background:#333;flex-shrink:0;margin-left:auto;"></div>
-    <button id="draw-clear" style="background:#333;border:none;border-radius:8px;color:#aaa;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">🗑 Vymazať</button>
+    <button id="draw-clear" style="background:#333;border:none;border-radius:8px;color:#aaa;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">Vymazať</button>
     <button id="draw-save" style="background:#3b82f6;border:none;border-radius:8px;color:#fff;padding:.3rem .75rem;font-size:.82rem;cursor:pointer;font-weight:600;flex-shrink:0;">Uložiť</button>
   </div>
   <canvas id="draw-canvas" style="flex:1;touch-action:none;cursor:crosshair;display:block;"></canvas>
@@ -885,8 +885,8 @@ let expandedTabs = new Set(); // taby rozbalené v sidebari (zobrazujú priečin
 let sortMode = localStorage.getItem('n28-sort') || 'manual'; // manual | created_desc | created_asc | updated_desc | title_asc
 
 const LAST_TAB   = '⏱ Posledné';
-const TRASH_TAB  = '🗑 Kôš';
-const AI_TAB     = '🤖 AI';
+const TRASH_TAB  = '🗑 Kôš';   // identifikátor (nie text v UI — zobrazuje sa cez SPECIAL_TAB_LABEL)
+const AI_TAB     = '🤖 AI';   // identifikátor uložený pri poznámkach — nemeniť
 const TRASH_DAYS = 30;
 
 // ─── ICONS (jednotný line štýl ako na hlavnej lište) ─────────────────────────
@@ -988,10 +988,11 @@ const searchInput  = document.getElementById('search-input');
 const tabsModal    = document.getElementById('tabs-modal');
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
+const _EMOJI_RE = /[\u{1F300}-\u{1FAFF}\u{2705}\u{274C}\u{2728}\u{26A1}\u{FE0F}]+\s*/gu;
 function showToast(msg, type='info', duration=3500) {
   const t = document.createElement('div');
   t.className = 'toast toast-'+type;
-  t.textContent = msg;
+  t.textContent = String(msg).replace(_EMOJI_RE, '');
   document.body.appendChild(t);
   requestAnimationFrame(()=>t.classList.add('toast-show'));
   setTimeout(()=>{ t.classList.remove('toast-show'); setTimeout(()=>t.remove(), 350); }, duration);
@@ -1089,7 +1090,7 @@ function htmlToWhatsApp(root) {
     if (node.classList && node.classList.contains('check-row')) {
       if (cur) pushLine();
       const cb = node.querySelector('.check-cb'), label = node.querySelector('.check-label');
-      lines.push((cb && cb.checked ? '✅ ' : '☐ ') + (label ? label.textContent.trim() : ''));
+      lines.push((cb && cb.checked ? '✓ ' : '☐ ') + (label ? label.textContent.trim() : ''));
       return;
     }
     const nf = { bold: fmt.bold||isBoldEl(node), italic: fmt.italic||isItalicEl(node), strike: fmt.strike||isStrikeEl(node) };
@@ -1337,7 +1338,7 @@ function renderTabs() {
       tabFolderList.forEach(f => {
         const frow = document.createElement('button');
         frow.className = 'tab tab-folder-row'+(currentTab===tab&&activeFolder===f?' active':'');
-        frow.innerHTML = `<span class="tab-folder-dot">📂</span>${escHtml(f)}`;
+        frow.innerHTML = `<span class="tab-folder-dot"></span>${escHtml(f)}`;
         frow.onclick = () => { currentTab=tab; activeShareId=null; activeFolder=f; renderTabs(); renderFolderBar(); renderNotes(); };
         frow.ondragover = e => { e.preventDefault(); frow.classList.add('tab-drop-over'); };
         frow.ondragleave = () => frow.classList.remove('tab-drop-over');
@@ -1364,7 +1365,7 @@ function renderTabs() {
     const el = document.createElement('button');
     el.className = 'tab tab-shared'+(currentTab===key?' active':'');
     el.dataset.tab = key;
-    el.textContent = '👥 '+st.name;
+    el.textContent = ''+st.name;
     el.title = (st.members?.length||1)+' členov';
     el.onclick = () => { currentTab=key; activeShareId=st.id; activeFolder=null; renderTabs(); renderFolderBar(); renderNotes(); };
     tabsContainer.appendChild(el);
@@ -1494,7 +1495,7 @@ function renderGlobalSearch(q) {
     .filter(n=>n.title?.toLowerCase().includes(q)||n.content?.toLowerCase().includes(q));
   notesGrid.innerHTML = '';
   notesGrid.style.gridTemplateColumns='';
-  if (!results.length) { notesGrid.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Žiadne výsledky</div><div class="empty-sub">Skús iné kľúčové slovo</div></div>'; return; }
+  if (!results.length) { notesGrid.innerHTML='<div class="empty"><div class="empty-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><div class="empty-title">Žiadne výsledky</div><div class="empty-sub">Skús iné kľúčové slovo</div></div>'; return; }
   results.forEach(note => {
     const card = makeCard(note);
     card.onclick = () => {
@@ -1512,10 +1513,10 @@ function renderGrid(filtered) {
   notesGrid.innerHTML = '';
   if (!filtered.length) {
     const emptyMsgs = {
-      [TRASH_TAB]: ['🗑', 'Kôš je prázdny', ''],
-      [LAST_TAB]:  ['🗂', 'Zatiaľ nič', 'Vytvor prvú poznámku'],
+      [TRASH_TAB]: ['<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>', 'Kôš je prázdny', ''],
+      [LAST_TAB]:  ['<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z"/></svg>', 'Zatiaľ nič', 'Vytvor prvú poznámku'],
     };
-    const [icon, title, sub] = emptyMsgs[currentTab] || ['📝', 'Žiadne poznámky', 'Klikni + pre novú poznámku'];
+    const [icon, title, sub] = emptyMsgs[currentTab] || ['<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>', 'Žiadne poznámky', 'Klikni + pre novú poznámku'];
     notesGrid.innerHTML = `<div class="empty"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div>${sub?`<div class="empty-sub">${sub}</div>`:''}</div>`;
     return;
   }
@@ -1574,17 +1575,17 @@ function makeCard(note) {
   else if (currentTab===LAST_TAB) {
     // Bez záložky → viditeľný "Nezaradené" štítok, aby bolo jasné, že jej treba dať kategóriu
     const badge = note._shareId
-      ? '👥 '+escHtml(sharedTabs.find(t=>t.id===note._shareId)?.name||'')
+      ? ''+escHtml(sharedTabs.find(t=>t.id===note._shareId)?.name||'')
       : (note.tab ? escHtml(note.tab) : '<span style="opacity:.55">Nezaradené</span>');
     metaRight=`<span class="card-tab-badge">${badge}</span>`;
   }
   else metaRight=`<span class="card-order-btns"><button class="order-btn up-btn">↑</button><button class="order-btn down-btn">↓</button></span>`;
-  const folderBadge = (note.folder && currentTab!==TRASH_TAB && currentTab!==LAST_TAB && !activeShareId && !activeFolder) ? `<span class="card-tab-badge" style="opacity:.7">📂 ${escHtml(note.folder)}</span>` : '';
+  const folderBadge = (note.folder && currentTab!==TRASH_TAB && currentTab!==LAST_TAB && !activeShareId && !activeFolder) ? `<span class="card-tab-badge" style="opacity:.7">${escHtml(note.folder)}</span>` : '';
 
   const imagesHtml = note.images?.length ? `<div class="card-images">${note.images.slice(0,3).map(img=>
     img.type==='image'||!img.type
       ? `<img class="card-img" src="${img.url}" onclick="event.stopPropagation();window.open('${img.url}','_blank')">`
-      : `<div class="card-img" style="display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;" onclick="event.stopPropagation();window.open('${img.url}','_blank')">${img.type==='pdf'?'📄':'📎'}<span style="font-size:.55rem;color:var(--text2)">${(img.name||'').slice(0,8)}</span></div>`
+      : `<div class="card-img" style="display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;" onclick="event.stopPropagation();window.open('${img.url}','_blank')">${'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>'}<span style="font-size:.55rem;color:var(--text2)">${(img.name||'').slice(0,8)}</span></div>`
   ).join('')}${note.images.length>3?`<div class="card-img" style="background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--text2)">+${note.images.length-3}</div>`:''}</div>` : '';
 
   card.innerHTML = `
@@ -1669,7 +1670,7 @@ function makeCard(note) {
 function renderTagBar() {
   const bar = document.getElementById('tag-bar');
   // Táto lišta rýchlych tag-filtrov už nie je potrebná — filtrovanie podľa tagu
-  // ostáva dostupné cez ikonu 🏷 (tag-browser modal) v hlavičke.
+  // ostáva dostupné cez ikonu (tag-browser modal) v hlavičke.
   bar.innerHTML = '';
   if (activeSmart || activeTag) {
     // lišta ukazuje len aktívny filter (inteligentný priečinok alebo tag); klik = zrušiť
@@ -1720,13 +1721,13 @@ function renderFolderBar() {
   if (folders.length) {
     const all = document.createElement('button');
     all.className = 'tag-pill' + (!activeFolder?' tag-pill-active':'');
-    all.textContent = '📁 Všetky';
+    all.textContent = 'Všetky';
     all.addEventListener('pointerup', () => { activeFolder=null; renderFolderBar(); renderNotes(); });
     bar.appendChild(all);
     folders.forEach(f => {
       const pill = document.createElement('button');
       pill.className = 'tag-pill' + (activeFolder===f?' tag-pill-active':'');
-      pill.textContent = '📂 '+f;
+      pill.textContent = ''+f;
       pill.oncontextmenu = e => { e.preventDefault(); openFolderMenu(f); };
       let pressTimer, longPressed=false;
       pill.addEventListener('pointerdown', () => {
@@ -1756,9 +1757,9 @@ function renderFolderBar() {
   sortSel.title = 'Zoradiť poznámky';
   sortSel.innerHTML = `
     <option value="manual">↕ Manuálne</option>
-    <option value="created_desc">🕓 Najnovšie prvé</option>
-    <option value="created_asc">🕓 Najstaršie prvé</option>
-    <option value="updated_desc">✏️ Naposledy upravené</option>
+    <option value="created_desc">Najnovšie prvé</option>
+    <option value="created_asc">Najstaršie prvé</option>
+    <option value="updated_desc">Naposledy upravené</option>
     <option value="title_asc">A–Z Názov</option>`;
   sortSel.value = sortMode;
   sortSel.onchange = () => { sortMode = sortSel.value; localStorage.setItem('n28-sort', sortMode); renderNotes(); };
@@ -1932,7 +1933,7 @@ function refreshFolderSelect(tab, selected) {
   const folders = getFoldersForTab(tab);
   if (!tab || !folders.length || activeShareId) { row.style.display='none'; sel.innerHTML=''; return; }
   row.style.display = 'inline-flex';
-  sel.innerHTML = `<option value="">— bez priečinka —</option>`+folders.map(f=>`<option value="${escHtml(f)}" ${selected===f?'selected':''}>📂 ${escHtml(f)}</option>`).join('');
+  sel.innerHTML = `<option value="">— bez priečinka —</option>`+folders.map(f=>`<option value="${escHtml(f)}" ${selected===f?'selected':''}>${escHtml(f)}</option>`).join('');
 }
 
 // ─── BODY SCROLL LOCK (kým je modál otvorený) ─────────────────────────────────
@@ -2223,7 +2224,7 @@ async function insertPastedImage(file) {
     placeholder.replaceWith(img);
     scheduleAutosave();
   } catch (err) {
-    placeholder.textContent = '❌ Obrázok sa nepodarilo vložiť';
+    placeholder.textContent = 'Obrázok sa nepodarilo vložiť';
     showToast('❌ ' + err.message, 'warn', 4000);
   }
 }
@@ -2358,7 +2359,7 @@ document.querySelector('.notes-wrap').addEventListener('touchend', e => {
   wrap.addEventListener('touchend', () => {
     if (!_pulling) return; _pulling=false;
     if (_active) {
-      indicator.textContent='🔄 Obnovujem…';
+      indicator.textContent='Obnovujem…';
       haptic(40);
       setTimeout(() => { subscribeNotes(); indicator.style.transform='translateX(-50%) translateY(-100%)'; showToast('✓ Obnovené','ok',1500); }, 800);
     } else { indicator.style.transform='translateX(-50%) translateY(-100%)'; }
@@ -2406,7 +2407,7 @@ function checkDueNotifications() {
     const key = 'n28-notif-'+note.id+'-'+note.dueDate;
     if (localStorage.getItem(key)) return;
     if (note.dueDate === today) {
-      fire('📅 Due dnes — '+(note.title||'N28'), {
+      fire('Due dnes — '+(note.title||'N28'), {
         body: note.content ? note.content.replace(/<[^>]+>/g,'').slice(0,80) : 'N28 Notes',
         icon: 'https://dvaosem.com/n28-icon-v2.png',
         tag: key,
@@ -3297,7 +3298,7 @@ function renderBacklinks(id) {
     const a = document.createElement('a');          // trieda note-link → klik rieši existujúci globálny handler
     a.className = 'note-link'; a.dataset.id = n.id;
     const t = (n.title || '').trim() || (n.content || '').replace(/<[^>]+>/g, ' ').trim().slice(0, 40) || 'Bez názvu';
-    a.textContent = '📝 ' + t.slice(0, 40);
+    a.textContent = '' + t.slice(0, 40);
     box.appendChild(a);
   });
   if (refs.length > 12) { const m = document.createElement('span'); m.textContent = '+' + (refs.length - 12); box.appendChild(m); }
@@ -4030,7 +4031,7 @@ document.getElementById('modal-export-pdf').onclick = () => {
   const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
   const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escHtml(title||'Poznámka')}</title>
   <style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6;color:#111;}h1{font-size:1.5rem;margin-bottom:1.2rem;}ul,ol{padding-left:1.4rem;}.print-btn{position:fixed;top:1rem;right:1rem;background:#c8f135;color:#0f0f0f;border:none;padding:.6rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;}@media print{.print-btn{display:none;}}</style>
-  </head><body><button class="print-btn" onclick="window.print()">🖨 Tlačiť / PDF</button>${title?`<h1>${escHtml(title)}</h1>`:''}${sanitizeHtml(content)}</body></html>`;
+  </head><body><button class="print-btn" onclick="window.print()">Tlačiť / PDF</button>${title?`<h1>${escHtml(title)}</h1>`:''}${sanitizeHtml(content)}</body></html>`;
   if (isMobile) {
     const blob = new Blob([htmlContent], {type:'text/html'});
     const a = document.createElement('a');
@@ -4188,7 +4189,7 @@ document.getElementById('modal-export-word').onclick = () => {
   // save → upload to Cloudinary as image
   document.getElementById('draw-save').onclick = async () => {
     const saveBtn = document.getElementById('draw-save');
-    saveBtn.textContent = '⏳'; saveBtn.disabled = true;
+    saveBtn.textContent = '…'; saveBtn.disabled = true;
     canvas.toBlob(async blob => {
       try {
         const fd = new FormData();
@@ -4218,7 +4219,7 @@ function renderImagePreviews() {
   preview.innerHTML='';
   pendingImages.forEach((img,i)=>{
     const item=document.createElement('div'); item.className='preview-item';
-    const icon=img.type==='pdf'?'📄':img.type==='file'?'📎':null;
+    const icon=(img.type==='pdf'||img.type==='file')?'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>':null;
     if (icon) item.innerHTML=`<div class="file-preview" onclick="window.open('${img.url}','_blank')"><span class="file-icon">${icon}</span><span class="file-name">${(img.name||'').slice(0,12)}</span></div><button class="del-img">×</button>`;
     else item.innerHTML=`<img src="${img.url}" onclick="window.open('${img.url}','_blank')" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;"><button class="del-img">×</button>`;
     item.querySelector('.del-img').onclick=()=>{pendingImages.splice(i,1);renderImagePreviews();};
@@ -4231,14 +4232,14 @@ document.getElementById('img-file-input').onchange = async e => {
   const MAX = 25*1024*1024; // 25 MB strop (Cloudinary free)
   for (const file of files) {
     if (file.size > MAX) { showToast('❌ '+file.name+' je príliš veľký (max 25 MB)','warn',4000); continue; }
-    const placeholder=document.createElement('div'); placeholder.className='upload-progress'; placeholder.textContent='⏳';
+    const placeholder=document.createElement('div'); placeholder.className='upload-progress'; placeholder.textContent='…';
     document.getElementById('images-preview').appendChild(placeholder);
     let success = false;
     for (let attempt=1; attempt<=3; attempt++) {
       try {
         const isImage=file.type.startsWith('image/'), isPdf=file.type==='application/pdf';
         const fd=new FormData(); fd.append('file',file); fd.append('upload_preset',CLOUDINARY_PRESET); fd.append('folder','notes28/'+currentUser.uid);
-        placeholder.textContent = attempt>1 ? `⏳ ${attempt}/3` : '⏳';
+        placeholder.textContent = attempt>1 ? `${attempt}/3` : '…';
         const res=await fetch('https://api.cloudinary.com/v1_1/'+CLOUDINARY_CLOUD+'/'+(isImage?'image':'raw')+'/upload',{method:'POST',body:fd});
         const data=await res.json();
         if (data.secure_url) {
@@ -4347,7 +4348,7 @@ function openNoteLinkPicker() {
   back.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1200;display:flex;align-items:center;justify-content:center;padding:1rem;';
   const box = document.createElement('div');
   box.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:420px;max-height:70vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow);';
-  box.innerHTML = `<div style="padding:.7rem .9rem;border-bottom:1px solid var(--border);"><input id="_nlSearch" type="search" placeholder="🔍 Hľadať poznámku…" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;color:var(--text);font-family:var(--font-body);outline:none;"></div><div id="_nlList" style="overflow-y:auto;padding:.4rem;"></div>`;
+  box.innerHTML = `<div style="padding:.7rem .9rem;border-bottom:1px solid var(--border);"><input id="_nlSearch" type="search" placeholder="Hľadať poznámku…" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;color:var(--text);font-family:var(--font-body);outline:none;"></div><div id="_nlList" style="overflow-y:auto;padding:.4rem;"></div>`;
   back.appendChild(box); document.body.appendChild(back);
   back.onclick = e => { if (e.target===back) back.remove(); };
   const listEl = box.querySelector('#_nlList');
@@ -4378,7 +4379,7 @@ function insertNoteLink(id, title) {
   editor.focus();
   const a = document.createElement('a');
   a.className = 'note-link'; a.dataset.id = id; a.contentEditable = 'false';
-  a.textContent = '📝 ' + (title||'poznámka').slice(0,40);
+  a.textContent = '' + (title||'poznámka').slice(0,40);
   const sel = window.getSelection();
   if (_noteLinkRange) { sel.removeAllRanges(); sel.addRange(_noteLinkRange); }
   const range = (sel.rangeCount) ? sel.getRangeAt(0) : null;
@@ -4630,7 +4631,7 @@ if (_tagBrowserBtn) _tagBrowserBtn.onclick = () => {
   back.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1200;display:flex;align-items:flex-start;justify-content:center;padding:3rem 1rem 1rem;';
   const box = document.createElement('div');
   box.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:440px;max-height:75vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow);';
-  box.innerHTML = `<div style="padding:.8rem 1rem;border-bottom:1px solid var(--border);font-family:var(--font-head);font-weight:700;display:flex;justify-content:space-between;align-items:center;">🏷 Všetky tagy <span style="font-size:.78rem;color:var(--text2);font-weight:400;">${tags.length}</span></div><div id="_tgList" style="overflow-y:auto;padding:.7rem;display:flex;flex-wrap:wrap;gap:.4rem;align-content:flex-start;"></div>`;
+  box.innerHTML = `<div style="padding:.8rem 1rem;border-bottom:1px solid var(--border);font-family:var(--font-head);font-weight:700;display:flex;justify-content:space-between;align-items:center;">Všetky tagy <span style="font-size:.78rem;color:var(--text2);font-weight:400;">${tags.length}</span></div><div id="_tgList" style="overflow-y:auto;padding:.7rem;display:flex;flex-wrap:wrap;gap:.4rem;align-content:flex-start;"></div>`;
   back.appendChild(box); document.body.appendChild(back);
   back.onclick = e => { if (e.target===back) back.remove(); };
   const listEl = box.querySelector('#_tgList');
@@ -4797,7 +4798,7 @@ function renderSharedManager() {
   sharedTabs.forEach(st=>{
     const isOwner=st.ownerId===currentUser.uid;
     const row=document.createElement('div'); row.className='tab-manage-row';
-    row.innerHTML=`<span style="flex:1;font-size:.88rem;">👥 ${escHtml(st.name)}</span><span style="font-size:.72rem;color:var(--text2);margin-right:.4rem">${st.members?.length||1} členov</span>${isOwner?`<button class="order-btn" data-copy="${st.id}">🔗</button>`:''}<button class="order-btn" data-leave="${st.id}" style="color:#ef4444">${isOwner?'✕':'↩'}</button>`;
+    row.innerHTML=`<span style="flex:1;font-size:.88rem;">${escHtml(st.name)}</span><span style="font-size:.72rem;color:var(--text2);margin-right:.4rem">${st.members?.length||1} členov</span>${isOwner?`<button class="order-btn" data-copy="${st.id}"></button>`:''}<button class="order-btn" data-leave="${st.id}" style="color:#ef4444">${isOwner?'✕':'↩'}</button>`;
     const copyBtn=row.querySelector('[data-copy]');
     if (copyBtn) copyBtn.onclick=()=>shareInviteLink(window.location.origin+window.location.pathname+'?join='+st.id, st.name);
     row.querySelector('[data-leave]').onclick=async()=>{ await leaveSharedTab(st.id); renderSharedManager(); };
@@ -4884,7 +4885,7 @@ function renderSettingsSharedList() {
   sharedTabs.forEach(st=>{
     const isOwner=st.ownerId===currentUser.uid;
     const row=document.createElement('div'); row.className='tab-manage-row'; row.style.marginBottom='.4rem';
-    row.innerHTML=`<span style="flex:1;font-size:.88rem;">👥 ${escHtml(st.name)}</span><span style="font-size:.72rem;color:var(--text2);margin-right:.3rem">${st.members?.length||1} členov</span>${isOwner?`<button class="order-btn" data-copy="${st.id}">🔗</button>`:''}<button class="order-btn" data-leave="${st.id}" style="color:#ef4444">${isOwner?'✕':'↩'}</button>`;
+    row.innerHTML=`<span style="flex:1;font-size:.88rem;">${escHtml(st.name)}</span><span style="font-size:.72rem;color:var(--text2);margin-right:.3rem">${st.members?.length||1} členov</span>${isOwner?`<button class="order-btn" data-copy="${st.id}"></button>`:''}<button class="order-btn" data-leave="${st.id}" style="color:#ef4444">${isOwner?'✕':'↩'}</button>`;
     const copyBtn=row.querySelector('[data-copy]');
     if (copyBtn) copyBtn.onclick=()=>shareInviteLink(window.location.origin+window.location.pathname+'?join='+st.id, st.name);
     row.querySelector('[data-leave]').onclick=async()=>{ await leaveSharedTab(st.id); renderSettingsSharedList(); };
@@ -5018,7 +5019,7 @@ function exportTabPdf() {
     ul,ol{padding-left:1.4rem;}
     .print-btn{position:fixed;top:1rem;right:1rem;background:#c8f135;color:#0f0f0f;border:none;padding:.6rem 1.2rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;}
   </style></head><body>
-  <button class="print-btn no-print" onclick="window.print()">🖨 Tlačiť / Uložiť PDF</button>
+  <button class="print-btn no-print" onclick="window.print()">Tlačiť / Uložiť PDF</button>
   <h1>${escHtml(currentTab)}</h1>${rows}</body></html>`);
   win.document.close();
 }
@@ -5085,7 +5086,7 @@ const resetBtn = document.getElementById('login-reset-btn');
 if (resetBtn) resetBtn.onclick = async () => {
   const email=document.getElementById('login-email').value.trim();
   if (!email) return showLoginError('Najprv zadaj email.');
-  try { await sendPasswordResetEmail(auth,email); showLoginError('✅ Link na reset hesla bol odoslaný na '+email); document.getElementById('login-error').style.color='#22c55e'; }
+  try { await sendPasswordResetEmail(auth,email); showLoginError('Link na reset hesla bol odoslaný na '+email); document.getElementById('login-error').style.color='#22c55e'; }
   catch(e) { showLoginError(e.code==='auth/invalid-email'?'Neplatný email.':e.message); }
 };
 function showLoginError(msg) { const el=document.getElementById('login-error'); el.textContent=msg; el.style.color='#ef4444'; el.style.display='block'; }
@@ -5233,11 +5234,11 @@ async function _saveSharedUrl(url) {
   try {
     const ts = new Date().toLocaleString('sk-SK',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     const linkHtml = `<div style="margin:.25rem 0;"><a href="${url}" style="color:var(--accent-default);text-decoration:underline;word-break:break-all;">${url}</a><span style="font-size:.72rem;color:var(--text2);margin-left:.5rem;">${ts}</span></div>`;
-    const linksNote = notes.find(n=>n.title==='🔗 Linky'&&!n._trash);
+    const linksNote = notes.find(n=>(n.title==='Linky'||n.title==='🔗 Linky')&&!n._trash);
     if (linksNote) {
       await updateDoc(doc(db,'users',currentUser.uid,'notes',linksNote.id),{content:(linksNote.content||'')+linkHtml,updatedAt:serverTimestamp()});
     } else {
-      await addDoc(notesRef(),{title:'🔗 Linky',content:linkHtml,tab:userTabs[0]||'',createdAt:serverTimestamp(),updatedAt:serverTimestamp(),authorEmail:currentUser.email,color:'#3b82f6',images:[],tasks:[],pinned:true});
+      await addDoc(notesRef(),{title:'Linky',content:linkHtml,tab:userTabs[0]||'',createdAt:serverTimestamp(),updatedAt:serverTimestamp(),authorEmail:currentUser.email,color:'#3b82f6',images:[],tasks:[],pinned:true});
     }
     showToast('🔗 Link uložený');
   } catch(e) { showToast('❌ Link sa neuložil','warn'); }
@@ -5253,7 +5254,7 @@ function _plainForWidget(html, tail) {
   return tail ? out.slice(-600) : out.slice(0, 600);
 }
 
-// poznámky napísané vo widgete (appka ich drží, kým sa neotvorí) -> pripíš do samostatnej poznámky „📱 Widget“
+// poznámky napísané vo widgete (appka ich drží, kým sa neotvorí) -> pripíš do samostatnej poznámky „Widget“
 let _inboxBusy = false;
 async function flushAndroidInbox() {
   if (!window.AndroidBridge || typeof AndroidBridge.getInbox !== 'function') return;
@@ -5267,11 +5268,12 @@ async function flushAndroidInbox() {
     if (!items.length) return;
     const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
     const html = items.map(t => '<div>' + esc(t) + '</div>').join('');
-    const qn = notes.find(n => n.id === WIDGETNOTE_ID && !n._trash);
+    const wn = notes.find(n => n.id === WIDGETNOTE_ID);
     const ref = doc(db,'users',currentUser.uid,'notes',WIDGETNOTE_ID);
-    if (qn) await updateDoc(ref, { content: (qn.content || '') + html, updatedAt: serverTimestamp() });
-    else await setDoc(ref, { title:'📱 Widget', content: html, tab: userTabs[0]||'', pinned:true, color:'#84cc16', images:[], tasks:[],
-      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email }, { merge:true });
+    if (wn && !wn._trash) await updateDoc(ref, { content: (wn.content || '') + html, updatedAt: serverTimestamp() });
+    else await setDoc(ref, { title:'Widget', content: html, tab: userTabs[0]||'', pinned:true, color:'#84cc16', images:[], tasks:[],
+      _trash:false, _trashedAt:null,
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email });
     AndroidBridge.clearInbox(items.length);
     showToast('📱 Widget poznámka doplnená','ok');
   } catch (e) {

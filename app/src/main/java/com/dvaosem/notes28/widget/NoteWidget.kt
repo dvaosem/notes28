@@ -64,7 +64,7 @@ class NoteWidget : AppWidgetProvider() {
                 val firstLine = note.content.lineSequence().firstOrNull { it.isNotBlank() }?.trim().orEmpty()
                 title = when {
                     note.title.isNotBlank() -> note.title.trim()
-                    note.id == "quicknote" -> "⚡ " + context.getString(R.string.w_untitled)
+                    note.id == "quicknote" -> "Rýchla poznámka"
                     firstLine.isNotEmpty() -> firstLine.take(40)
                     else -> context.getString(R.string.w_untitled)
                 }

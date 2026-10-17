@@ -17,10 +17,10 @@
     <string name="q_hint">Poznámka do widgetu…</string>
     <string name="q_save">Uložiť</string>
     <string name="q_cancel">Zrušiť</string>
-    <string name="q_saved">⚡ Uložené do poznámky Widget</string>
-    <string name="qw_title">📱 Widget poznámka</string>
+    <string name="q_saved">Uložené do poznámky Widget</string>
+    <string name="qw_title">Widget poznámka</string>
     <string name="qw_write">✎  Napíš poznámku…</string>
     <string name="qw_empty">Zatiaľ prázdne</string>
     <string name="widget_quick_name">N28 widget poznámka</string>
-    <string name="widget_quick_desc">Píš do poznámky „📱 Widget“ bez otvárania appky</string>
+    <string name="widget_quick_desc">Píš do poznámky „Widget“ bez otvárania appky</string>
 </resources>
