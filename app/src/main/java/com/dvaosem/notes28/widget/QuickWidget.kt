@@ -7,6 +7,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
+import android.view.View
 import android.widget.RemoteViews
 import com.dvaosem.notes28.R
 import com.dvaosem.notes28.ui.MainActivity
@@ -16,6 +18,10 @@ class QuickWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (id in appWidgetIds) updateWidget(context, appWidgetManager, id)
+    }
+
+    override fun onAppWidgetOptionsChanged(context: Context, mgr: AppWidgetManager, id: Int, newOptions: Bundle?) {
+        updateWidget(context, mgr, id)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
@@ -57,8 +63,12 @@ class QuickWidget : AppWidgetProvider() {
             }
             views.setOnClickPendingIntent(R.id.qw_cfg, PendingIntent.getActivity(context, id * 3 + 2000, cfg, flags()))
 
-            val lines = WidgetPrefs.quickText(context).lines().filter { it.isNotBlank() }.takeLast(6)
+            // height-aware: the taller the widget (user resizes it), the more lines of the note it shows
+            val hDp = mgr.getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
+            val room = ((hDp - 92) / 17).coerceIn(0, 40)
+            val lines = WidgetPrefs.quickText(context).lines().filter { it.isNotBlank() }.takeLast(40)
             views.setTextViewText(R.id.qw_text, if (lines.isEmpty()) context.getString(R.string.qw_empty) else lines.joinToString("\n"))
+            views.setViewVisibility(R.id.qw_text, if (room < 1) View.GONE else View.VISIBLE)
 
             val write = Intent(context, QuickNoteActivity::class.java).apply {
                 action = "com.dvaosem.notes28.QW_WRITE_$id"
