@@ -1,0 +1,16 @@
+*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+# never commit secrets
+secrets/
+*.jks
+*.keystore.bak
+n28-list.php
+*-firebase-adminsdk-*.json
+*-sa*.php

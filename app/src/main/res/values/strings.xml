@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">N28</string>
+    <string name="widget_name">N28 poznámka</string>
+    <string name="widget_desc">Vybraná poznámka na ploche</string>
+    <string name="cfg_title">Vyber poznámku</string>
+    <string name="cfg_empty">Zatiaľ nemám žiadne poznámky. Otvor appku N28, prihlás sa a počkaj kým sa načítajú, potom widget nastav znova.</string>
+    <string name="cfg_style">ŠTÝL</string>
+    <string name="cfg_style_dark">Tmavý</string>
+    <string name="cfg_style_light">Svetlý</string>
+    <string name="cfg_style_clear">Priehľadný</string>
+    <string name="cfg_opacity">NEPRIEHĽADNOSŤ POZADIA</string>
+    <string name="cfg_save">Uložiť</string>
+    <string name="cfg_pick">Najprv vyber poznámku</string>
+    <string name="w_hint">Ťukni na ⚙ a vyber poznámku</string>
+    <string name="w_untitled">Poznámka</string>
+</resources>

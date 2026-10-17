@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- OAuth "Web client ID" of the Firebase project (Firebase console -> Authentication -> Sign-in method -> Google).
+         Not a secret. Empty = native Google sign-in is disabled. -->
+    <string name="google_web_client_id" translatable="false"></string>
+</resources>
