@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v68">
+<meta name="n28-build" content="n28-v69">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -2139,9 +2139,10 @@ function liveLink() {
     a.style.cssText='color:var(--accent-default);text-decoration:underline;word-break:break-all;';
     const before = document.createTextNode(text.slice(0, md.index));
     const after  = document.createTextNode(text.slice(md.index + md[0].length));
-    node.parentNode.replaceChild(after, node);
-    node.parentNode.insertBefore(a, after);
-    node.parentNode.insertBefore(before, a);
+    const par = node.parentNode;
+    par.replaceChild(after, node);
+    par.insertBefore(a, after);
+    par.insertBefore(before, a);
     const r = document.createRange(); r.setStartAfter(a); r.collapse(true);
     sel.removeAllRanges(); sel.addRange(r);
     scheduleAutosave(); return;
@@ -2156,11 +2157,12 @@ function liveLink() {
     a.href = href; a.textContent = url; a.target='_blank'; a.rel='noopener';
     a.style.cssText='color:var(--accent-default);text-decoration:underline;word-break:break-all;';
     const before = document.createTextNode(text.slice(0, urlM.index));
-    const after  = document.createTextNode(' ');
-    node.parentNode.replaceChild(after, node);
-    node.parentNode.insertBefore(a, after);
-    node.parentNode.insertBefore(before, a);
-    const r = document.createRange(); r.setStartAfter(after); r.collapse(true);
+    const after  = document.createTextNode('\u00a0');
+    const par = node.parentNode;
+    par.replaceChild(after, node);
+    par.insertBefore(a, after);
+    par.insertBefore(before, a);
+    const r = document.createRange(); r.setStart(after, after.length); r.collapse(true);
     sel.removeAllRanges(); sel.addRange(r);
     scheduleAutosave();
   }
