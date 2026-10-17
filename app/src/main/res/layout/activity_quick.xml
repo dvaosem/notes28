@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/q_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -48,23 +49,33 @@
 
             <Button
                 android:id="@+id/q_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:background="@null"
+                android:layout_height="36dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
                 android:text="@string/q_cancel"
-                android:textColor="#a0a0a0"/>
+                android:textColor="#a0a0a0"
+                android:textSize="12sp"/>
 
             <Button
                 android:id="@+id/q_save"
                 android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/cfg_btn_bg"
-                android:paddingStart="22dp"
-                android:paddingEnd="22dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="4dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
                 android:text="@string/q_save"
                 android:textColor="#0f0f0f"
-                android:textStyle="bold"/>
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:cornerRadius="10dp"/>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

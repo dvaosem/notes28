@@ -2169,6 +2169,28 @@ function liveLink() {
 }
 editor.addEventListener('input', liveLink);
 
+// Kurzor na konci odkazu: ďalší text (aj Enter) sa nesmie písať dovnútra odkazu → presuň kurzor hneď za <a>.
+function escapeLinkEnd() {
+  if (_isComposing) return;
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount || !sel.isCollapsed) return;
+  const r = sel.getRangeAt(0);
+  let n = r.startContainer;
+  if (!editor.contains(n)) return;
+  const a = (n.nodeType === 3 ? n.parentElement : n).closest && (n.nodeType === 3 ? n.parentElement : n).closest('a');
+  if (!a || !editor.contains(a)) return;
+  const atEnd = n === a ? r.startOffset >= a.childNodes.length
+              : (n.nodeType === 3 && r.startOffset >= n.length && n === a.lastChild);
+  if (!atEnd) return;
+  let next = a.nextSibling;
+  if (!next || next.nodeType !== 3) { next = document.createTextNode('\u200b'); a.parentNode.insertBefore(next, a.nextSibling); }
+  const nr = document.createRange();
+  nr.setStart(next, 0); nr.collapse(true);
+  sel.removeAllRanges(); sel.addRange(nr);
+}
+document.addEventListener('selectionchange', () => { if (document.activeElement === editor) escapeLinkEnd(); });
+editor.addEventListener('beforeinput', escapeLinkEnd);
+
 // Sanitizácia HTML pri vkladaní (Word/Teams/Docs) — ponechá len zoznamy a základné formátovanie.
 function sanitizePasteHtml(html) {
   const tpl = document.createElement('template');
@@ -5152,7 +5174,7 @@ function _hrefFor(tok) {
 }
 function _hasLinkable(text) { return new RegExp(_LINK_SRC, 'i').test(text); }
 
-function linkifyForSave(html) { try { return linkify(html); } catch (e) { return html; } }
+function linkifyForSave(html) { try { return linkify((html||'').replace(/\u200b/g, '')); } catch (e) { return html; } }
 function linkify(html) {
   if (!html) return html;
   const div=document.createElement('div'); div.innerHTML=html;
