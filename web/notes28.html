@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v78">
+<meta name="n28-build" content="n28-v81">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -389,8 +389,8 @@ body.logged-out #fab{display:none!important;}
 #editor img.n28-img-selected{outline:2px solid var(--accent-default);outline-offset:2px;}
 .n28-resize-handle{position:fixed;width:18px;height:18px;background:var(--accent-default);border:2px solid var(--surface);border-radius:50%;cursor:nwse-resize;touch-action:none;z-index:3000;box-shadow:0 1px 4px rgba(0,0,0,.35);}
 .n28-expand-handle{position:fixed;width:24px;height:24px;background:var(--surface);border:1px solid var(--border);border-radius:50%;cursor:pointer;z-index:3000;display:flex;align-items:center;justify-content:center;font-size:.8rem;box-shadow:0 1px 4px rgba(0,0,0,.35);}
-.check-row{display:flex;align-items:center;gap:.45rem;margin:.08rem 0;min-height:1.6rem;}
-.check-cb{width:15px;height:15px;accent-color:var(--accent-default);cursor:pointer;flex-shrink:0;}
+.check-row{display:flex;align-items:center;gap:.45rem;margin:.08rem 0;min-height:2.2rem;}
+.check-cb{width:22px;height:22px;margin:0 .15rem 0 .1rem;accent-color:var(--accent-default);cursor:pointer;flex-shrink:0;}
 .check-label{flex:1;outline:none;min-width:0;word-break:break-word;font-family:var(--font-body);font-size:.92rem;color:var(--text);line-height:1.5;display:block;}
 .modal-row{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;}
 .modal-row label{font-size:.8rem;color:var(--text2);flex-shrink:0;}
@@ -2886,6 +2886,20 @@ document.getElementById('btn-checklist').onmousedown = e => {
   setTimeout(() => row.querySelector('.check-label').focus(), 0);
   scheduleAutosave();
 };
+
+// ťuknutie tesne vedľa políčka (pruh od ľavého okraja riadku po 12 px za políčkom) prepne checklist —
+// samotné malé políčko sa na telefóne ťažko trafí
+editor.addEventListener('click', e => {
+  const row = e.target.closest && e.target.closest('.check-row');
+  if (!row || !editor.contains(row)) return;
+  if (e.target.classList.contains('check-cb')) return;           // samotné políčko prepne prehliadač
+  const cb = row.querySelector('.check-cb'); if (!cb) return;
+  const rr = row.getBoundingClientRect(), cr = cb.getBoundingClientRect();
+  if (e.clientX < rr.left - 6 || e.clientX > cr.right + 12) return;
+  e.preventDefault();
+  cb.checked = !cb.checked;
+  cb.dispatchEvent(new Event('change'));
+});
 
 function restoreChecklists() {
   editor.querySelectorAll('.check-row').forEach(row => {
