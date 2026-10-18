@@ -68,7 +68,20 @@ class QuickWidget : AppWidgetProvider() {
             val room = ((hDp - 92) / 17).coerceIn(0, 40)
             val lines = WidgetPrefs.quickText(context).lines().filter { it.isNotBlank() }.takeLast(40)
             views.setTextViewText(R.id.qw_text, if (lines.isEmpty()) context.getString(R.string.qw_empty) else lines.joinToString("\n"))
-            views.setViewVisibility(R.id.qw_text, if (room < 1) View.GONE else View.VISIBLE)
+            val hasList = WidgetPrefs.quickHasChecks(context)
+            views.setViewVisibility(R.id.qw_text, if (room < 1 || hasList) View.GONE else View.VISIBLE)
+            views.setViewVisibility(R.id.qw_list, if (room < 1 || !hasList) View.GONE else View.VISIBLE)
+            if (hasList) {
+                val svc = Intent(context, CheckListService::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+                    putExtra("quick", true)
+                    data = android.net.Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+                }
+                views.setRemoteAdapter(R.id.qw_list, svc)
+                val tpl = Intent(context, NoteWidget::class.java).apply { action = NoteWidget.ACTION_TOGGLE }
+                views.setPendingIntentTemplate(R.id.qw_list, PendingIntent.getBroadcast(context, id * 3 + 3000, tpl,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE))
+            }
 
             val write = Intent(context, QuickNoteActivity::class.java).apply {
                 action = "com.dvaosem.notes28.QW_WRITE_$id"
@@ -84,6 +97,7 @@ class QuickWidget : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.qw_root, PendingIntent.getActivity(context, id * 3 + 1, open, flags()))
 
             mgr.updateAppWidget(id, views)
+            if (hasList) mgr.notifyAppWidgetViewDataChanged(id, R.id.qw_list)
         }
     }
 }

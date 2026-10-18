@@ -115,6 +115,12 @@ object WidgetPrefs {
         return (listOf(base) + inboxList(c)).filter { it.isNotBlank() }.joinToString("\n")
     }
 
+    /** Rows of the writing widget: checklist rows of the Widget note + lines typed but not yet delivered. */
+    fun quickRows(c: Context): List<CheckItem> =
+        find(c, QUICK_ID)?.items.orEmpty() + inboxList(c).flatMap { it.lines() }.filter { it.isNotBlank() }.map { CheckItem(it.trim(), false) }
+
+    fun quickHasChecks(c: Context): Boolean = find(c, QUICK_ID)?.items?.any { it.check } == true
+
     fun noteId(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_note", "") ?: ""
     fun style(c: Context, widgetId: Int): String = sp(c).getString("w${widgetId}_style", STYLE_GRAY) ?: STYLE_GRAY
     fun opacity(c: Context, widgetId: Int): Int = sp(c).getInt("w${widgetId}_opacity", 90)

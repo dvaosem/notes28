@@ -71,6 +71,17 @@
                 android:textColor="#f2f2f2"
                 android:textSize="14sp"/>
         </FrameLayout>
+        <ListView
+            android:id="@+id/qw_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="6dp"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/qw_text"
             android:layout_width="match_parent"

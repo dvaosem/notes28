@@ -11,15 +11,20 @@ import com.dvaosem.notes28.R
 
 class CheckListService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
-        Factory(applicationContext, intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0))
+        Factory(applicationContext, intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0), intent.getBooleanExtra("quick", false))
 
-    private class Factory(val ctx: Context, val widgetId: Int) : RemoteViewsFactory {
+    private class Factory(val ctx: Context, val widgetId: Int, val quick: Boolean) : RemoteViewsFactory {
         var noteId = ""
         var rows: List<WidgetPrefs.CheckItem> = emptyList()
 
         private fun load() {
-            noteId = WidgetPrefs.noteId(ctx, widgetId)
-            rows = if (noteId.isEmpty()) emptyList() else WidgetPrefs.find(ctx, noteId)?.items.orEmpty()
+            if (quick) {
+                noteId = WidgetPrefs.QUICK_ID
+                rows = WidgetPrefs.quickRows(ctx)
+            } else {
+                noteId = WidgetPrefs.noteId(ctx, widgetId)
+                rows = if (noteId.isEmpty()) emptyList() else WidgetPrefs.find(ctx, noteId)?.items.orEmpty()
+            }
         }
 
         override fun onCreate() = load()
@@ -28,7 +33,7 @@ class CheckListService : RemoteViewsService() {
         override fun getCount() = rows.size
         override fun getViewAt(pos: Int): RemoteViews {
             val it = rows.getOrNull(pos) ?: return RemoteViews(ctx.packageName, R.layout.widget_check_row)
-            val style = WidgetPrefs.style(ctx, widgetId)
+            val style = if (quick) WidgetPrefs.qStyle(ctx, widgetId) else WidgetPrefs.style(ctx, widgetId)
             val fg: Int
             val sub: Int
             when (style) {
