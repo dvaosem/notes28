@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
  * CI publishes every build as release "build-<run number>" with notes28.apk attached,
  * and the app's versionCode is the same run number.
  */
+// Updates install through PackageInstaller (silent on Android 12+ when allowed).
 object UpdateManager {
 
     private const val REPO = "dvaosem/notes28"
