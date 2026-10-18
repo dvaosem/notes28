@@ -57,6 +57,17 @@
                 android:textColor="#c8f135"/>
         </LinearLayout>
 
+        <ListView
+            android:id="@+id/w_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="4dp"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/w_text"
             android:layout_width="match_parent"

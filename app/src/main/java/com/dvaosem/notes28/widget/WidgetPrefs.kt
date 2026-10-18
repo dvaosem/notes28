@@ -10,7 +10,8 @@ object WidgetPrefs {
     const val STYLE_LIGHT = "light"
     const val STYLE_CLEAR = "clear"
 
-    data class NoteItem(val id: String, val title: String, val content: String)
+    data class CheckItem(val text: String, val checked: Boolean, val check: Boolean = false, val n: Int = 0)
+    data class NoteItem(val id: String, val title: String, val content: String, val items: List<CheckItem> = emptyList())
 
     private fun sp(c: Context) = c.getSharedPreferences("n28_widget", Context.MODE_PRIVATE)
 
@@ -23,11 +24,25 @@ object WidgetPrefs {
 
     fun notes(c: Context): List<NoteItem> = try {
         val arr = JSONArray(sp(c).getString("notes", "[]"))
+        val pend = togglesList(c)
         val out = ArrayList<NoteItem>()
         for (i in 0 until arr.length()) {
             val o = arr.getJSONObject(i)
             val id = o.optString("id")
-            if (id.isNotEmpty()) out.add(NoteItem(id, o.optString("title"), o.optString("content")))
+            if (id.isEmpty()) continue
+            val its = ArrayList<CheckItem>()
+            val ia = o.optJSONArray("items")
+            if (ia != null) for (k in 0 until ia.length()) {
+                val io = ia.getJSONObject(k)
+                val t = io.optString("t")
+                val isCheck = io.optInt("k") == 1
+                val ord = io.optInt("n")
+                var ch = io.optBoolean("c")
+                // zmeny z widgetu, ktoré appka ešte nezapísala, majú prednosť pred starým stavom z webu
+                if (isCheck) for (p in pend) if (p.id == id && p.index == ord && p.text == t) ch = p.checked
+                its.add(CheckItem(t, ch, isCheck, ord))
+            }
+            out.add(NoteItem(id, o.optString("title"), o.optString("content"), its))
         }
         out
     } catch (e: Exception) {
@@ -35,6 +50,41 @@ object WidgetPrefs {
     }
 
     fun find(c: Context, id: String): NoteItem? = notes(c).firstOrNull { it.id == id }
+
+    // ---- Checklist toggles tapped in the widget, delivered to Firestore by the web app on next open ----
+    data class Toggle(val id: String, val index: Int, val text: String, val checked: Boolean)
+
+    @Synchronized
+    fun togglesList(c: Context): List<Toggle> = try {
+        val arr = JSONArray(sp(c).getString("toggles", "[]"))
+        (0 until arr.length()).map {
+            val o = arr.getJSONObject(it)
+            Toggle(o.optString("id"), o.optInt("i"), o.optString("t"), o.optBoolean("c"))
+        }
+    } catch (e: Exception) {
+        emptyList()
+    }
+
+    @Synchronized
+    fun togglesJson(c: Context): String = sp(c).getString("toggles", "[]") ?: "[]"
+
+    /** Flips list row [pos] of [noteId]; returns false when the item is gone. */
+    @Synchronized
+    fun toggleItem(c: Context, noteId: String, pos: Int): Boolean {
+        val item = find(c, noteId)?.items?.getOrNull(pos)?.takeIf { it.check } ?: return false
+        val arr = JSONArray(sp(c).getString("toggles", "[]"))
+        arr.put(org.json.JSONObject().put("id", noteId).put("i", item.n).put("t", item.text).put("c", !item.checked))
+        sp(c).edit().putString("toggles", arr.toString()).apply()
+        return true
+    }
+
+    @Synchronized
+    fun clearToggles(c: Context, n: Int) {
+        val arr = JSONArray(sp(c).getString("toggles", "[]"))
+        val out = JSONArray()
+        for (i in n until arr.length()) out.put(arr.get(i))
+        sp(c).edit().putString("toggles", out.toString()).apply()
+    }
 
     // ---- Quick-note inbox: text typed in the widget dialog, delivered to Firestore by the web app on next open ----
     const val QUICK_ID = "widgetnote"

@@ -157,6 +157,16 @@ class MainActivity : AppCompatActivity() {
             if (WidgetPrefs.saveNotesJson(this@MainActivity, json)) NoteWidget.refreshAll(this@MainActivity)
         }
 
+        /** Checklist ticks made in the home-screen widget, waiting to be written to the note. */
+        @JavascriptInterface
+        fun getToggles(): String = WidgetPrefs.togglesJson(this@MainActivity)
+
+        @JavascriptInterface
+        fun clearToggles(n: Int) {
+            WidgetPrefs.clearToggles(this@MainActivity, n)
+            NoteWidget.refreshAll(this@MainActivity)
+        }
+
         /** Native Google sign-in; answers via window.n28OnNativeLogin(idToken) / n28OnNativeLoginError(msg). */
         @JavascriptInterface
         fun googleSignIn() {

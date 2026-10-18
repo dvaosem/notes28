@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v81">
+<meta name="n28-build" content="n28-v82">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -1953,6 +1953,7 @@ function subscribeNotes() {
           id: n.id,
           title: n.title||'',
           content: _plainForWidget(n.content, n.id===QUICKNOTE_ID||n.id===WIDGETNOTE_ID),
+          items: _rowsForWidget(n.content),
           tab: n.tab||''
         }));
         AndroidBridge.saveNotes(JSON.stringify(compact));
@@ -5374,12 +5375,67 @@ function _plainForWidget(html, tail) {
   return tail ? out.slice(-600) : out.slice(0, 600);
 }
 
+// riadky poznámky pre widget: odrážky s checkboxom ({t,c,k:1,n}) + obyčajný text ({t}); prázdne pole ak poznámka nemá checklist
+function _rowsForWidget(html) {
+  if (!/check-row/.test(html || '')) return [];
+  const box = document.createElement('div'); box.innerHTML = html;
+  const rows = []; let n = 0;
+  const txt = el => (el.textContent || '').replace(/ /g, ' ').trim();
+  const walk = el => {
+    for (const c of el.childNodes) {
+      if (c.nodeType === 3) { const t = c.textContent.replace(/ /g, ' ').trim(); if (t) rows.push({ t: t.slice(0, 200) }); }
+      else if (c.nodeType === 1) {
+        if (c.classList.contains('check-row')) {
+          const cb = c.querySelector('.check-cb'), lb = c.querySelector('.check-label');
+          rows.push({ t: (lb ? txt(lb) : txt(c)).slice(0, 200), c: !!(cb && (cb.hasAttribute('checked') || cb.checked)), k: 1, n: n++ });
+        } else if (c.querySelector && c.querySelector('.check-row')) walk(c);
+        else if (c.tagName === 'BR') {}
+        else { const t = txt(c); if (t) rows.push({ t: t.slice(0, 200) }); }
+      }
+    }
+  };
+  walk(box);
+  return rows.slice(0, 60);
+}
+
+// odškrtnutia z widgetu -> zapíš do poznámky
+let _toggleBusy = false;
+async function applyAndroidToggles() {
+  if (!window.AndroidBridge || typeof AndroidBridge.getToggles !== 'function') return;
+  if (!currentUser || !_notesReady || _toggleBusy) return;
+  _toggleBusy = true;
+  try {
+    let list = []; try { list = JSON.parse(AndroidBridge.getToggles() || '[]'); } catch (e) {}
+    let done = 0;
+    for (const t of list) {
+      const note = notes.find(n => n.id === t.id);
+      if (note && !note._trash) {
+        if (document.getElementById('modal').classList.contains('open') && editingId === t.id) break; // otvorená v editore — až po zatvorení
+        const box = document.createElement('div'); box.innerHTML = note.content || '';
+        const row = box.querySelectorAll('.check-row')[t.i];
+        const lb = row && row.querySelector('.check-label'), cb = row && row.querySelector('.check-cb');
+        if (cb && lb && (lb.textContent || '').replace(/ /g, ' ').trim().slice(0, 200) === t.t) {
+          if (t.c) cb.setAttribute('checked', ''); else cb.removeAttribute('checked');
+          lb.style.textDecoration = t.c ? 'line-through' : ''; lb.style.opacity = t.c ? '.5' : '';
+          const content = box.innerHTML;
+          await updateDoc(doc(db, 'users', currentUser.uid, 'notes', t.id), { content, updatedAt: serverTimestamp() });
+          note.content = content;
+        }
+      }
+      done++;
+    }
+    if (done) AndroidBridge.clearToggles(done);
+  } catch (e) {} finally { _toggleBusy = false; }
+}
+window.n28ApplyToggles = applyAndroidToggles;
+
 // poznámky napísané vo widgete (appka ich drží, kým sa neotvorí) -> pripíš do samostatnej poznámky „Widget“
 let _inboxBusy = false;
 // vráti nový obsah poznámky (ak sa niečo zapísalo), inak null
 async function flushAndroidInbox() {
   if (!window.AndroidBridge || typeof AndroidBridge.getInbox !== 'function') return null;
   if (!currentUser || !_notesReady || _inboxBusy) return null;
+  await applyAndroidToggles();
   // pri otvorenej poznámke Widget nezasahuj do editora — zapíše sa hneď po jej zatvorení
   if (document.getElementById('modal').classList.contains('open') && editingId === WIDGETNOTE_ID) return null;
   _inboxBusy = true;
@@ -5422,7 +5478,7 @@ function openNoteById(id, tries=0) {
   };
   // text z widgetu najprv doplň do poznámky a až potom ju otvor — inak by editor mal starý obsah
   if (id === WIDGETNOTE_ID) flushAndroidInbox().then(c => show(c == null ? (notes.find(n=>n.id===id) || note) : { ...note, content: c }));
-  else show(note);
+  else applyAndroidToggles().then(() => show(notes.find(n=>n.id===id) || note));
 }
 
 // ─── MATERIAL RIPPLE (delegovaný, funguje aj na dynamicky pridané prvky) ────

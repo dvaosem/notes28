@@ -17,11 +17,25 @@ class NoteWidget : AppWidgetProvider() {
         for (id in appWidgetIds) updateWidget(context, appWidgetManager, id)
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == ACTION_TOGGLE) {
+            val nid = intent.getStringExtra(EXTRA_NOTE).orEmpty()
+            val pos = intent.getIntExtra(EXTRA_POS, -1)
+            if (nid.isNotEmpty() && pos >= 0 && WidgetPrefs.toggleItem(context, nid, pos)) refreshAll(context)
+            return
+        }
+        super.onReceive(context, intent)
+    }
+
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         for (id in appWidgetIds) WidgetPrefs.remove(context, id)
     }
 
     companion object {
+        const val ACTION_TOGGLE = "com.dvaosem.notes28.TOGGLE"
+        const val EXTRA_POS = "pos"
+        const val EXTRA_NOTE = "note"
+
         fun refreshAll(context: Context) {
             val mgr = AppWidgetManager.getInstance(context)
             val ids = mgr.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
@@ -73,6 +87,19 @@ class NoteWidget : AppWidgetProvider() {
             }
             views.setTextViewText(R.id.w_title, title)
             views.setTextViewText(R.id.w_text, text)
+            val hasList = note != null && note.items.any { it.check }
+            views.setViewVisibility(R.id.w_list, if (hasList) android.view.View.VISIBLE else android.view.View.GONE)
+            views.setViewVisibility(R.id.w_text, if (hasList) android.view.View.GONE else android.view.View.VISIBLE)
+            if (hasList) {
+                val svc = Intent(context, CheckListService::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+                    data = android.net.Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+                }
+                views.setRemoteAdapter(R.id.w_list, svc)
+                val tpl = Intent(context, NoteWidget::class.java).apply { action = ACTION_TOGGLE }
+                views.setPendingIntentTemplate(R.id.w_list, PendingIntent.getBroadcast(context, id * 3 + 100, tpl,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE))
+            }
             views.setTextColor(R.id.w_title, fg)
             views.setTextColor(R.id.w_text, sub)
             views.setTextColor(R.id.w_cfg, muted)
@@ -102,6 +129,7 @@ class NoteWidget : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.w_cfg, PendingIntent.getActivity(context, id * 3 + 2, cfg, flags()))
 
             mgr.updateAppWidget(id, views)
+            if (hasList) mgr.notifyAppWidgetViewDataChanged(id, R.id.w_list)
         }
     }
 }
