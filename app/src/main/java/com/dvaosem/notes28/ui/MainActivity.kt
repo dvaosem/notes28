@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
             Thread {
                 val apk = UpdateManager.download(this@MainActivity, url) { p -> call("n28OnUpdateProgress", p.toString()) }
                 if (apk == null) { call("n28OnUpdateProgress", "-1"); return@Thread }
-                runOnUiThread { UpdateManager.install(this@MainActivity, apk) }
+                runOnUiThread { UpdateManager.installSession(this@MainActivity, apk) }
                 call("n28OnUpdateProgress", "101")
             }.start()
         }
