@@ -37,6 +37,14 @@
                 android:textStyle="bold"
                 android:textColor="#f2f2f2"/>
 
+            <ImageView
+                android:id="@+id/w_pick"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_pick"
+                android:contentDescription="@null"/>
+
             <TextView
                 android:id="@+id/w_cfg"
                 android:layout_width="wrap_content"
@@ -47,15 +55,6 @@
                 android:textSize="16sp"
                 android:textColor="#a0a0a0"/>
 
-            <TextView
-                android:id="@+id/w_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="＋"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#c8f135"/>
         </LinearLayout>
 
         <ListView
@@ -80,4 +79,13 @@
             android:textSize="13sp"
             android:textColor="#d8d8d8"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/w_add"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:src="@drawable/ic_fab"
+        android:contentDescription="@null"/>
 </FrameLayout>

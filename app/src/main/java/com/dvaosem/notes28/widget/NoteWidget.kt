@@ -104,7 +104,7 @@ class NoteWidget : AppWidgetProvider() {
             views.setTextColor(R.id.w_title, fg)
             views.setTextColor(R.id.w_text, sub)
             views.setTextColor(R.id.w_cfg, muted)
-            views.setTextColor(R.id.w_add, if (style == WidgetPrefs.STYLE_LIGHT) Color.rgb(122, 90, 62) else Color.rgb(176, 132, 99))
+            views.setInt(R.id.w_pick, "setColorFilter", muted)
 
             // tap on the widget -> open the note (or the app)
             val open = Intent(context, MainActivity::class.java).apply {
@@ -114,12 +114,20 @@ class NoteWidget : AppWidgetProvider() {
             }
             views.setOnClickPendingIntent(R.id.w_root, PendingIntent.getActivity(context, id * 3, open, flags()))
 
-            // + -> write a quick note right away (small dialog, the app does not open)
-            val quick = Intent(context, QuickNoteActivity::class.java).apply {
-                action = "com.dvaosem.notes28.QUICK_$id"
+            // + -> "Add note" menu (text / list / voice / photo), like Google Keep
+            val add = Intent(context, AddNoteActivity::class.java).apply {
+                action = "com.dvaosem.notes28.ADD_$id"
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            views.setOnClickPendingIntent(R.id.w_add, PendingIntent.getActivity(context, id * 3 + 1, quick, flags()))
+            views.setOnClickPendingIntent(R.id.w_add, PendingIntent.getActivity(context, id * 3 + 1, add, flags()))
+
+            // list icon -> quick switch of the shown note
+            val pick = Intent(context, PickNoteActivity::class.java).apply {
+                action = "com.dvaosem.notes28.PICK_$id"
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+            }
+            views.setOnClickPendingIntent(R.id.w_pick, PendingIntent.getActivity(context, id * 3 + 7000, pick, flags()))
 
             // gear -> choose another note / style
             val cfg = Intent(context, WidgetConfigActivity::class.java).apply {

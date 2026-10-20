@@ -14,7 +14,7 @@
     <string name="qcfg_title">Vzhľad widgetu</string>
     <string name="cfg_save">Uložiť</string>
     <string name="cfg_pick">Najprv vyber poznámku</string>
-    <string name="w_hint">Ťukni na ⚙ a vyber poznámku</string>
+    <string name="w_hint">Ťukni na ikonu zoznamu a vyber poznámku</string>
     <string name="w_untitled">Poznámka</string>
     <string name="q_hint">Poznámka do widgetu…</string>
     <string name="q_save">Uložiť</string>
@@ -36,4 +36,11 @@
     <string name="l_empty_pinned">Žiadne pripnuté poznámky. Pripni poznámku v appke.</string>
     <string name="dict_prompt">Diktuj poznámku…</string>
     <string name="dict_missing">Na telefóne chýba rozpoznávanie reči (Google).</string>
+    <string name="add_title">Pridať poznámku</string>
+    <string name="add_text">Textová poznámka</string>
+    <string name="add_list">Zoznam</string>
+    <string name="add_voice">Hlasová poznámka</string>
+    <string name="add_photo">Foto poznámka</string>
+    <string name="pick_title">Vyber poznámku</string>
+    <string name="pick_empty">Zatiaľ nič. Otvor appku N28, nech sa poznámky načítajú.</string>
 </resources>

@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_NOTE_ID = "n28_note_id"
         const val EXTRA_QUICK = "n28_quick"
         const val EXTRA_SCAN = "n28_scan"
+        const val EXTRA_NEWLIST = "n28_newlist"
         private val OWN_HOSTS = setOf("dvaosem.com", "www.dvaosem.com")
         private val URL_RE = Regex("https?://\\S+")
         private const val OFFLINE_HTML = "<html><head><meta name='viewport' content='width=device-width,initial-scale=1'></head>" +
@@ -125,6 +126,8 @@ class MainActivity : AppCompatActivity() {
             js("window.openQuickNote&&window.openQuickNote()")
         } else if (intent.getBooleanExtra(EXTRA_SCAN, false)) {
             js("window.n28Scan&&window.n28Scan()")
+        } else if (intent.getBooleanExtra(EXTRA_NEWLIST, false)) {
+            js("window.n28NewList&&window.n28NewList()")
         }
         clearLaunchExtras(intent)
         if (pageLoaded) deliverShare()
@@ -136,6 +139,7 @@ class MainActivity : AppCompatActivity() {
             !note.isNullOrEmpty() -> "$START_URL?note=" + Uri.encode(note)
             i?.getBooleanExtra(EXTRA_QUICK, false) == true -> "$START_URL?quick=1"
             i?.getBooleanExtra(EXTRA_SCAN, false) == true -> "$START_URL?scan=1"
+            i?.getBooleanExtra(EXTRA_NEWLIST, false) == true -> "$START_URL?newlist=1"
             else -> START_URL
         }
     }
@@ -144,6 +148,7 @@ class MainActivity : AppCompatActivity() {
         i?.removeExtra(EXTRA_NOTE_ID)
         i?.removeExtra(EXTRA_QUICK)
         i?.removeExtra(EXTRA_SCAN)
+        i?.removeExtra(EXTRA_NEWLIST)
     }
 
     /** A link shared from the browser (Share -> N28): remembered until the page is ready. */

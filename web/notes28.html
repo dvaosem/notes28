@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v93">
+<meta name="n28-build" content="n28-v94">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -2094,7 +2094,7 @@ function subscribeNotes() {
     });
     notes = raw; renderTagBar(); renderNotes();
     // deep-link (widget/skratka): appku odkry až keď je editor otvorený — žiadne bliknutie zoznamu
-    if (_noteParamHandled || !/[?&](note|quick)=/.test(window.location.search)) bootReady(); else window.__n28Cold = true;
+    if (_noteParamHandled || !/[?&](note|quick|newlist)=/.test(window.location.search)) bootReady(); else window.__n28Cold = true;
     if (!_notesReady) {
       const markReady = () => {
         if (_notesReady) return;
@@ -2109,6 +2109,7 @@ function subscribeNotes() {
       const noteParam = sp.get('note');
       // skratka z panela úloh / plochy (manifest shortcuts) — otvorí rovno rýchlu poznámku
       if (sp.get('quick') === '1') { _noteParamHandled = true; openQuickNote(); setTimeout(() => { window.__n28Cold = false; bootReady(); }, 120); }
+      else if (sp.get('newlist') === '1') { _noteParamHandled = true; window.__n28Cold = true; if (window.n28NewList) window.n28NewList(); setTimeout(() => { window.__n28Cold = false; bootReady(); }, 200); }
       else if (sp.get('scan') === '1') { _noteParamHandled = true; setTimeout(() => { if (window.n28Scan) window.n28Scan(); }, 500); }
       else if (noteParam) { _noteParamHandled = true; openNoteById(noteParam); }
     }
@@ -6678,6 +6679,7 @@ async function shareImage() {
 })();
 
 window.n28Scan = () => scanFlow('new');
+window.n28NewList = () => { openModal(); setTimeout(() => { try { $id('btn-checklist').onmousedown(new Event('mousedown')); } catch (e) {} }, 120); };
 window.n28Plus = { version: '2026-10-20' };
 })();
 </script>

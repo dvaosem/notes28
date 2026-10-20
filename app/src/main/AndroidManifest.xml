@@ -75,6 +75,20 @@
             android:theme="@style/Theme.Notes28.Quick"/>
 
         <activity
+            android:name=".widget.AddNoteActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Notes28.Quick"/>
+
+        <activity
+            android:name=".widget.PickNoteActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Notes28.Quick"/>
+
+        <activity
             android:name=".widget.QuickNoteActivity"
             android:exported="false"
             android:excludeFromRecents="true"
