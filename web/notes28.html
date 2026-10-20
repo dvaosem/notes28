@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v92">
+<meta name="n28-build" content="n28-v93">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -682,15 +682,9 @@ html.vt-on .n28-modal{animation:none!important;}
   // ÚVOD: žiadna animácia. Appka ostane skrytá (tmavá plocha ako splash), kým nepríde prvá várka dát,
   // a potom sa jemne prelinie (CSS trieda html.app-ready). Takto sa nikdy neukáže prázdny stav ani skeletony.
   var done=false;
-  window.__m={};
   window.__bootReady=function(){
     if(done) return; done=true;
     document.documentElement.classList.add('app-ready');
-    // DOČASNÉ: meranie štartu (ms od navigácie) — zobrazí sa raz po štarte v APK
-    try{ var m=window.__m; m.ready=Math.round(performance.now());
-      if(window.AndroidBridge&&AndroidBridge.getBoot&&!sessionStorage.getItem('n28-bootshown')){ sessionStorage.setItem('n28-bootshown','1');
-        setTimeout(function(){ var d=document.createElement('div'); d.style.cssText='position:fixed;left:8px;right:8px;bottom:80px;z-index:99999;background:#000c;color:#fff;font:12px monospace;padding:8px 10px;border-radius:10px;pointer-events:none'; d.textContent='štart '+AndroidBridge.getBoot()+' · js '+(m.js||'?')+' · auth '+(m.auth||'?')+' · dáta '+(m.data||'?')+' · zobrazené '+m.ready; document.body.appendChild(d); setTimeout(function(){d.remove();},12000); },700); }
-    }catch(e){}
   };
   setTimeout(window.__bootReady,4000); // poistka — appka sa odkryje aj keby dáta neprišli
 })();
@@ -1022,9 +1016,7 @@ html.vt-on .n28-modal{animation:none!important;}
 
 
 <script type="module">
-window.__m = window.__m || {}; 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-window.__m.js = Math.round(performance.now());
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, signInWithEmailAndPassword,
   createUserWithEmailAndPassword, sendPasswordResetEmail,
   signOut, onAuthStateChanged, browserLocalPersistence, setPersistence } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -2100,7 +2092,6 @@ function subscribeNotes() {
       const ao=a.sortOrder??999999,bo=b.sortOrder??999999; if (ao!==bo) return ao-bo;
       return (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0);
     });
-    if(window.__m && !window.__m.data) window.__m.data=Math.round(performance.now());
     notes = raw; renderTagBar(); renderNotes();
     // deep-link (widget/skratka): appku odkry až keď je editor otvorený — žiadne bliknutie zoznamu
     if (_noteParamHandled || !/[?&](note|quick)=/.test(window.location.search)) bootReady(); else window.__n28Cold = true;
@@ -5395,15 +5386,30 @@ function stopWordSky() { _loginSky.stop(); }
 const bootReady = () => { if (window.__bootReady) window.__bootReady(); };
 logoutBtn.onclick = ()=>signOut(auth);
 
+// RÝCHLY ŠTART: ak sa na tomto zariadení naposledy prihlásil používateľ, poznámky sa začnú čítať z lokálnej cache
+// hneď (bez čakania na obnovenie prihlásenia). Ak auth potom povie niečo iné, všetko sa prepne na správny stav.
+let _earlyUid = null;
+try {
+  _earlyUid = localStorage.getItem('n28-uid');
+  if (_earlyUid) {
+    currentUser = { uid: _earlyUid, email: localStorage.getItem('n28-email') || '' };
+    document.body.classList.remove('logged-out');
+    loginScreen.style.display='none'; appScreen.style.display='flex';
+    subscribeNotes();
+  }
+} catch (e) { _earlyUid = null; }
+
 onAuthStateChanged(auth, user => {
-  if(window.__m && !window.__m.auth) window.__m.auth=Math.round(performance.now());
+  const _early = _earlyUid && user && user.uid === _earlyUid; _earlyUid = null;
   currentUser=user;
+  try { if (user) { localStorage.setItem('n28-uid', user.uid); localStorage.setItem('n28-email', user.email || ''); } else { localStorage.removeItem('n28-uid'); localStorage.removeItem('n28-email'); } } catch (e) {}
   document.body.classList.toggle('logged-out', !user);
   if (user) {
     loginScreen.style.display='none'; appScreen.style.display='flex';
     stopWordSky();
     userAvatar.src=user.photoURL||''; userAvatar.style.display=user.photoURL?'block':'none';
-    subscribeNotes(); subscribeTabs(); subscribeSmart(); subscribeSharedTabs(); checkJoinInvite();
+    if (!_early) subscribeNotes();
+    subscribeTabs(); subscribeSmart(); subscribeSharedTabs(); checkJoinInvite();
     requestNotifPermission();
     clearInterval(_notifInterval);
     _notifInterval = setInterval(checkDueNotifications, 60000);
