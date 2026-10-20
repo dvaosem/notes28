@@ -81,6 +81,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         webView = findViewById(R.id.webview)
+        // pozadie v tóne poslednej témy appky — žiadna čierna plocha pred prvým vykreslením
+        try {
+            val c = android.graphics.Color.parseColor(getSharedPreferences("n28_ui", MODE_PRIVATE).getString("bg", "#262624"))
+            window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(c))
+            webView.setBackgroundColor(c)
+        } catch (e: Exception) {}
         ViewCompat.setOnApplyWindowInsetsListener(webView) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
@@ -154,6 +160,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class AndroidBridge {
+
+        /** Web app reports its current theme background so the next cold start paints it natively. */
+        @JavascriptInterface
+        fun setBg(color: String) {
+            if (!Regex("#[0-9a-fA-F]{6}").matches(color)) return
+            getSharedPreferences("n28_ui", MODE_PRIVATE).edit().putString("bg", color).apply()
+        }
 
         /** Compact notes list for the widget (pushed by the web app after every Firestore update). */
         @JavascriptInterface
