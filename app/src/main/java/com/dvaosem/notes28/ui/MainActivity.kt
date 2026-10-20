@@ -173,6 +173,23 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun getBoot(): String = "proc " + (bootCreate - bootProc) + " · wv " + (bootStart - bootCreate) + " · load " + (bootFinish - bootCreate)
 
+        /** Native Android share sheet for plain text (navigator.share is not available in a WebView). */
+        @JavascriptInterface
+        fun shareText(title: String, text: String): Boolean {
+            if (text.length > 500_000) return false
+            runOnUiThread {
+                try {
+                    val send = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, title)
+                        putExtra(Intent.EXTRA_TEXT, text)
+                    }
+                    startActivity(Intent.createChooser(send, title))
+                } catch (e: Exception) {}
+            }
+            return true
+        }
+
         /** Web app reports its current theme background so the next cold start paints it natively. */
         @JavascriptInterface
         fun setBg(color: String) {
