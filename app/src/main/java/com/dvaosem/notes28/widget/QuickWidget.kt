@@ -43,9 +43,9 @@ class QuickWidget : AppWidgetProvider() {
             val bg: Int; val pill: Int; val title: Int; val fg: Int; val sub: Int; val muted: Int; var pillAlpha = 255
             when (style) {
                 WidgetPrefs.STYLE_GRAY -> { bg = Color.rgb(38, 38, 36); pill = Color.rgb(58, 57, 54); title = Color.rgb(176, 132, 99); fg = Color.rgb(243, 242, 236); sub = Color.rgb(200, 198, 190); muted = Color.rgb(168, 166, 157) }
-                WidgetPrefs.STYLE_LIGHT -> { bg = Color.rgb(250, 250, 250); pill = Color.rgb(232, 232, 232); title = Color.rgb(84, 112, 0); fg = Color.rgb(26, 26, 26); sub = Color.rgb(60, 60, 60); muted = Color.rgb(120, 120, 120) }
-                WidgetPrefs.STYLE_CLEAR -> { bg = Color.BLACK; pill = Color.BLACK; pillAlpha = 110; title = Color.rgb(200, 241, 53); fg = Color.WHITE; sub = Color.rgb(235, 235, 235); muted = Color.rgb(200, 200, 200) }
-                else -> { bg = Color.rgb(15, 15, 15); pill = Color.rgb(38, 38, 38); title = Color.rgb(200, 241, 53); fg = Color.rgb(242, 242, 242); sub = Color.rgb(216, 216, 216); muted = Color.rgb(160, 160, 160) }
+                WidgetPrefs.STYLE_LIGHT -> { bg = Color.rgb(250, 250, 250); pill = Color.rgb(232, 232, 232); title = Color.rgb(122, 90, 62); fg = Color.rgb(26, 26, 26); sub = Color.rgb(60, 60, 60); muted = Color.rgb(120, 120, 120) }
+                WidgetPrefs.STYLE_CLEAR -> { bg = Color.BLACK; pill = Color.BLACK; pillAlpha = 110; title = Color.rgb(176, 132, 99); fg = Color.WHITE; sub = Color.rgb(235, 235, 235); muted = Color.rgb(200, 200, 200) }
+                else -> { bg = Color.rgb(15, 15, 15); pill = Color.rgb(38, 38, 38); title = Color.rgb(176, 132, 99); fg = Color.rgb(242, 242, 242); sub = Color.rgb(216, 216, 216); muted = Color.rgb(160, 160, 160) }
             }
             views.setInt(R.id.qw_bg, "setColorFilter", bg)
             views.setInt(R.id.qw_bg, "setImageAlpha", (WidgetPrefs.qOpacity(context, id).coerceIn(0, 100) * 255) / 100)
@@ -55,6 +55,8 @@ class QuickWidget : AppWidgetProvider() {
             views.setTextColor(R.id.qw_write_text, fg)
             views.setTextColor(R.id.qw_text, sub)
             views.setTextColor(R.id.qw_cfg, muted)
+            views.setInt(R.id.qw_scan, "setColorFilter", fg)
+            views.setInt(R.id.qw_mic, "setColorFilter", fg)
 
             val cfg = Intent(context, QuickConfigActivity::class.java).apply {
                 action = "com.dvaosem.notes28.QW_CFG_$id"
@@ -88,6 +90,21 @@ class QuickWidget : AppWidgetProvider() {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             views.setOnClickPendingIntent(R.id.qw_write, PendingIntent.getActivity(context, id * 3, write, flags()))
+
+            // camera -> app opens straight into "scan a photo into a note"
+            val scan = Intent(context, MainActivity::class.java).apply {
+                action = "com.dvaosem.notes28.QW_SCAN_$id"
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                putExtra(MainActivity.EXTRA_SCAN, true)
+            }
+            views.setOnClickPendingIntent(R.id.qw_scan, PendingIntent.getActivity(context, id * 3 + 4000, scan, flags()))
+
+            // microphone -> system speech dialog, the text lands in the widget note (app does not open)
+            val mic = Intent(context, DictateActivity::class.java).apply {
+                action = "com.dvaosem.notes28.QW_MIC_$id"
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            views.setOnClickPendingIntent(R.id.qw_mic, PendingIntent.getActivity(context, id * 3 + 5000, mic, flags()))
 
             val open = Intent(context, MainActivity::class.java).apply {
                 action = "com.dvaosem.notes28.QW_OPEN_$id"

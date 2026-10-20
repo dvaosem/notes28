@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
+    <!-- speech recognition dialog of the widget mic button (Android 11+ package visibility) -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH"/>
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -52,6 +59,22 @@
         </activity>
 
         <activity
+            android:name=".widget.ListConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Notes28.Config">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".widget.DictateActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Notes28.Quick"/>
+
+        <activity
             android:name=".widget.QuickNoteActivity"
             android:exported="false"
             android:excludeFromRecents="true"
@@ -84,7 +107,23 @@
         </receiver>
 
         <receiver
+            android:name=".widget.NotesListWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_list"/>
+        </receiver>
+
+        <receiver
             android:name=".ui.InstallResultReceiver"
+            android:exported="false"/>
+
+        <service
+            android:name=".widget.NotesListService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false"/>
 
         <service

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v83">
+<meta name="n28-build" content="n28-v89">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -485,6 +485,157 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
 .modal-expanded { max-width:100vw!important; width:100vw!important; height:var(--vvh,100dvh)!important; max-height:var(--vvh,100dvh)!important; border-radius:0!important; }
 #modal.open:has(.modal-expanded) { padding:0!important; align-items:stretch!important; }
 
+
+/* ═══════════════ N28 PLUS (2026-10-20) — dizajn a UX vylepšenia ═══════════════ */
+:root{--font-serif:'Iowan Old Style','Palatino Linotype',Palatino,'Source Serif 4','Source Serif Pro',Charter,Georgia,serif;}
+
+/* 1) Serifové nadpisy — teplý, "papierový" charakter */
+.card-title,.empty-title,.rs-title{font-family:var(--font-serif);letter-spacing:-.005em;}
+.card-title{font-size:.95rem;line-height:1.28;}
+#modal #input-title{font-family:var(--font-serif)!important;font-size:1.2rem!important;letter-spacing:-.01em;}
+
+/* 2) Hĺbka namiesto farby — vrstvené tiene, jemný horný odlesk */
+.note-card{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--text) 5%,transparent) 0%,transparent 55%),color-mix(in srgb,var(--surface) 93%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--text) 8%,transparent),0 1px 2px rgba(0,0,0,.30),0 8px 18px -8px rgba(0,0,0,.42);
+  transition:transform .22s cubic-bezier(.32,.72,0,1),box-shadow .22s cubic-bezier(.32,.72,0,1),background .15s ease;
+}
+.note-card:hover{box-shadow:inset 0 1px 0 color-mix(in srgb,var(--text) 10%,transparent),0 2px 4px rgba(0,0,0,.3),0 14px 26px -10px rgba(0,0,0,.5);}
+.note-card:active{transform:scale(.985);}
+[data-theme="light"] .note-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(0,0,0,.08),0 8px 18px -10px rgba(0,0,0,.18);}
+/* jemné papierové zrno (len tmavé a šedé témy, bez blend režimu = lacné na GPU) */
+:root:not([data-theme="light"]) body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* 3) Zbaliteľná hlavička — logo sa zmenší, sklo zhustne (bez zmeny výšky = žiadne skákanie obsahu) */
+#topbar-sticky .logo{transition:transform .3s cubic-bezier(.32,.72,0,1),opacity .3s ease;transform-origin:left center;}
+#topbar-sticky.tb-scrolled .logo{transform:scale(.8);opacity:.55;}
+
+/* 4) Bohatšie karty: obálka, priebeh zoznamu, doména odkazu, zvýraznenie hľadania */
+.card-cover{margin:0;height:92px;flex-shrink:0;background:var(--surface2) center/cover no-repeat;position:relative;}
+.card-cover::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;background:linear-gradient(0deg,color-mix(in srgb,var(--surface) 70%,transparent),transparent);}
+#notes-grid.list-view .card-cover{height:64px;}
+.note-card:has(.card-cover){flex-direction:column;}
+.card-prog{display:flex;align-items:center;gap:.45rem;font-size:.68rem;color:var(--text2);flex-shrink:0;margin-top:.1rem;}
+.card-prog i{flex:1;height:4px;border-radius:99px;background:color-mix(in srgb,var(--text) 12%,transparent);overflow:hidden;display:block;}
+.card-prog b{display:block;height:100%;width:var(--p,0%);background:var(--accent-default);border-radius:99px;transition:width .4s cubic-bezier(.32,.72,0,1);}
+.card-prog.done{opacity:.6;}
+.card-chip{display:inline-flex;align-items:center;gap:.3rem;align-self:flex-start;max-width:100%;font-size:.66rem;color:var(--text2);background:color-mix(in srgb,var(--surface2) 85%,transparent);border-radius:10px;padding:.14rem .5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;margin-top:.1rem;}
+.card-chip svg{flex-shrink:0;opacity:.7;}
+mark.n28-hit{background:color-mix(in srgb,var(--accent-default) 32%,transparent);color:inherit;border-radius:3px;padding:0 1px;}
+
+/* 5) Skeleton — jemné prelievanie namiesto bliknutia */
+.skel{background:linear-gradient(90deg,var(--surface2) 25%,color-mix(in srgb,var(--surface2) 70%,var(--text)) 50%,var(--surface2) 75%);background-size:300% 100%;animation:n28Shimmer 1.5s ease-in-out infinite;}
+@keyframes n28Shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+
+/* 6) Gestá na kartách (potiahnutie) */
+.note-card .swipe-ov{position:absolute;inset:0;display:flex;align-items:center;gap:.45rem;padding:0 1.1rem;font-size:.78rem;font-weight:700;opacity:0;z-index:0;pointer-events:none;}
+.note-card .swipe-ov.pin{background:var(--earth,#9a8470);color:var(--earth-text,#1f1e1d);justify-content:flex-start;}
+.note-card .swipe-ov.trash{background:var(--brick,#9a5f52);color:#f3f2ec;justify-content:flex-end;}
+.note-card .swipe-ov.armed svg{transform:scale(1.25);}
+.note-card .swipe-ov svg{transition:transform .15s cubic-bezier(.34,1.56,.64,1);}
+.note-card.swiping{touch-action:pan-y;}
+.note-card.swiping .card-body{background:var(--surface);position:relative;z-index:1;will-change:transform;}
+.note-card.swiping .card-cover{position:relative;z-index:1;will-change:transform;}
+
+/* 7) Zoznam úloh — mäkké zaškrtnutie */
+.check-cb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border:1.6px solid color-mix(in srgb,var(--text2) 80%,transparent);border-radius:7px;background:transparent;position:relative;transition:background .18s ease,border-color .18s ease,transform .18s cubic-bezier(.34,1.56,.64,1);outline:none;}
+.check-cb::after{content:'';position:absolute;left:6.2px;top:2.2px;width:6px;height:11px;border:solid var(--accent-text);border-width:0 2.2px 2.2px 0;transform:rotate(45deg) scale(0);transition:transform .2s cubic-bezier(.34,1.56,.64,1);}
+.check-cb:checked{background:var(--accent-default);border-color:var(--accent-default);}
+.check-cb:checked::after{transform:rotate(45deg) scale(1);}
+.check-row.chk-pop .check-cb{animation:chkPop .32s cubic-bezier(.34,1.56,.64,1);}
+@keyframes chkPop{0%{transform:scale(1)}40%{transform:scale(1.28)}100%{transform:scale(1)}}
+.check-label{transition:opacity .25s ease,color .25s ease;}
+
+/* 8) Rýchle akcie (mini FAB) + spodný panel zachytenia */
+#fab2{position:fixed;right:1.75rem;bottom:5.4rem;width:44px;height:44px;border-radius:15px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);background:color-mix(in srgb,var(--surface2) 82%,transparent);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),var(--elev2);z-index:199;transition:transform .2s cubic-bezier(.2,0,0,1),opacity .25s ease;}
+#fab2 svg{width:20px;height:20px;}
+#fab2.fab-hidden{transform:translateY(130px);opacity:0;pointer-events:none;}
+body.logged-out #fab2{display:none!important;}
+html:not(.app-ready) #fab2{opacity:0!important;pointer-events:none;}
+#cap-sheet{position:fixed;inset:0;z-index:380;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);}
+#cap-sheet.open{display:flex;animation:n28Fade .18s ease;}
+#cap-sheet .cs-box{width:100%;max-width:520px;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border-radius:26px 26px 0 0;padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom,0px));box-shadow:var(--elev4);animation:csUp .28s cubic-bezier(.32,.72,0,1);}
+@keyframes csUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+#cap-sheet .cs-grip{width:38px;height:4px;border-radius:9px;background:var(--border);margin:0 auto .8rem;}
+.cs-item{display:flex;align-items:center;gap:.9rem;width:100%;background:none;border:none;color:var(--text);text-align:left;padding:.75rem .6rem;border-radius:16px;cursor:pointer;font-family:var(--font-body);}
+.cs-item:hover,.cs-item:active{background:var(--state-hover);}
+.cs-ico{width:44px;height:44px;border-radius:14px;background:color-mix(in srgb,var(--surface2) 90%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text);}
+.cs-ico svg{width:22px;height:22px;}
+.cs-t{font-weight:700;font-size:.95rem;}
+.cs-s{font-size:.78rem;color:var(--text2);margin-top:.1rem;}
+
+/* 9) Diktovanie */
+#dict-overlay{position:fixed;inset:0;z-index:390;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;padding:1.5rem;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);}
+#dict-overlay.open{display:flex;animation:n28Fade .2s ease;}
+.dict-orb{width:92px;height:92px;border-radius:50%;background:var(--accent-default);color:var(--accent-text);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 0 color-mix(in srgb,var(--accent-default) 50%,transparent);animation:dictPulse 1.6s ease-out infinite;}
+.dict-orb svg{width:36px;height:36px;}
+@keyframes dictPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent-default) 45%,transparent)}100%{box-shadow:0 0 0 34px transparent}}
+.dict-text{max-width:520px;width:100%;max-height:38dvh;overflow:auto;font-family:var(--font-serif);font-size:1.05rem;line-height:1.55;color:var(--text);text-align:center;white-space:pre-wrap;}
+.dict-text em{color:var(--text2);font-style:normal;}
+.dict-hint{font-size:.78rem;color:var(--text2);}
+.dict-btns{display:flex;gap:.6rem;}
+
+/* 10) Spracovanie (scan / AI) */
+#busy-pill{position:fixed;left:50%;bottom:6.2rem;transform:translateX(-50%) translateY(14px);z-index:395;display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;border-radius:999px;font-size:.84rem;background:color-mix(in srgb,var(--surface2) 92%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);box-shadow:var(--elev3);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .25s cubic-bezier(.32,.72,0,1);}
+#busy-pill.on{opacity:1;transform:translateX(-50%);}
+#busy-pill i{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--text);animation:n28Spin .7s linear infinite;}
+@keyframes n28Spin{to{transform:rotate(360deg)}}
+
+/* 11) Lomítkové menu "/" v editore */
+#slash-menu{position:fixed;z-index:420;display:none;min-width:220px;max-width:280px;max-height:min(280px,40dvh);overflow-y:auto;overscroll-behavior:contain;background:color-mix(in srgb,var(--surface2) 94%,transparent);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid var(--border);border-radius:16px;padding:.3rem;box-shadow:var(--elev4);}
+#slash-menu.open{display:block;animation:slashIn .14s cubic-bezier(.32,.72,0,1);}
+@keyframes slashIn{from{opacity:0;transform:translateY(4px) scale(.98)}to{opacity:1;transform:none}}
+.slash-item{display:flex;align-items:center;gap:.65rem;padding:.5rem .6rem;border-radius:10px;font-size:.86rem;cursor:pointer;color:var(--text);}
+.slash-item svg{width:17px;height:17px;flex-shrink:0;color:var(--text2);}
+.slash-item small{margin-left:auto;color:var(--text2);font-size:.7rem;}
+.slash-item.on{background:var(--state-press);}
+.slash-sep{height:1px;background:var(--border);margin:.25rem .4rem;opacity:.7;}
+
+/* 12) Dátum → kalendár */
+#date-chip{position:fixed;z-index:410;display:none;align-items:center;gap:.4rem;padding:.4rem .75rem;border-radius:999px;font-size:.78rem;font-weight:600;cursor:pointer;background:var(--earth,var(--accent-default));color:var(--earth-text,var(--accent-text));box-shadow:var(--elev3);animation:slashIn .16s ease;}
+#date-chip.open{display:inline-flex;}
+#date-chip svg{width:14px;height:14px;}
+
+/* 13) Hľadanie ako vstupné dvere: nedávne + filtre */
+@media(min-width:1000px){#search-toggle{display:none!important;}header .search-wrap{display:flex!important;}}
+@media(max-width:999px){#search-suggest{display:none!important;}}
+.ss-row.ss-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-top:0;}
+.ss-filters::-webkit-scrollbar{display:none;}
+.ss-filters .ss-chip{flex-shrink:0;white-space:nowrap;}
+#search-suggest{display:none;padding:.1rem .9rem .5rem;}
+#search-suggest.on{display:block;}
+.ss-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.35rem;}
+.ss-chip{border:none;cursor:pointer;font-family:var(--font-body);font-size:.74rem;font-weight:600;padding:.3rem .7rem;border-radius:999px;color:var(--text2);background:color-mix(in srgb,var(--surface2) 80%,transparent);transition:background var(--tr),color var(--tr);}
+.ss-chip.on{background:var(--state-press);color:var(--text);box-shadow:inset 0 0 0 1px var(--border);}
+.ss-lab{font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);opacity:.75;margin-top:.5rem;}
+.ss-recent{display:flex;align-items:center;gap:.4rem;}
+.ss-recent svg{width:13px;height:13px;opacity:.6;}
+
+/* 14) Pripomenutie starej poznámky */
+.resurface{grid-column:1/-1;display:flex;align-items:flex-start;gap:.8rem;padding:.8rem .9rem;border-radius:var(--radius);cursor:pointer;background:linear-gradient(135deg,color-mix(in srgb,var(--surface2) 70%,transparent),color-mix(in srgb,var(--surface) 90%,transparent));box-shadow:inset 0 1px 0 color-mix(in srgb,var(--text) 8%,transparent),var(--elev1);animation:n28Fade .35s ease;}
+.rs-ico{width:34px;height:34px;border-radius:11px;background:color-mix(in srgb,var(--surface2) 90%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text2);}
+.rs-ico svg{width:17px;height:17px;}
+.rs-body{flex:1;min-width:0;}
+.rs-kick{font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);}
+.rs-title{font-weight:700;font-size:.95rem;margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rs-snip{font-size:.78rem;color:var(--text2);margin-top:.15rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.rs-x{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.1rem;line-height:1;padding:.2rem .35rem;border-radius:8px;}
+.rs-x:hover{background:var(--state-hover);}
+
+/* 15) Fokus + písací stroj: aktuálny riadok svieti, zvyšok tlmený */
+::highlight(tw-dim){color:color-mix(in srgb,var(--text) 30%,transparent);}
+#editor hr{border:none;border-top:1px solid var(--border);margin:.8rem 0;}
+
+/* 16) Prechod karta ↔ editor (View Transitions) */
+::view-transition-group(n28sheet){animation-duration:.4s;animation-timing-function:cubic-bezier(.32,.72,0,1);overflow:clip;border-radius:var(--radius);}
+::view-transition-old(n28sheet),::view-transition-new(n28sheet){height:100%;width:100%;object-fit:cover;}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.28s;}
+html.vt-on .modal-box{animation:none!important;}
+html.vt-on .n28-modal{animation:none!important;}
+@media(prefers-reduced-motion:reduce){
+  .skel,.dict-orb,.check-row.chk-pop .check-cb{animation:none!important;}
+}
+.notes-wrap{overscroll-behavior-y:contain;}
 </style>
 <body class="logged-out">
 
@@ -755,6 +906,17 @@ select.meta-pill{width:auto;max-width:80px;text-overflow:ellipsis;}
             <option value="gray">Šedá</option>
             <option value="light">Svetlá</option>
           </select>
+        </label>
+      </div>
+      <div>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Správanie</p>
+        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;margin-bottom:.5rem;">
+          <span>Gestá na kartách (doprava = pripnúť, doľava = do koša)</span>
+          <input type="checkbox" id="set-swipe">
+        </label>
+        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;">
+          <span>Odškrtnuté položky presúvať dole</span>
+          <input type="checkbox" id="set-chk-sort">
         </label>
       </div>
       <div id="settings-android" style="display:none;flex-direction:column;gap:.8rem">
@@ -1944,6 +2106,7 @@ function subscribeNotes() {
       const noteParam = sp.get('note');
       // skratka z panela úloh / plochy (manifest shortcuts) — otvorí rovno rýchlu poznámku
       if (sp.get('quick') === '1') { _noteParamHandled = true; openQuickNote(); }
+      else if (sp.get('scan') === '1') { _noteParamHandled = true; setTimeout(() => { if (window.n28Scan) window.n28Scan(); }, 500); }
       else if (noteParam) { _noteParamHandled = true; openNoteById(noteParam); }
     }
     // sync to Android widget
@@ -1954,7 +2117,9 @@ function subscribeNotes() {
           title: n.title||'',
           content: _plainForWidget(n.content, n.id===QUICKNOTE_ID||n.id===WIDGETNOTE_ID),
           items: _rowsForWidget(n.content, n.id===QUICKNOTE_ID||n.id===WIDGETNOTE_ID),
-          tab: n.tab||''
+          tab: n.tab||'',
+          pin: n.pinned?1:0,
+          ts: (n.updatedAt||n.createdAt)?.toMillis?.()||0
         }));
         AndroidBridge.saveNotes(JSON.stringify(compact));
       } catch(e) {}
@@ -5587,6 +5752,971 @@ document.addEventListener('pointerdown', e => {
     try { if (!AB.pinQuickWidget()) showToast('Widget pridaj: podrž plochu → Widgety → N28 widget poznámka', 'warn', 5000); } catch (e) {}
   };
   setTimeout(() => { try { AB.checkUpdate(false); } catch (e) {} }, 4000);
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// N28 PLUS (2026-10-20) — prechod karta→editor, bohatšie karty, gestá, zoznam úloh,
+// hľadanie, lomítkové menu, sken, diktovanie, zdieľanie obrázkom, pripomenutie.
+// Beží v tom istom module ako appka; pôvodné funkcie len obaľuje (rollback = vyhodiť tento blok).
+// ═══════════════════════════════════════════════════════════════════════════
+(function n28Plus() {
+'use strict';
+const $id = id => document.getElementById(id);
+const html = document.documentElement;
+const REDUCED = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const noteDoc = id => doc(db, 'users', currentUser.uid, 'notes', id);
+const esc = s => escHtml(s);
+const cssEsc = s => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/"/g, '\\"');
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const topbar = $id('topbar-sticky');
+const wrap = document.querySelector('.notes-wrap');
+const modalBox = () => modal.querySelector('.modal-box');
+const modalBody = () => modal.querySelector('.modal-body');
+const inView = el => { if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight; };
+
+// ─── ikony (jednotný line štýl, žiadne farebné emoji) ────────────────────────
+const svg = (inner, s) => '<svg viewBox="0 0 24 24" width="' + (s || 17) + '" height="' + (s || 17) + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+const ic = {
+  camera: svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
+  mic: svg('<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
+  bolt: svg('<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/>'),
+  check: svg('<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><polyline points="7.5 12 10.5 15 16.5 9"/>'),
+  list: svg('<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>'),
+  olist: svg('<line x1="10" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="10" y1="18" x2="20" y2="18"/><path d="M4 4.5l1.5-1v5"/><path d="M4 12.5c0-1.7 3-1.7 3 0 0 1-3 2.2-3 3h3"/>'),
+  cal: svg('<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>'),
+  clock: svg('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>'),
+  minus: svg('<line x1="4" y1="12" x2="20" y2="12"/>'),
+  spark: svg('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7Z"/>'),
+  image: svg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.6"/><path d="M21 15l-5-5L5 21"/>'),
+  link: svg('<path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1"/><path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/>', 12),
+  pin: svg('<path d="M12 17v5"/><path d="M9 10.8V4h6v6.8l2 3.2H7l2-3.2Z"/>', 18),
+  trash: svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>', 18),
+  past: svg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><polyline points="12 7 12 12 15 14"/>'),
+  search: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>', 13),
+};
+
+// ─── nastavenia (uložené lokálne) ────────────────────────────────────────────
+const S = { swipe: lsGet('n28-swipe', true), chk: lsGet('n28-chk-sort', true) };
+(function wireSettings() {
+  const a = $id('set-swipe'), b = $id('set-chk-sort');
+  if (a) { a.checked = S.swipe; a.onchange = () => { S.swipe = a.checked; lsSet('n28-swipe', S.swipe); }; }
+  if (b) { b.checked = S.chk; b.onchange = () => { S.chk = b.checked; lsSet('n28-chk-sort', S.chk); }; }
+})();
+
+// ─── pomocníci UI ────────────────────────────────────────────────────────────
+const pill = document.createElement('div');
+pill.id = 'busy-pill'; pill.innerHTML = '<i></i><span></span>';
+document.body.appendChild(pill);
+function busy(msg) { pill.querySelector('span').textContent = msg; pill.classList.add('on'); return () => pill.classList.remove('on'); }
+
+// ═══ A) hlavička: logo sa zmenší a sklo zhustne pri scrolle ═══════════════════
+if (wrap && topbar) {
+  let tick = false;
+  wrap.addEventListener('scroll', () => {
+    if (tick) return; tick = true;
+    requestAnimationFrame(() => { tick = false; topbar.classList.toggle('tb-scrolled', wrap.scrollTop > 24); });
+  }, { passive: true });
+}
+
+// ═══ B) pamätanie pozície (kurzor + scroll) pre každú poznámku ═════════════════
+const POSKEY = 'n28-pos';
+function caretOffset() {
+  const s = getSelection();
+  if (!s.rangeCount || !editor.contains(s.anchorNode)) return null;
+  const r = document.createRange(); r.selectNodeContents(editor); r.setEnd(s.anchorNode, s.anchorOffset);
+  return r.toString().length;
+}
+function savePos() {
+  const id = editingId;
+  if (!id || id === QUICKNOTE_ID || id === WIDGETNOTE_ID) return;
+  const body = modalBody(); if (!body) return;
+  const m = lsGet(POSKEY, {});
+  m[id] = { s: Math.round(body.scrollTop), c: caretOffset(), t: Date.now() };
+  const keys = Object.keys(m);
+  if (keys.length > 150) keys.sort((a, b) => m[a].t - m[b].t).slice(0, keys.length - 120).forEach(k => delete m[k]);
+  lsSet(POSKEY, m);
+}
+function setCaret(off) {
+  const w = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+  let acc = 0, n;
+  while ((n = w.nextNode())) {
+    const len = n.data.length;
+    if (acc + len >= off) {
+      const r = document.createRange(); r.setStart(n, Math.max(0, off - acc)); r.collapse(true);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); return true;
+    }
+    acc += len;
+  }
+  return false;
+}
+function restorePos(note) {
+  if (!note || !note.id || !note.content || note.id === QUICKNOTE_ID || note.id === WIDGETNOTE_ID) return;
+  const p = lsGet(POSKEY, {})[note.id]; if (!p) return;
+  setTimeout(() => {
+    if (editingId !== note.id || !modal.classList.contains('open')) return;
+    try { if (p.c != null) { editor.focus(); setCaret(p.c); } } catch (e) {}
+    const body = modalBody(); if (body && p.s) body.scrollTop = p.s;
+  }, 160);
+}
+
+// ═══ C) prechod karta ↔ editor (View Transitions) ═════════════════════════════
+let vtBusy = false;
+const canVT = () => !!document.startViewTransition && !REDUCED && !vtBusy;
+const _openModal = openModal;
+openModal = function (note) {
+  if (note === undefined) note = null;
+  try { addRecent(searchInput.value); } catch (e) {}
+  let src = null;
+  if (!modal.classList.contains('open') && canVT()) {
+    if (note && note.id && note.id !== QUICKNOTE_ID) src = notesGrid.querySelector('.note-card[data-id="' + cssEsc(note.id) + '"]');
+    else if (!note) src = fab;
+    if (src && !inView(src)) src = null;
+  }
+  if (!src) { _openModal(note); try { restorePos(note); } catch (e) {} return; }
+  const box = modalBox();
+  vtBusy = true; html.classList.add('vt-on'); src.style.viewTransitionName = 'n28sheet';
+  const cleanup = () => { src.style.viewTransitionName = ''; box.style.viewTransitionName = ''; html.classList.remove('vt-on'); vtBusy = false; };
+  try {
+    const t = document.startViewTransition(() => { src.style.viewTransitionName = ''; box.style.viewTransitionName = 'n28sheet'; _openModal(note); });
+    t.finished.then(cleanup, cleanup);
+  } catch (e) { cleanup(); _openModal(note); }
+  try { restorePos(note); } catch (e) {}
+};
+
+const _closeModal = closeModal;
+closeModal = function (fromPop) {
+  try { savePos(); clearTW(); hideDchip(); closeSlash(); } catch (e) {}
+  if (!modal.classList.contains('open') || !canVT()) return _closeModal(fromPop);
+  const id = editingId, box = modalBox();
+  let target = null;
+  vtBusy = true; html.classList.add('vt-on'); box.style.viewTransitionName = 'n28sheet';
+  const cleanup = () => { box.style.viewTransitionName = ''; if (target) target.style.viewTransitionName = ''; html.classList.remove('vt-on'); vtBusy = false; };
+  try {
+    const t = document.startViewTransition(() => {
+      _closeModal(fromPop);
+      box.style.viewTransitionName = '';
+      const c = id ? notesGrid.querySelector('.note-card[data-id="' + cssEsc(id) + '"]') : null;
+      if (c && inView(c)) { target = c; c.style.viewTransitionName = 'n28sheet'; }
+    });
+    t.finished.then(cleanup, cleanup);
+  } catch (e) { cleanup(); _closeModal(fromPop); }
+};
+
+// ═══ D) bohatšie karty: obálka, priebeh zoznamu, doména odkazu, zvýraznenie ════
+const enrichCache = new Map();
+function analyse(note) {
+  const c = enrichCache.get(note.id);
+  const imgCount = note.images ? note.images.length : 0;
+  if (c && c.src === note.content && c.n === imgCount) return c.v;
+  const v = { total: 0, done: 0, img: '', domain: '' };
+  const h = note.content || '';
+  if (h) {
+    const tpl = document.createElement('template'); tpl.innerHTML = sanitizeHtml(h);
+    const rows = tpl.content.querySelectorAll('.check-row');
+    v.total = rows.length;
+    rows.forEach(r => { const cb = r.querySelector('.check-cb'); if (cb && (cb.checked || cb.hasAttribute('checked'))) v.done++; });
+    const im = tpl.content.querySelector('img');
+    if (im) { const s = im.getAttribute('src') || ''; if (/^https?:/i.test(s)) v.img = s; }
+    const a = tpl.content.querySelector('a[href^="http"]');
+    let href = a ? a.getAttribute('href') : '';
+    if (!href) { const m = (tpl.content.textContent || '').match(/https?:\/\/[^\s<>"']+|www\.[^\s<>"']+/i); href = m ? m[0] : ''; }
+    if (href) { try { v.domain = new URL(/^www\./i.test(href) ? 'https://' + href : href).hostname.replace(/^www\./, ''); } catch (e) {} }
+  }
+  const first = (note.images || []).find(i => !i.type || i.type === 'image');
+  if (first && first.url) v.img = first.url;
+  enrichCache.set(note.id, { src: note.content, n: imgCount, v });
+  if (enrichCache.size > 600) enrichCache.delete(enrichCache.keys().next().value);
+  return v;
+}
+function coverUrl(u) {
+  if (/res\.cloudinary\.com/.test(u) && /\/upload\/v\d/.test(u)) return u.replace('/upload/', '/upload/c_fill,w_520,h_240,q_auto,f_auto/');
+  return u;
+}
+function hl(el, q) {
+  if (!el) return;
+  const nq = norm(q); if (!nq) return;
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), nodes = [];
+  while (w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n => {
+    if (n.parentElement && n.parentElement.closest('a,mark')) return;
+    const t = n.data; let out = '';
+    const map = [];
+    for (let i = 0; i < t.length; i++) { const nc = norm(t[i]); for (let k = 0; k < nc.length; k++) { out += nc[k]; map.push(i); } }
+    let idx = out.indexOf(nq); if (idx < 0) return;
+    const frag = document.createDocumentFragment(); let last = 0;
+    while (idx >= 0) {
+      const a = map[idx], b = map[idx + nq.length - 1] + 1;
+      if (a >= last) {
+        if (a > last) frag.appendChild(document.createTextNode(t.slice(last, a)));
+        const m = document.createElement('mark'); m.className = 'n28-hit'; m.textContent = t.slice(a, b); frag.appendChild(m); last = b;
+      }
+      idx = out.indexOf(nq, idx + nq.length);
+    }
+    if (last < t.length) frag.appendChild(document.createTextNode(t.slice(last)));
+    n.replaceWith(frag);
+  });
+}
+function enrichCard(card, note) {
+  const body = card.querySelector('.card-body'); if (!body) return;
+  const v = analyse(note);
+  const content = body.querySelector('.card-content');
+  let anchor = content;
+  if (content && v.total > 0) {
+    const p = document.createElement('div'); p.className = 'card-prog' + (v.done === v.total ? ' done' : '');
+    p.innerHTML = '<i><b style="--p:' + Math.round(v.done / v.total * 100) + '%"></b></i><span>' + v.done + '/' + v.total + '</span>';
+    anchor.after(p); anchor = p;
+  }
+  if (content && v.domain) {
+    const ch = document.createElement('div'); ch.className = 'card-chip'; ch.innerHTML = ic.link + '<span>' + esc(v.domain) + '</span>';
+    anchor.after(ch);
+  }
+  const q = searchInput.value.trim();
+  if (q.length > 1) { hl(body.querySelector('.card-title'), q); hl(content, q); }
+}
+const _makeCard = makeCard;
+makeCard = function (note) {
+  const card = _makeCard(note);
+  try { enrichCard(card, note); } catch (e) {}
+  return card;
+};
+
+// ═══ E) gestá na kartách: potiahnutie doprava = pripnúť, doľava = do koša (s Späť) ═
+(function swipe() {
+  let st = null, lastSwipe = 0;
+  const allowed = () => S.swipe && currentTab !== TRASH_TAB && currentTab !== AI_TAB && !activeShareId && !bulkMode && !modal.classList.contains('open');
+  const thresh = card => Math.min(110, card.offsetWidth * 0.36);
+  const parts = card => card.querySelectorAll('.card-body,.card-cover');
+  function begin() {
+    const { card } = st;
+    card.classList.add('swiping');
+    st.ov = document.createElement('div'); st.ov.className = 'swipe-ov';
+    card.insertBefore(st.ov, card.firstChild);
+    st.type = '';
+  }
+  function move(dx) {
+    st.dx = dx;
+    const lim = st.card.offsetWidth * 0.9, x = Math.max(-lim, Math.min(lim, dx));
+    parts(st.card).forEach(el => { el.style.transition = 'none'; el.style.transform = 'translateX(' + x + 'px)'; });
+    const type = dx > 0 ? 'pin' : 'trash';
+    if (type !== st.type) {
+      st.type = type;
+      st.ov.className = 'swipe-ov ' + type;
+      st.ov.innerHTML = type === 'pin' ? ic.pin + '<span>' + (st.note.pinned ? 'Odpnúť' : 'Pripnúť') + '</span>' : '<span>Do koša</span>' + ic.trash;
+    }
+    st.ov.style.opacity = Math.min(1, Math.abs(dx) / 70);
+    const armed = Math.abs(dx) >= thresh(st.card);
+    if (armed !== st.armed) { st.armed = armed; st.ov.classList.toggle('armed', armed); if (armed) haptic(12); }
+  }
+  function reset(s, animate) {
+    const { card, ov } = s;
+    parts(card).forEach(el => { el.style.transition = animate ? 'transform .24s cubic-bezier(.32,.72,0,1)' : 'none'; el.style.transform = ''; });
+    if (ov) ov.style.opacity = 0;
+    setTimeout(() => { card.classList.remove('swiping'); parts(card).forEach(el => { el.style.transition = ''; el.style.transform = ''; }); if (ov) ov.remove(); }, animate ? 260 : 0);
+  }
+  function doPin(note) {
+    const to = !note.pinned; haptic(18);
+    updateDoc(noteDoc(note.id), { pinned: to }).catch(err => showToast('Chyba: ' + err.message, 'warn', 4000));
+    showUndoToast(to ? 'Pripnuté' : 'Odpnuté', () => updateDoc(noteDoc(note.id), { pinned: !to }).catch(() => {}), 4000);
+  }
+  function doTrash(note) {
+    if (lockedNotes.has(note.id)) { showToast('Poznámka je zamknutá', 'warn'); return; }
+    haptic(24);
+    updateDoc(noteDoc(note.id), { _trash: true, _trashedAt: serverTimestamp(), _origTab: note.tab || '' }).catch(err => showToast('Chyba: ' + err.message, 'warn', 4000));
+    showUndoToast('Presunuté do koša', () => updateDoc(noteDoc(note.id), { _trash: false, _trashedAt: null }).catch(() => {}), 6000);
+  }
+  notesGrid.addEventListener('touchstart', e => {
+    st = null;
+    if (!allowed() || e.touches.length !== 1) return;
+    const card = e.target.closest && e.target.closest('.note-card[data-id]'); if (!card) return;
+    if (e.target.closest('a,button,.card-img,.order-btn')) return;
+    const t = e.touches[0];
+    if (t.clientX < 22 || t.clientX > innerWidth - 22) return;      // okraje = systémové gesto "späť"
+    const id = card.dataset.id;
+    if (id === QUICKNOTE_ID || id === WIDGETNOTE_ID) return;
+    const note = notes.find(n => n.id === id); if (!note) return;
+    st = { card, note, x: t.clientX, y: t.clientY, lock: null, dx: 0, armed: false, ov: null, type: '' };
+  }, { passive: true });
+  notesGrid.addEventListener('touchmove', e => {
+    if (!st) return;
+    const t = e.touches[0], dx = t.clientX - st.x, dy = t.clientY - st.y;
+    if (st.lock === null) {
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+      if (Math.abs(dx) > Math.abs(dy) * 1.5) { st.lock = 'x'; begin(); } else { st = null; return; }
+    }
+    if (e.cancelable) e.preventDefault();
+    move(dx);
+  }, { passive: false });
+  const end = () => {
+    if (!st) return;
+    const s = st; st = null;
+    if (s.lock !== 'x') return;
+    lastSwipe = Date.now();
+    if (Math.abs(s.dx) >= thresh(s.card)) {
+      const dir = s.dx > 0 ? 1 : -1;
+      parts(s.card).forEach(el => { el.style.transition = 'transform .18s ease-in'; el.style.transform = 'translateX(' + (dir * 105) + '%)'; });
+      setTimeout(() => { if (dir > 0) { reset(s, false); doPin(s.note); } else { doTrash(s.note); setTimeout(() => reset(s, false), 400); } }, 170);
+    } else reset(s, true);
+  };
+  notesGrid.addEventListener('touchend', end, { passive: true });
+  notesGrid.addEventListener('touchcancel', () => { if (st && st.lock === 'x') { const s = st; st = null; reset(s, true); } else st = null; }, { passive: true });
+  notesGrid.addEventListener('click', e => { if (Date.now() - lastSwipe < 450) { e.stopPropagation(); e.preventDefault(); } }, true);
+})();
+
+// ═══ F) zoznam úloh: animácia, haptika, odškrtnuté sa plynulo presunú dole ═════
+editor.addEventListener('change', e => {
+  const cb = e.target;
+  if (!cb || !cb.classList || !cb.classList.contains('check-cb')) return;
+  const row = cb.closest('.check-row'); if (!row) return;
+  haptic(10);
+  row.classList.remove('chk-pop'); void row.offsetWidth; row.classList.add('chk-pop');
+  setTimeout(() => row.classList.remove('chk-pop'), 400);
+  if (S.chk) setTimeout(() => reorderBlock(row), 300);
+}, true);
+function reorderBlock(row) {
+  if (!row.isConnected || editor.contentEditable === 'false') return;
+  const isRow = n => n && n.classList && n.classList.contains('check-row');
+  const isDone = r => { const c = r.querySelector('.check-cb'); return !!(c && c.checked); };
+  let first = row; while (isRow(first.previousElementSibling)) first = first.previousElementSibling;
+  const rows = []; for (let n = first; isRow(n); n = n.nextElementSibling) rows.push(n);
+  if (rows.length < 2) return;
+  const tops = new Map(rows.map(r => [r, r.getBoundingClientRect().top]));
+  const others = rows.filter(r => r !== row);
+  if (isDone(row)) {
+    const lastUn = others.slice().reverse().find(r => !isDone(r));
+    if (lastUn) { if (lastUn.nextElementSibling !== row) lastUn.after(row); }
+    else if (others[0].previousElementSibling !== row) others[0].before(row);
+  } else {
+    const firstDone = others.find(r => isDone(r));
+    if (firstDone) { if (firstDone.previousElementSibling !== row) firstDone.before(row); }
+    else if (others[others.length - 1].nextElementSibling !== row) others[others.length - 1].after(row);
+  }
+  let moved = false;
+  rows.forEach(r => {
+    const dy = tops.get(r) - r.getBoundingClientRect().top;
+    if (Math.abs(dy) > 1) { moved = true; r.style.transition = 'none'; r.style.transform = 'translateY(' + dy + 'px)'; }
+  });
+  if (!moved) return;
+  void editor.offsetHeight;
+  requestAnimationFrame(() => {
+    rows.forEach(r => { if (r.style.transform) { r.style.transition = 'transform .28s cubic-bezier(.32,.72,0,1)'; r.style.transform = ''; } });
+    setTimeout(() => rows.forEach(r => { r.style.transition = ''; }), 340);
+  });
+  scheduleAutosave();
+}
+
+// ═══ G) hľadanie ako vstupné dvere: nedávne, filtre, potiahnutie, zvýraznenie ══
+const RKEY = 'n28-recent-q';
+function addRecent(q) {
+  q = String(q || '').trim(); if (q.length < 2) return;
+  const r = lsGet(RKEY, []).filter(x => x.toLowerCase() !== q.toLowerCase()); r.unshift(q); lsSet(RKEY, r.slice(0, 6));
+}
+searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') addRecent(searchInput.value); });
+searchInput.addEventListener('search', () => addRecent(searchInput.value));
+const F = { pinned: false, img: false, chk: false, link: false, week: false };
+const FCHIPS = [['pinned', 'Pripnuté'], ['img', 'S obrázkom'], ['chk', 'Zoznam úloh'], ['link', 'S odkazom'], ['week', 'Tento týždeň']];
+const anyF = () => Object.keys(F).some(k => F[k]);
+const matchF = n => {
+  if (F.pinned && !n.pinned) return false;
+  const c = n.content || '';
+  if (F.img && !((n.images || []).some(i => !i.type || i.type === 'image') || /<img\b/i.test(c))) return false;
+  if (F.chk && !/check-row/.test(c)) return false;
+  if (F.link && !/https?:\/\/|www\./i.test(c)) return false;
+  if (F.week) { const ms = (n.updatedAt || n.createdAt)?.toMillis?.() ?? 0; if (Date.now() - ms > 7 * 864e5) return false; }
+  return true;
+};
+const ss = document.createElement('div'); ss.id = 'search-suggest';
+const hdr = topbar && topbar.querySelector('header'); if (hdr) hdr.after(ss);
+function renderSS() {
+  if (matchMedia('(min-width:1000px)').matches && !document.body.classList.contains('search-open')) { document.body.classList.add('search-open'); return; }
+  const q = searchInput.value.trim();
+  const rec = (document.activeElement === searchInput && !q) ? lsGet(RKEY, []) : [];
+  let h = '<div class="ss-row ss-filters">' + FCHIPS.map(([k, t]) => '<button type="button" class="ss-chip' + (F[k] ? ' on' : '') + '" data-f="' + k + '">' + t + '</button>').join('') + '</div>';
+  if (rec.length) h += '<div class="ss-lab">Nedávne</div><div class="ss-row">' + rec.map(t => '<button type="button" class="ss-chip ss-recent" data-q="' + esc(t) + '">' + ic.search + esc(t) + '</button>').join('') + '</div>';
+  ss.innerHTML = h; ss.classList.add('on');
+}
+ss.addEventListener('mousedown', e => e.preventDefault());
+ss.addEventListener('click', e => {
+  const c = e.target.closest('.ss-chip'); if (!c) return;
+  if (c.dataset.f) { F[c.dataset.f] = !F[c.dataset.f]; haptic(8); renderSS(); renderNotes(); }
+  else if (c.dataset.q != null) { searchInput.value = c.dataset.q; searchInput.dispatchEvent(new Event('input')); searchInput.focus(); renderSS(); }
+});
+['focus', 'input'].forEach(ev => searchInput.addEventListener(ev, renderSS));
+searchInput.addEventListener('blur', () => setTimeout(renderSS, 260));
+new MutationObserver(renderSS).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+const _renderGrid = renderGrid;
+renderGrid = function (list) { if (anyF()) list = list.filter(matchF); _renderGrid(list); try { addResurface(); } catch (e) {} };
+const _renderGlobalSearch = renderGlobalSearch;
+renderGlobalSearch = function (q) {
+  _renderGlobalSearch(q);
+  if (!anyF()) return;
+  notesGrid.querySelectorAll('.note-card[data-id]').forEach(c => {
+    const n = notes.find(x => x.id === c.dataset.id) || Object.values(sharedNotes).flat().find(x => x.id === c.dataset.id);
+    if (n && !matchF(n)) c.remove();
+  });
+};
+// potiahnutie zoznamu dole (na začiatku) otvorí hľadanie
+(function pull() {
+  if (!wrap) return;
+  let y0 = null, x0 = 0, done = false;
+  wrap.addEventListener('touchstart', e => {
+    done = false;
+    y0 = (wrap.scrollTop <= 0 && e.touches.length === 1 && !modal.classList.contains('open') && !bulkMode) ? e.touches[0].clientY : null;
+    x0 = e.touches[0].clientX;
+  }, { passive: true });
+  wrap.addEventListener('touchmove', e => {
+    if (y0 == null || done) return;
+    const t = e.touches[0], dy = t.clientY - y0;
+    if (dy > 100 && Math.abs(t.clientX - x0) < 40 && !document.body.classList.contains('search-open')) {
+      done = true; haptic(12); const b = $id('search-toggle'); if (b) b.click();
+    }
+  }, { passive: true });
+})();
+
+// ═══ H) pripomenutie: stará poznámka na vrchu v "Všetko" ═══════════════════════
+const RS_KEY = 'n28-resurf-dismiss';
+function ageText(ms) {
+  const d = Math.floor((Date.now() - ms) / 864e5);
+  if (d < 60) return 'Pred ' + d + ' dňami';
+  const m = Math.floor(d / 30.4);
+  if (m < 12) return 'Pred ' + m + ' mesiacmi';
+  const y = Math.floor(m / 12);
+  return y === 1 ? 'Pred rokom' : 'Pred ' + y + ' rokmi';
+}
+function addResurface() {
+  if (currentTab !== LAST_TAB || searchInput.value.trim() || activeTag || activeSmart || activeShareId || anyF()) return;
+  if (!notesGrid.querySelector('.note-card[data-id]')) return;
+  const day = new Date().toDateString();
+  if (lsGet(RS_KEY, '') === day) return;
+  const pool = notes.filter(n => {
+    if (n._trash || n.id === QUICKNOTE_ID || n.id === WIDGETNOTE_ID || lockedNotes.has(n.id)) return false;
+    const ms = (n.updatedAt || n.createdAt)?.toMillis?.(); if (!ms || Date.now() - ms < 45 * 864e5) return false;
+    return (n.content || '').replace(/<[^>]*>/g, '').trim().length >= 40;
+  });
+  if (!pool.length) return;
+  let h = 0; for (let i = 0; i < day.length; i++) h = (h * 31 + day.charCodeAt(i)) >>> 0;
+  const n = pool[h % pool.length];
+  const ms = (n.updatedAt || n.createdAt).toMillis();
+  const tmp = document.createElement('div'); tmp.innerHTML = cardContentPreview(n.content || '');
+  const snip = (tmp.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 160);
+  const el = document.createElement('div'); el.className = 'resurface';
+  el.innerHTML = '<div class="rs-ico">' + ic.past + '</div><div class="rs-body"><div class="rs-kick">' + ageText(ms) + '</div>' +
+    (n.title ? '<div class="rs-title">' + esc(n.title) + '</div>' : '') + '<div class="rs-snip">' + esc(snip) + '</div></div><button type="button" class="rs-x" aria-label="Skryť">×</button>';
+  el.onclick = e => { if (e.target.closest('.rs-x')) { e.stopPropagation(); lsSet(RS_KEY, day); el.remove(); return; } openModal(n); };
+  notesGrid.insertBefore(el, notesGrid.firstChild);
+}
+
+// ═══ I) dátum v texte → "Pridať do kalendára" ═══════════════════════════════════
+const dchip = document.createElement('div');
+dchip.id = 'date-chip'; dchip.innerHTML = ic.cal + '<span>Pridať do kalendára</span>';
+document.body.appendChild(dchip);
+let dchipTimer = null, dchipData = null;
+function hideDchip() { dchip.classList.remove('open'); dchipData = null; clearTimeout(dchipTimer); }
+const DATE_RE = /(\d{1,2})\.\s?(\d{1,2})\.(?:\s?(\d{4}|\d{2})(?!\d))?/g;
+editor.addEventListener('click', e => {
+  if (e.target.closest('a,.check-cb')) return;
+  setTimeout(() => {
+    const s = getSelection();
+    if (!s.rangeCount || !s.isCollapsed || !s.anchorNode || s.anchorNode.nodeType !== 3 || !editor.contains(s.anchorNode)) return hideDchip();
+    const t = s.anchorNode.data, off = s.anchorOffset; let m, hit = null;
+    DATE_RE.lastIndex = 0;
+    while ((m = DATE_RE.exec(t))) { if (off >= m.index && off <= m.index + m[0].length) { hit = m; break; } }
+    if (!hit) return hideDchip();
+    const d = +hit[1], mo = +hit[2]; if (d < 1 || d > 31 || mo < 1 || mo > 12) return hideDchip();
+    const now = new Date(); let y = hit[3] ? (hit[3].length === 2 ? 2000 + +hit[3] : +hit[3]) : now.getFullYear();
+    let dt = new Date(y, mo - 1, d);
+    if (dt.getMonth() !== mo - 1) return hideDchip();
+    if (!hit[3] && dt < new Date(now.getFullYear(), now.getMonth(), now.getDate())) dt = new Date(y + 1, mo - 1, d);
+    const after = t.slice(hit.index + hit[0].length, hit.index + hit[0].length + 14);
+    const tm = after.match(/^[\s,;–-]*(?:o\s*)?(\d{1,2}):(\d{2})/);
+    const line = (s.anchorNode.parentElement && s.anchorNode.parentElement.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 90);
+    dchipData = { dt, hh: tm ? +tm[1] : null, mm: tm ? +tm[2] : 0, title: inputTitle.value.trim() || line || 'Udalosť' };
+    const r = s.getRangeAt(0).getBoundingClientRect();
+    const top = (r.top > 70 ? r.top - 46 : r.bottom + 10), left = Math.min(Math.max(8, r.left - 20), innerWidth - 210);
+    dchip.style.top = top + 'px'; dchip.style.left = left + 'px'; dchip.classList.add('open');
+    clearTimeout(dchipTimer); dchipTimer = setTimeout(hideDchip, 5500);
+  }, 30);
+});
+editor.addEventListener('input', hideDchip);
+dchip.addEventListener('mousedown', e => e.preventDefault());
+dchip.addEventListener('click', () => {
+  if (!dchipData) return;
+  const { dt, hh, mm, title } = dchipData;
+  const p2 = n => String(n).padStart(2, '0'), ymd = d => d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate());
+  let dates;
+  if (hh != null && hh < 24 && mm < 60) {
+    const a = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), hh, mm), b = new Date(a.getTime() + 3600e3);
+    const f = d => ymd(d) + 'T' + p2(d.getHours()) + p2(d.getMinutes()) + '00';
+    dates = f(a) + '/' + f(b);
+  } else { const nx = new Date(dt.getTime() + 864e5); dates = ymd(dt) + '/' + ymd(nx); }
+  window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + dates, '_blank', 'noopener');
+  hideDchip();
+});
+
+// ═══ J) fokus + písací stroj: aktuálny riadok svieti, zvyšok je tlmený ══════════
+const hasHL = !!(window.CSS && CSS.highlights && window.Highlight);
+function clearTW() { if (hasHL) { try { CSS.highlights.delete('tw-dim'); } catch (e) {} } }
+let twTick = false;
+function updateTW() {
+  twTick = false;
+  if (!modal.classList.contains('open') || !_focusMode) { clearTW(); return; }
+  const s = getSelection();
+  if (!s.rangeCount || !editor.contains(s.anchorNode)) { clearTW(); return; }
+  let el = s.anchorNode;
+  while (el && el.parentNode !== editor) el = el.parentNode;
+  if (!el) { clearTW(); return; }
+  if (el.nodeType === 1 && /^(UL|OL)$/.test(el.tagName)) { const li = (s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement).closest('li'); if (li && editor.contains(li)) el = li; }
+  const isBlock = n => n.nodeType === 1 && (/^(DIV|P|UL|OL|LI|H[1-6]|BLOCKQUOTE|HR)$/.test(n.tagName) || n.classList.contains('check-row'));
+  let a = el, b = el;
+  if (!isBlock(el)) {
+    while (a.previousSibling && !(a.previousSibling.nodeType === 1 && (a.previousSibling.tagName === 'BR' || isBlock(a.previousSibling)))) a = a.previousSibling;
+    while (b.nextSibling && !(b.nextSibling.nodeType === 1 && (b.nextSibling.tagName === 'BR' || isBlock(b.nextSibling)))) b = b.nextSibling;
+  }
+  if (hasHL) {
+    try {
+      const cur = document.createRange(); cur.setStartBefore(a); cur.setEndAfter(b);
+      const r1 = document.createRange(); r1.setStart(editor, 0); r1.setEnd(cur.startContainer, cur.startOffset);
+      const r2 = document.createRange(); r2.setStart(cur.endContainer, cur.endOffset); r2.setEnd(editor, editor.childNodes.length);
+      CSS.highlights.set('tw-dim', new Highlight(r1, r2));
+    } catch (e) {}
+  }
+  const rects = s.getRangeAt(0).getClientRects();
+  const r = rects[0] || (el.nodeType === 1 ? el : el.parentElement).getBoundingClientRect();
+  const body = modalBody(); if (!body || !r || (!r.top && !r.bottom)) return;
+  const br = body.getBoundingClientRect(), dy = r.top - (br.top + br.height * 0.42);
+  if (Math.abs(dy) > 30) body.scrollBy({ top: dy, behavior: 'smooth' });
+}
+document.addEventListener('selectionchange', () => {
+  if (!_focusMode || twTick || !modal.classList.contains('open')) return;
+  twTick = true; requestAnimationFrame(updateTW);
+});
+const fbtn = $id('modal-focus-btn');
+if (fbtn) fbtn.addEventListener('click', () => setTimeout(() => { if (_focusMode) updateTW(); else clearTW(); }, 80));
+
+// ═══ K) lomítkové menu "/" v editore ══════════════════════════════════════════
+const slash = document.createElement('div'); slash.id = 'slash-menu'; document.body.appendChild(slash);
+let slashItems = [], slashIdx = 0;
+const ins = t => document.execCommand('insertText', false, t);
+const SL = [
+  { k: 'todo checklist ukol ulohy zoznam uloh', t: 'Zoznam úloh', s: '/todo', i: ic.check, run: () => $id('btn-checklist').onmousedown(new Event('mousedown')) },
+  { k: 'odrazky bullet zoznam', t: 'Odrážky', s: '/odrazky', i: ic.list, run: () => document.execCommand('insertUnorderedList') },
+  { k: 'cislovany cisla numbered', t: 'Číslovaný zoznam', s: '/cisla', i: ic.olist, run: () => document.execCommand('insertOrderedList') },
+  { k: 'datum dnes date', t: 'Dnešný dátum', s: '/datum', i: ic.cal, run: () => ins(new Date().toLocaleDateString('sk-SK')) },
+  { k: 'cas hodina time', t: 'Aktuálny čas', s: '/cas', i: ic.clock, run: () => ins(new Date().toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' })) },
+  { k: 'oddelovac ciara divider', t: 'Oddeľovač', s: '/ciara', i: ic.minus, run: () => document.execCommand('insertHorizontalRule') },
+  { sep: 1 },
+  { k: 'sken skenovat foto fotka dokument', t: 'Skenovať z fotky', s: '/sken', i: ic.camera, run: () => scanFlow('editor') },
+  { k: 'diktovat hlas mikrofon', t: 'Diktovať hlasom', s: '/hlas', i: ic.mic, run: () => dictateFlow('editor') },
+  { sep: 1 },
+  { k: 'zhrn zhrnutie summary ai', t: 'AI: zhrnúť poznámku', s: '/zhrn', i: ic.spark, run: () => aiSummary() },
+  { k: 'pokracuj dopis ai dalej', t: 'AI: pokračovať v písaní', s: '/pokracuj', i: ic.spark, run: () => aiContinue() },
+  { sep: 1 },
+  { k: 'obrazok zdielat image karta', t: 'Zdieľať ako obrázok', s: '/obrazok', i: ic.image, run: () => shareImage() },
+];
+function slashCtx() {
+  const s = getSelection(); if (!s.rangeCount || !s.isCollapsed) return null;
+  const n = s.anchorNode; if (!n || n.nodeType !== 3 || !editor.contains(n)) return null;
+  if (n.parentElement && n.parentElement.closest('.check-row')) return null;
+  const before = n.data.slice(0, s.anchorOffset);
+  const m = before.match(/(^|[\s ])\/([^\s\/]{0,14})$/); if (!m) return null;
+  return { node: n, start: s.anchorOffset - m[2].length - 1, end: s.anchorOffset, q: m[2] };
+}
+function closeSlash() { slash.classList.remove('open'); slashItems = []; }
+function renderSlash() {
+  slash.innerHTML = slashItems.map((it, i) => it.sep ? '<div class="slash-sep"></div>' : '<div class="slash-item' + (i === slashIdx ? ' on' : '') + '" data-i="' + i + '">' + it.i + '<span>' + it.t + '</span><small>' + it.s + '</small></div>').join('');
+}
+function positionSlash() {
+  const s = getSelection(); if (!s.rangeCount) return;
+  let r = s.getRangeAt(0).getBoundingClientRect();
+  if (!r.top && !r.bottom) { const p = s.anchorNode.parentElement; if (p) r = p.getBoundingClientRect(); }
+  const vv = window.visualViewport, vh = vv ? vv.height + vv.offsetTop : innerHeight;
+  const mh = slash.offsetHeight, mw = slash.offsetWidth;
+  let top = r.bottom + 8; if (top + mh > vh - 8) top = Math.max(8, r.top - mh - 8);
+  slash.style.top = top + 'px'; slash.style.left = Math.max(8, Math.min(r.left, innerWidth - mw - 8)) + 'px';
+}
+function updateSlash() {
+  if (_isComposing) return;
+  const c = slashCtx(); if (!c) return closeSlash();
+  const q = norm(c.q);
+  let list = SL.filter(it => it.sep ? !q : (!q || norm(it.k + ' ' + it.t).includes(q)));
+  list = list.filter((it, i) => !(it.sep && (i === 0 || i === list.length - 1)));
+  if (!list.some(it => !it.sep)) return closeSlash();
+  slashItems = list;
+  if (slashIdx >= list.length || list[slashIdx].sep) slashIdx = list.findIndex(it => !it.sep);
+  renderSlash(); slash.classList.add('open'); positionSlash();
+}
+function applySlash(i) {
+  const it = slashItems[i]; if (!it || it.sep) return;
+  const c = slashCtx();
+  if (c) {
+    const r = document.createRange(); r.setStart(c.node, c.start); r.setEnd(c.node, c.end); r.deleteContents();
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  closeSlash();
+  try { it.run(); } catch (e) { showToast('Chyba: ' + e.message, 'warn'); }
+  editor.dispatchEvent(new Event('input'));
+}
+editor.addEventListener('input', () => { slashIdx = 0; updateSlash(); });
+document.addEventListener('selectionchange', () => { if (slash.classList.contains('open') && !slashCtx()) closeSlash(); });
+slash.addEventListener('mousedown', e => e.preventDefault());
+slash.addEventListener('click', e => { const it = e.target.closest('.slash-item'); if (it) applySlash(+it.dataset.i); });
+editor.addEventListener('keydown', e => {
+  if (!slash.classList.contains('open')) return;
+  const move = d => { let i = slashIdx; do { i = (i + d + slashItems.length) % slashItems.length; } while (slashItems[i].sep); slashIdx = i; renderSlash(); const on = slash.querySelector('.on'); if (on) on.scrollIntoView({ block: 'nearest' }); };
+  if (e.key === 'ArrowDown') { e.preventDefault(); e.stopImmediatePropagation(); move(1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); e.stopImmediatePropagation(); move(-1); }
+  else if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); e.stopImmediatePropagation(); applySlash(slashIdx); }
+  else if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); closeSlash(); }
+}, true);
+
+// ═══ L) zachytenie: sken z fotky + diktovanie ══════════════════════════════════
+const checkHtml = (t, done) => '<div class="check-row" contenteditable="false"><input type="checkbox" class="check-cb"' + (done ? ' checked' : '') + '><span class="check-label" contenteditable="true"' + (done ? ' style="text-decoration:line-through;opacity:.5"' : '') + '>' + esc(t) + '</span></div>';
+function textToNoteHtml(text) {
+  const lines = String(text || '').replace(/\r/g, '').split('\n'); let out = '', list = null;
+  const closeList = () => { if (list) { out += '</' + list + '>'; list = null; } };
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, ''); let m;
+    if ((m = line.match(/^\s*\[( |x|X)\]\s+(.*)$/))) { closeList(); out += checkHtml(m[2], m[1] !== ' '); }
+    else if ((m = line.match(/^\s*[-*•]\s+(.*)$/))) { if (list !== 'ul') { closeList(); out += '<ul>'; list = 'ul'; } out += '<li>' + esc(m[1]) + '</li>'; }
+    else if ((m = line.match(/^\s*\d+[.)]\s+(.*)$/))) { if (list !== 'ol') { closeList(); out += '<ol>'; list = 'ol'; } out += '<li>' + esc(m[1]) + '</li>'; }
+    else { closeList(); out += line.trim() ? '<div>' + esc(line) + '</div>' : '<div><br></div>'; }
+  }
+  closeList(); return out;
+}
+function plainEditorText() { return (editor.innerText || '').replace(/​/g, '').trim(); }
+function normalTab() { return (currentTab && currentTab !== LAST_TAB && currentTab !== TRASH_TAB && currentTab !== AI_TAB && !activeShareId) ? currentTab : ''; }
+function createNote({ title, html: content, images }) {
+  const ref = doc(notesRef());
+  const data = { title: title || '', content, dueDate: null, color: null, images: images || [], createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email, folder: null, sortOrder: 0, tab: normalTab() };
+  setDoc(ref, data).catch(err => showToast('Chyba: ' + err.message, 'warn', 4000));
+  window._lastCreatedNoteId = ref.id;
+  openModal({ id: ref.id, title: data.title, content, images: data.images, tab: data.tab, createdAt: null });
+  return ref.id;
+}
+async function uploadBlob(blob, name) {
+  const fd = new FormData(); fd.append('file', blob, name); fd.append('upload_preset', CLOUDINARY_PRESET); fd.append('folder', 'notes28/' + currentUser.uid);
+  const res = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', { method: 'POST', body: fd });
+  const d = await res.json(); if (!d.secure_url) throw new Error((d.error && d.error.message) || 'Upload zlyhal');
+  return { url: d.secure_url, publicId: d.public_id, name, type: 'image' };
+}
+function attachImageToNote(id, entry) {
+  if (editingId === id && modal.classList.contains('open')) { pendingImages.push(entry); renderImagePreviews(); scheduleAutosave(); }
+  else updateDoc(noteDoc(id), { images: arrayUnion(entry) }).catch(() => {});
+}
+function pickImage() {
+  return new Promise(res => {
+    const i = document.createElement('input'); i.type = 'file'; i.accept = 'image/*'; i.capture = 'environment'; i.style.display = 'none';
+    document.body.appendChild(i);
+    i.onchange = () => { const f = i.files && i.files[0]; i.remove(); res(f || null); };
+    i.oncancel = () => { i.remove(); res(null); };
+    i.click();
+  });
+}
+async function shrink(file, max, q) {
+  let src, w, h;
+  try { src = await createImageBitmap(file); w = src.width; h = src.height; }
+  catch (e) {
+    const url = URL.createObjectURL(file);
+    src = await new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = url; });
+    w = src.naturalWidth; h = src.naturalHeight;
+  }
+  const k = Math.min(1, max / Math.max(w, h)), c = document.createElement('canvas');
+  c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', q));
+  const b64 = await new Promise(r => { const fr = new FileReader(); fr.onloadend = () => r(String(fr.result).split(',')[1]); fr.readAsDataURL(blob); });
+  return { blob, b64 };
+}
+async function claudeVision(b64, system, userText) {
+  const key = getApiKey();
+  if (!key) { showToast('Nastav si Anthropic API kľúč v Nastaveniach.', 'error'); openSettings(); throw new Error('chýba API kľúč'); }
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 2500, system, messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: userText }] }] })
+  });
+  if (!r.ok) throw new Error('API ' + r.status);
+  const d = await r.json(); const b = (d.content || []).find(x => x.type === 'text');
+  if (!b) throw new Error('Prázdna odpoveď'); return b.text.trim();
+}
+const SCAN_SYS = 'Si presný OCR a editor poznámok. Z fotografie vytvor čistú poznámku v pôvodnom jazyku dokumentu. Vráť IBA JSON bez komentára: {"title":"krátky názov, max 6 slov","text":"obsah poznámky"}. V "text" oddeľ odseky znakom \\n; zoznamy píš ako riadky začínajúce "- "; ak sú na fotke políčka na odškrtnutie alebo úlohy, píš riadky začínajúce "[ ] " alebo "[x] ". Nič nevymýšľaj ani nedopĺňaj; nečitateľné miesta označ [nečitateľné]. Zachovaj čísla, mená a dátumy presne.';
+function applyResult(out, target, extra) {
+  const obj = parseJsonLoose(out); const title = obj && obj.title ? String(obj.title).trim() : ''; const text = obj && typeof obj.text === 'string' ? obj.text : out;
+  const h = textToNoteHtml(text);
+  if (target === 'editor' && modal.classList.contains('open')) {
+    editor.focus();
+    if (!inputTitle.value.trim() && title) inputTitle.value = title;
+    document.execCommand('insertHTML', false, h);
+    restoreChecklists(); editor.dispatchEvent(new Event('input'));
+    return editingId;
+  }
+  return createNote({ title, html: h, images: [] });
+}
+async function scanFlow(target) {
+  const f = await pickImage(); if (!f) return;
+  const done = busy('Spracúvam fotku…');
+  try {
+    const { blob, b64 } = await shrink(f, 1600, 0.82);
+    const out = await claudeVision(b64, SCAN_SYS, 'Prepíš a uprac túto fotografiu do poznámky.');
+    const id = applyResult(out, target);
+    uploadBlob(blob, 'sken-' + Date.now() + '.jpg').then(en => attachImageToNote(id, en)).catch(() => {});
+    showToast('Poznámka z fotky je hotová', 'ok');
+  } catch (e) { showToast('Sken zlyhal: ' + e.message, 'warn', 5000); }
+  finally { done(); }
+}
+const DICT_SYS = 'Dostaneš surový prepis diktovaného textu. Oprav interpunkciu, veľké písmená a zjavné chyby rozpoznávania reči. Nič nepridávaj ani nevymýšľaj; zachovaj jazyk a význam. Ak ide o výpočet vecí, daj ich ako riadky začínajúce "- ". Vráť IBA JSON bez komentára: {"title":"krátky názov, max 6 slov","text":"upravený text"}.';
+const dict = document.createElement('div'); dict.id = 'dict-overlay';
+dict.innerHTML = '<div class="dict-orb">' + ic.mic.replace(/width="17" height="17"/, 'width="36" height="36"') + '</div><div class="dict-text" id="dict-text"></div><div class="dict-hint">Hovor — ťukni na Hotovo, keď skončíš</div><div class="dict-btns"><button type="button" class="btn btn-ghost" id="dict-cancel">Zrušiť</button><button type="button" class="btn btn-primary" id="dict-done">Hotovo</button></div>';
+document.body.appendChild(dict);
+function dictateFlow(target) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('Diktovanie tu nie je dostupné. Použi mikrofón na klávesnici.', 'warn', 5000); return; }
+  let rec; try { rec = new SR(); } catch (e) { showToast('Diktovanie sa nepodarilo spustiť.', 'warn'); return; }
+  rec.lang = 'sk-SK'; rec.interimResults = true; rec.continuous = !/Android/i.test(navigator.userAgent);
+  let fin = '', interim = '', stopping = false, cancelled = false;
+  const tEl = $id('dict-text');
+  const show = () => { tEl.innerHTML = esc(fin) + '<em>' + esc(interim) + '</em>'; tEl.scrollTop = tEl.scrollHeight; };
+  const close = () => dict.classList.remove('open');
+  rec.onresult = e => {
+    interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) { const r = e.results[i]; if (r.isFinal) fin += r[0].transcript + ' '; else interim += r[0].transcript; }
+    show();
+  };
+  rec.onerror = e => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    cancelled = true; close();
+    showToast(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'Mikrofón nie je povolený.' : 'Diktovanie zlyhalo: ' + e.error, 'warn', 5000);
+  };
+  rec.onend = async () => {
+    if (!stopping && !cancelled) { try { rec.start(); } catch (e) {} return; }
+    close(); if (cancelled) return;
+    const text = (fin + interim).trim();
+    if (text.length < 2) { showToast('Nič som nezachytil.', 'info'); return; }
+    let out = text;
+    if (getApiKey()) {
+      const done = busy('Upratujem text…');
+      try { out = await n28Claude(DICT_SYS, text, { max: 1500 }); } catch (e) { out = text; }
+      finally { done(); }
+    }
+    const id = applyResult(out, target);
+    if (id && !parseJsonLoose(out) && target !== 'editor') { /* bez AI: názov ostane prázdny */ }
+  };
+  $id('dict-done').onclick = () => { stopping = true; try { rec.stop(); } catch (e) {} };
+  $id('dict-cancel').onclick = () => { cancelled = true; try { rec.abort(); } catch (e) {} close(); };
+  fin = ''; interim = ''; show(); dict.classList.add('open');
+  try { rec.start(); } catch (e) { close(); showToast('Diktovanie sa nepodarilo spustiť.', 'warn'); }
+}
+async function aiSummary() {
+  const text = plainEditorText();
+  if (text.length < 80) { showToast('Poznámka je príliš krátka na zhrnutie.', 'info'); return; }
+  const done = busy('AI zhrňuje…');
+  try {
+    const out = await n28Claude('Zhrň poznámku v 1–3 vetách v jazyku poznámky. Bez úvodu a úvodzoviek, iba samotné zhrnutie.', text.slice(0, 12000), { max: 300 });
+    const d = document.createElement('div'); d.innerHTML = '<b>Zhrnutie:</b> ' + esc(out);
+    const sp = document.createElement('div'); sp.innerHTML = '<br>';
+    editor.insertBefore(sp, editor.firstChild); editor.insertBefore(d, editor.firstChild);
+    editor.dispatchEvent(new Event('input'));
+  } catch (e) { showToast('AI zlyhala: ' + e.message, 'warn', 4000); } finally { done(); }
+}
+async function aiContinue() {
+  const text = plainEditorText();
+  if (text.length < 20) { showToast('Napíš najprv pár viet.', 'info'); return; }
+  const done = busy('AI píše ďalej…');
+  try {
+    const out = await n28Claude('Pokračuj v písaní tejto poznámky 1–2 odsekmi, rovnakým štýlom a jazykom. Vráť iba pokračovanie, bez úvodu.', text.slice(-8000), { max: 600 });
+    const frag = document.createDocumentFragment();
+    out.split('\n').forEach(l => { const d = document.createElement('div'); if (l.trim()) d.textContent = l; else d.innerHTML = '<br>'; frag.appendChild(d); });
+    editor.appendChild(frag); editor.dispatchEvent(new Event('input'));
+  } catch (e) { showToast('AI zlyhala: ' + e.message, 'warn', 4000); } finally { done(); }
+}
+
+// ── spodný panel rýchlych akcií + mini FAB
+const sheet = document.createElement('div'); sheet.id = 'cap-sheet';
+sheet.innerHTML = '<div class="cs-box"><div class="cs-grip"></div>' +
+  '<button type="button" class="cs-item" data-a="scan"><span class="cs-ico">' + ic.camera + '</span><span><div class="cs-t">Skenovať dokument</div><div class="cs-s">Odfoť papier alebo tabuľu, AI z toho urobí poznámku</div></span></button>' +
+  '<button type="button" class="cs-item" data-a="voice"><span class="cs-ico">' + ic.mic + '</span><span><div class="cs-t">Diktovať poznámku</div><div class="cs-s">Hovor, text sa prepíše a uprace</div></span></button>' +
+  '<button type="button" class="cs-item" data-a="quick"><span class="cs-ico">' + ic.bolt + '</span><span><div class="cs-t">Rýchla poznámka</div><div class="cs-s">Rovno do písania, bez názvu</div></span></button></div>';
+document.body.appendChild(sheet);
+const openSheet = () => sheet.classList.add('open');
+const closeSheet = () => sheet.classList.remove('open');
+sheet.addEventListener('click', e => {
+  const b = e.target.closest('.cs-item');
+  if (!b) { if (e.target === sheet) closeSheet(); return; }
+  closeSheet();
+  const a = b.dataset.a;
+  if (a === 'scan') scanFlow('new'); else if (a === 'voice') dictateFlow('new'); else if (a === 'quick') openQuickNote();
+});
+const fab2 = document.createElement('button'); fab2.id = 'fab2'; fab2.type = 'button'; fab2.title = 'Skenovať / diktovať'; fab2.setAttribute('aria-label', 'Rýchle akcie');
+fab2.innerHTML = ic.camera; fab.after(fab2);
+fab2.onclick = openSheet;
+new MutationObserver(() => fab2.classList.toggle('fab-hidden', fab.classList.contains('fab-hidden'))).observe(fab, { attributes: true, attributeFilter: ['class'] });
+(function fabLongPress() {
+  let tm = null, lp = false;
+  fab.addEventListener('pointerdown', () => { lp = false; clearTimeout(tm); tm = setTimeout(() => { lp = true; haptic(20); openSheet(); }, 480); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => fab.addEventListener(ev, () => clearTimeout(tm)));
+  fab.onclick = () => { if (lp) { lp = false; return; } openModal(); };
+})();
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSheet(); } });
+
+// ═══ M) zdieľanie poznámky ako obrázka ═════════════════════════════════════════
+function extractLines() {
+  const out = []; let buf = '';
+  const flush = () => {
+    const t = buf.replace(/​/g, '').replace(/[ \t ]+/g, ' ').trim();
+    if (t) out.push({ type: 'p', text: t }); else if (out.length && out[out.length - 1].type !== 'gap') out.push({ type: 'gap' });
+    buf = '';
+  };
+  const walk = node => {
+    if (node.nodeType === 3) { buf += node.data; return; }
+    if (node.nodeType !== 1) return;
+    const tag = node.tagName;
+    if (node.classList.contains('check-row')) { flush(); const cb = node.querySelector('.check-cb'); out.push({ type: 'chk', done: !!(cb && cb.checked), text: ((node.querySelector('.check-label') || {}).textContent || '').trim() }); return; }
+    if (tag === 'BR') { flush(); return; }
+    if (tag === 'UL' || tag === 'OL') { flush(); let i = 0; node.querySelectorAll(':scope > li').forEach(li => { i++; out.push({ type: 'li', n: tag === 'OL' ? i : 0, text: li.textContent.replace(/\s+/g, ' ').trim() }); }); return; }
+    if (tag === 'IMG' || tag === 'HR') { flush(); return; }
+    const block = /^(DIV|P|H[1-6]|BLOCKQUOTE)$/.test(tag);
+    if (block) flush();
+    node.childNodes.forEach(walk);
+    if (block) flush();
+  };
+  editor.childNodes.forEach(walk); flush();
+  while (out.length && out[0].type === 'gap') out.shift();
+  while (out.length && out[out.length - 1].type === 'gap') out.pop();
+  return out;
+}
+function wrapText(ctx, text, maxW) {
+  const words = text.split(' '), lines = []; let cur = '';
+  for (const w of words) {
+    const t = cur ? cur + ' ' + w : w;
+    if (ctx.measureText(t).width <= maxW || !cur) cur = t; else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur); return lines;
+}
+async function shareImage() {
+  const title = inputTitle.value.trim(), items = extractLines();
+  if (!title && !items.length) { showToast('Poznámka je prázdna.', 'warn'); return; }
+  const cs = getComputedStyle(html), col = (n, d) => (cs.getPropertyValue(n).trim() || d);
+  const bg = col('--bg', '#262624'), surf = col('--surface', '#30302e'), tx = col('--text', '#f3f2ec'), tx2 = col('--text2', '#a8a69d'), acc = col('--earth', col('--accent-default', '#b08463'));
+  const W = 1080, M = 40, P = 76, IW = W - 2 * M - 2 * P;
+  const serif = '"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif', sans = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+  const sc = document.createElement('canvas').getContext('2d');
+  const TF = '700 60px ' + serif, BF = '400 36px ' + sans, LH = 54, TLH = 76;
+  const ops = []; let y = 0;
+  if (title) { sc.font = TF; wrapText(sc, title, IW).slice(0, 3).forEach(l => { ops.push({ k: 't', x: 0, y: y + 54, s: l }); y += TLH; }); y += 22; }
+  sc.font = BF; let nLines = 0, truncated = false;
+  for (const it of items) {
+    if (nLines >= 22) { truncated = true; break; }
+    if (it.type === 'gap') { y += 26; continue; }
+    const ind = it.type === 'p' ? 0 : 52;
+    const ls = wrapText(sc, it.text, IW - ind).slice(0, 8);
+    ls.forEach((l, i) => {
+      if (i === 0 && it.type === 'chk') ops.push({ k: 'c', x: 0, y: y + 8, done: it.done });
+      if (i === 0 && it.type === 'li') ops.push({ k: 'b', x: 14, y: y + 26, n: it.n });
+      ops.push({ k: 'p', x: ind, y: y + 38, s: l, dim: it.type === 'chk' && it.done }); y += LH; nLines++;
+    });
+  }
+  if (truncated) { ops.push({ k: 'p', x: 0, y: y + 38, s: '…', dim: true }); y += LH; }
+  const H = M + P + y + 40 + 70 + P / 2 + M;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  const rr = (x, yy, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, yy); ctx.arcTo(x + w, yy, x + w, yy + h, r); ctx.arcTo(x + w, yy + h, x, yy + h, r); ctx.arcTo(x, yy + h, x, yy, r); ctx.arcTo(x, yy, x + w, yy, r); ctx.closePath(); };
+  ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 40; ctx.shadowOffsetY = 14;
+  rr(M, M, W - 2 * M, H - 2 * M, 44); ctx.fillStyle = surf; ctx.fill();
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+  const ox = M + P, oy = M + P;
+  ctx.textBaseline = 'alphabetic';
+  ops.forEach(o => {
+    if (o.k === 't') { ctx.font = TF; ctx.fillStyle = tx; ctx.fillText(o.s, ox + o.x, oy + o.y); }
+    else if (o.k === 'p') { ctx.font = BF; ctx.fillStyle = o.dim ? tx2 : tx; ctx.fillText(o.s, ox + o.x, oy + o.y); }
+    else if (o.k === 'b') { ctx.fillStyle = tx2; if (o.n) { ctx.font = '600 32px ' + sans; ctx.fillText(o.n + '.', ox + o.x - 14, oy + o.y + 10); } else { ctx.beginPath(); ctx.arc(ox + o.x + 4, oy + o.y, 6, 0, 7); ctx.fill(); } }
+    else if (o.k === 'c') {
+      rr(ox + o.x, oy + o.y, 34, 34, 10);
+      if (o.done) { ctx.fillStyle = acc; ctx.fill(); ctx.strokeStyle = surf; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(ox + o.x + 8, oy + o.y + 18); ctx.lineTo(ox + o.x + 15, oy + o.y + 25); ctx.lineTo(ox + o.x + 27, oy + o.y + 10); ctx.stroke(); }
+      else { ctx.strokeStyle = tx2; ctx.lineWidth = 3; ctx.stroke(); }
+    }
+  });
+  const fy = oy + y + 40 + 40;
+  ctx.fillStyle = tx2; ctx.font = '700 30px ' + sans; ctx.textAlign = 'left'; ctx.fillText('N28', ox, fy);
+  ctx.font = '400 28px ' + sans; ctx.textAlign = 'right'; ctx.fillText(new Date().toLocaleDateString('sk-SK'), ox + IW, fy);
+  const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+  if (!blob) { showToast('Obrázok sa nepodarilo vytvoriť.', 'warn'); return; }
+  const file = new File([blob], 'n28-poznamka.png', { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: title || 'N28' }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'n28-poznamka.png';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  showToast('Obrázok uložený', 'ok');
+}
+(function addShareImageMenu() {
+  const menu = $id('meta-more-menu'), ref = $id('btn-notelink'); if (!menu || !ref) return;
+  const mk = (label, icon, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'more-menu-item'; b.innerHTML = icon.replace('<svg ', '<svg style="margin-right:.4rem;vertical-align:-2px;" ') + label; b.onclick = () => { menu.style.display = 'none'; fn(); }; return b; };
+  ref.after(mk('Zdieľať ako obrázok', ic.image, shareImage));
+  ref.after(mk('Diktovať hlasom', ic.mic, () => dictateFlow('editor')));
+  ref.after(mk('Skenovať z fotky', ic.camera, () => scanFlow('editor')));
+})();
+
+window.n28Scan = () => scanFlow('new');
+window.n28Plus = { version: '2026-10-20' };
+})();
+</script>
+<script>
+/* n28 copy-image (added 2026-10-20) */
+(function(){
+  var btn=null, raf=0;
+  function toast(m){
+    try{ if(typeof showToast==='function'){ showToast(m); return; } }catch(e){}
+    var d=document.createElement('div'); d.textContent=m;
+    d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#3a352f;color:#f2eee8;padding:10px 16px;border-radius:10px;font:14px sans-serif;z-index:99999;box-shadow:0 4px 16px rgba(0,0,0,.4)';
+    document.body.appendChild(d); setTimeout(function(){ d.remove(); },2200);
+  }
+  function toPngBlob(img){
+    return new Promise(function(res,rej){
+      var im=new Image(); im.crossOrigin='anonymous';
+      im.onload=function(){ try{
+        var c=document.createElement('canvas'); c.width=im.naturalWidth; c.height=im.naturalHeight;
+        c.getContext('2d').drawImage(im,0,0);
+        c.toBlob(function(b){ b?res(b):rej(new Error('blob')); },'image/png');
+      }catch(e){ rej(e); } };
+      im.onerror=function(){ rej(new Error('load')); };
+      im.src=img.currentSrc||img.src;
+    });
+  }
+  async function copyImg(img){
+    if(!img) return;
+    try{
+      if(!(navigator.clipboard && window.ClipboardItem)) throw new Error('noapi');
+      await navigator.clipboard.write([new ClipboardItem({'image/png': toPngBlob(img)})]);
+      toast('✅ Obrázok skopírovaný');
+    }catch(e){
+      try{ await navigator.clipboard.writeText(img.src); toast('📋 Skopírovaný odkaz na obrázok'); }
+      catch(e2){ window.open(img.src,'_blank'); toast('Obrázok otvorený – pravý klik › Kopírovať obrázok'); }
+    }
+  }
+  function sync(){
+    var ex=document.querySelector('.n28-expand-handle:not(.n28-copy-handle)');
+    if(!ex){ if(btn){ btn.remove(); btn=null; } raf=0; return; }
+    if(!btn){
+      btn=document.createElement('div'); btn.className='n28-expand-handle n28-copy-handle';
+      btn.textContent='📋'; btn.title='Kopírovať obrázok';
+      btn.addEventListener('mousedown',function(e){ e.preventDefault(); e.stopPropagation(); });
+      btn.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); copyImg(document.querySelector('img.n28-img-selected')); };
+      document.body.appendChild(btn);
+    }
+    var l=parseFloat(ex.style.left), t=parseFloat(ex.style.top);
+    if(!isNaN(l)){ btn.style.left=(l-30)+'px'; btn.style.top=t+'px'; }
+    raf=setTimeout(sync,50);
+  }
+  new MutationObserver(function(){
+    if(!raf && document.querySelector('.n28-expand-handle:not(.n28-copy-handle)')) raf=setTimeout(sync,50);
+  }).observe(document.body,{childList:true});
+  document.addEventListener('copy',function(e){
+    var img=document.querySelector('img.n28-img-selected'); if(!img) return;
+    var s=window.getSelection(); if(s && !s.isCollapsed && String(s).trim()) return;
+    e.preventDefault(); copyImg(img);
+  });
 })();
 </script>
 </body>

@@ -25,4 +25,15 @@
     <string name="qw_empty">Zatiaľ prázdne</string>
     <string name="widget_quick_name">N28 widget poznámka</string>
     <string name="widget_quick_desc">Píš do poznámky „Widget“ bez otvárania appky</string>
+    <string name="widget_list_name">N28 zoznam poznámok</string>
+    <string name="widget_list_desc">Pripnuté, posledné alebo pripomenutie starej poznámky</string>
+    <string name="l_mode_recent">Posledné poznámky</string>
+    <string name="l_mode_pinned">Pripnuté</string>
+    <string name="l_mode_memory">Pripomenutie dňa</string>
+    <string name="l_cfg_what">Čo zobraziť?</string>
+    <string name="l_next">Ďalej</string>
+    <string name="l_empty">Zatiaľ nič. Otvor appku N28, nech sa poznámky načítajú.</string>
+    <string name="l_empty_pinned">Žiadne pripnuté poznámky. Pripni poznámku v appke.</string>
+    <string name="dict_prompt">Diktuj poznámku…</string>
+    <string name="dict_missing">Na telefóne chýba rozpoznávanie reči (Google).</string>
 </resources>

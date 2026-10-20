@@ -36,3 +36,8 @@ Treba raz nastaviť:
 
 APK sa podpisuje `app/debug.keystore` (je v repe, tak ako pri Weather28), takže nové verzie sa inštalujú cez staré.
 Tajné údaje (tokeny, API kľúče) do repa nepatria – `n28-list.php` je v `.gitignore`.
+
+## Widgety
+- **Widget poznámka** (N28 widget poznámka): píš do poznámky „Widget“ bez otvárania appky, vedľa sú tlačidlá **kamera** (otvorí appku rovno v režime „skenovať fotku do poznámky“) a **mikrofón** (systémové diktovanie, text sa uloží do poznámky Widget).
+- **Zoznam poznámok** (N28 zoznam poznámok): pripnuté / posledné / pripomenutie dňa (stará poznámka); ťuk na riadok otvorí poznámku. Režim a vzhľad sa menia cez ⚙.
+- **N28 poznámka**: jedna vybraná poznámka, odškrtávanie zoznamu priamo vo widgete.

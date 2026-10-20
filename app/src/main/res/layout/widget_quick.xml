@@ -31,8 +31,9 @@
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:text="@string/qw_title"
-                android:textColor="#c8f135"
-                android:textSize="13sp"
+                android:textColor="#b08463"
+                android:fontFamily="serif"
+                android:textSize="14sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -46,31 +47,57 @@
                 android:textSize="16sp"/>
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/qw_write"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="38dp"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <FrameLayout
+                android:id="@+id/qw_write"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/qw_pill"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/widget_pill_shape"
+                    android:contentDescription="@null"/>
+
+                <TextView
+                    android:id="@+id/qw_write_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:text="@string/qw_write"
+                    android:textColor="#f2f2f2"
+                    android:textSize="14sp"/>
+            </FrameLayout>
 
             <ImageView
-                android:id="@+id/qw_pill"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/widget_pill_shape"
-                android:contentDescription="@null"/>
+                android:id="@+id/qw_scan"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="6dp"
+                android:padding="9dp"
+                android:src="@drawable/ic_camera"
+                android:contentDescription="Skenovať"/>
 
-            <TextView
-                android:id="@+id/qw_write_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:text="@string/qw_write"
-                android:textColor="#f2f2f2"
-                android:textSize="14sp"/>
-        </FrameLayout>
+            <ImageView
+                android:id="@+id/qw_mic"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="2dp"
+                android:padding="9dp"
+                android:src="@drawable/ic_mic"
+                android:contentDescription="Diktovať"/>
+        </LinearLayout>
         <ListView
             android:id="@+id/qw_list"
             android:layout_width="match_parent"

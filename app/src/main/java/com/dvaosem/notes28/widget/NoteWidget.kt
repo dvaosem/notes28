@@ -41,6 +41,7 @@ class NoteWidget : AppWidgetProvider() {
             val ids = mgr.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
             for (id in ids) updateWidget(context, mgr, id)
             QuickWidget.refreshAll(context)
+            NotesListWidget.refreshAll(context)
         }
 
         fun hasWidgets(context: Context): Boolean {
@@ -103,7 +104,7 @@ class NoteWidget : AppWidgetProvider() {
             views.setTextColor(R.id.w_title, fg)
             views.setTextColor(R.id.w_text, sub)
             views.setTextColor(R.id.w_cfg, muted)
-            views.setTextColor(R.id.w_add, if (style == WidgetPrefs.STYLE_GRAY) Color.rgb(176, 132, 99) else Color.rgb(200, 241, 53))
+            views.setTextColor(R.id.w_add, if (style == WidgetPrefs.STYLE_LIGHT) Color.rgb(122, 90, 62) else Color.rgb(176, 132, 99))
 
             // tap on the widget -> open the note (or the app)
             val open = Intent(context, MainActivity::class.java).apply {
