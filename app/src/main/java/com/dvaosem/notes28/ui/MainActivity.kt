@@ -46,6 +46,7 @@ import org.json.JSONObject
  * The web app itself is updated through the hosting (service worker); the APK changes only when this shell does.
  */
 class MainActivity : AppCompatActivity() {
+    private var bootProc = 0L; private var bootCreate = 0L; private var bootStart = 0L; private var bootFinish = 0L
 
     companion object {
         const val START_URL = "https://dvaosem.com/notes28.html"
@@ -78,6 +79,8 @@ class MainActivity : AppCompatActivity() {
     private fun call(fn: String, argJson: String) = js("window.$fn&&window.$fn($argJson)")
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        bootCreate = android.os.SystemClock.uptimeMillis()
+        bootProc = android.os.Process.getStartUptimeMillis()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         webView = findViewById(R.id.webview)
@@ -160,6 +163,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class AndroidBridge {
+
+        /** Startup timing (ms): process->onCreate, onCreate->pageStarted, onCreate->pageFinished. */
+        @JavascriptInterface
+        fun getBoot(): String = "proc " + (bootCreate - bootProc) + " · wv " + (bootStart - bootCreate) + " · load " + (bootFinish - bootCreate)
 
         /** Web app reports its current theme background so the next cold start paints it natively. */
         @JavascriptInterface
@@ -383,7 +390,12 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
+            override fun onPageStarted(view: WebView, url: String?, favicon: android.graphics.Bitmap?) {
+                if (bootStart == 0L) bootStart = android.os.SystemClock.uptimeMillis()
+            }
+
             override fun onPageFinished(view: WebView, url: String?) {
+                if (bootFinish == 0L) bootFinish = android.os.SystemClock.uptimeMillis()
                 pageLoaded = true
                 CookieManager.getInstance().flush()
                 deliverShare()
