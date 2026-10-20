@@ -304,7 +304,7 @@ class MainActivity : AppCompatActivity() {
             val mgr = AppWidgetManager.getInstance(this@MainActivity)
             if (!mgr.isRequestPinAppWidgetSupported) return false
             runOnUiThread {
-                mgr.requestPinAppWidget(ComponentName(this@MainActivity, com.dvaosem.notes28.widget.QuickWidget::class.java), null, null)
+                mgr.requestPinAppWidget(ComponentName(this@MainActivity, com.dvaosem.notes28.widget.NotesListWidget::class.java), null, null)
             }
             return true
         }

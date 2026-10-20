@@ -49,14 +49,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".widget.QuickConfigActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Notes28.Config">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".widget.ListConfigActivity"
@@ -73,6 +65,14 @@
             android:excludeFromRecents="true"
             android:taskAffinity=""
             android:theme="@style/Theme.Notes28.Quick"/>
+
+        <activity
+            android:name=".widget.WidgetActionActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Notes28.Trampoline"/>
 
         <activity
             android:name=".widget.AddNoteActivity"
@@ -97,16 +97,6 @@
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
             android:theme="@style/Theme.Notes28.Quick"/>
 
-        <receiver
-            android:name=".widget.QuickWidget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info_quick"/>
-        </receiver>
 
         <receiver
             android:name=".widget.NoteWidget"

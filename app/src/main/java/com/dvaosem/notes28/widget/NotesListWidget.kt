@@ -25,12 +25,12 @@ class NotesListWidget : AppWidgetProvider() {
     }
 
     companion object {
-        class Palette(val bg: Int, val fg: Int, val sub: Int, val muted: Int, val accent: Int)
+        class Palette(val bg: Int, val fg: Int, val sub: Int, val muted: Int, val accent: Int, val card: Int)
 
         fun palette(style: String): Palette = when (style) {
-            WidgetPrefs.STYLE_LIGHT -> Palette(Color.rgb(250, 250, 250), Color.rgb(26, 26, 26), Color.rgb(90, 90, 90), Color.rgb(120, 120, 120), Color.rgb(122, 90, 62))
-            WidgetPrefs.STYLE_DARK -> Palette(Color.rgb(15, 15, 15), Color.rgb(242, 242, 242), Color.rgb(190, 190, 190), Color.rgb(160, 160, 160), Color.rgb(176, 132, 99))
-            else -> Palette(Color.rgb(38, 38, 36), Color.rgb(243, 242, 236), Color.rgb(200, 198, 190), Color.rgb(168, 166, 157), Color.rgb(176, 132, 99))
+            WidgetPrefs.STYLE_LIGHT -> Palette(Color.rgb(250, 250, 250), Color.rgb(26, 26, 26), Color.rgb(90, 90, 90), Color.rgb(120, 120, 120), Color.rgb(122, 90, 62), Color.rgb(240, 238, 232))
+            WidgetPrefs.STYLE_DARK -> Palette(Color.rgb(15, 15, 15), Color.rgb(242, 242, 242), Color.rgb(190, 190, 190), Color.rgb(160, 160, 160), Color.rgb(176, 132, 99), Color.rgb(32, 32, 31))
+            else -> Palette(Color.rgb(38, 38, 36), Color.rgb(243, 242, 236), Color.rgb(200, 198, 190), Color.rgb(168, 166, 157), Color.rgb(176, 132, 99), Color.rgb(52, 51, 48))
         }
 
         fun refreshAll(context: Context) {
@@ -42,6 +42,7 @@ class NotesListWidget : AppWidgetProvider() {
         private fun flags() = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 
         fun titleFor(context: Context, mode: String): String = when (mode) {
+            WidgetPrefs.MODE_ALL -> context.getString(R.string.l_mode_all)
             WidgetPrefs.MODE_PINNED -> context.getString(R.string.l_mode_pinned)
             WidgetPrefs.MODE_MEMORY -> context.getString(R.string.l_mode_memory)
             else -> context.getString(R.string.l_mode_recent)
@@ -70,9 +71,9 @@ class NotesListWidget : AppWidgetProvider() {
             views.setRemoteAdapter(R.id.l_list, svc)
 
             // tap on a row -> open that note (template + per-row fill-in intent)
-            val tpl = Intent(context, MainActivity::class.java).apply {
-                action = "com.dvaosem.notes28.LIST_OPEN_$id"
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val tpl = Intent(context, WidgetActionActivity::class.java).apply {
+                action = "com.dvaosem.notes28.LIST_ACT_$id"
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION)
             }
             views.setPendingIntentTemplate(R.id.l_list, PendingIntent.getActivity(context, id * 3 + 6000, tpl,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE))
@@ -90,6 +91,12 @@ class NotesListWidget : AppWidgetProvider() {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
             }
             views.setOnClickPendingIntent(R.id.l_cfg, PendingIntent.getActivity(context, id * 3 + 6002, cfg, flags()))
+
+            val add = Intent(context, AddNoteActivity::class.java).apply {
+                action = "com.dvaosem.notes28.LIST_ADD_$id"
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            views.setOnClickPendingIntent(R.id.l_add, PendingIntent.getActivity(context, id * 3 + 6003, add, flags()))
 
             mgr.updateAppWidget(id, views)
             mgr.notifyAppWidgetViewDataChanged(id, R.id.l_list)

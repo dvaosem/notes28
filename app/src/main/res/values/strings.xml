@@ -23,10 +23,9 @@
     <string name="qw_title">Widget poznámka</string>
     <string name="qw_write">✎  Napíš poznámku…</string>
     <string name="qw_empty">Zatiaľ prázdne</string>
-    <string name="widget_quick_name">N28 widget poznámka</string>
-    <string name="widget_quick_desc">Píš do poznámky „Widget“ bez otvárania appky</string>
-    <string name="widget_list_name">N28 zoznam poznámok</string>
-    <string name="widget_list_desc">Pripnuté, posledné alebo pripomenutie starej poznámky</string>
+    <string name="widget_list_name">N28 všetky poznámky</string>
+    <string name="widget_list_desc">Všetky poznámky ako v appke, zoznamy sa dajú odškrtávať, tlačidlo + pridá poznámku</string>
+    <string name="l_mode_all">Všetky poznámky</string>
     <string name="l_mode_recent">Posledné poznámky</string>
     <string name="l_mode_pinned">Pripnuté</string>
     <string name="l_mode_memory">Pripomenutie dňa</string>

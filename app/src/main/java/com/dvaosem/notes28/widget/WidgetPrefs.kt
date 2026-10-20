@@ -122,10 +122,11 @@ object WidgetPrefs {
     fun quickHasChecks(c: Context): Boolean = find(c, QUICK_ID)?.items?.any { it.check } == true
 
     // notes-list widget: mode = pinned | recent | memory
+    const val MODE_ALL = "all"
     const val MODE_PINNED = "pinned"
     const val MODE_RECENT = "recent"
     const val MODE_MEMORY = "memory"
-    fun lMode(c: Context, id: Int): String = sp(c).getString("l${id}_mode", MODE_RECENT) ?: MODE_RECENT
+    fun lMode(c: Context, id: Int): String = sp(c).getString("l${id}_mode", MODE_ALL) ?: MODE_ALL
     fun lStyle(c: Context, id: Int): String = sp(c).getString("l${id}_style", STYLE_GRAY) ?: STYLE_GRAY
     fun lOpacity(c: Context, id: Int): Int = sp(c).getInt("l${id}_opacity", 92)
     fun saveList(c: Context, id: Int, mode: String, style: String, opacity: Int) {
@@ -141,6 +142,7 @@ object WidgetPrefs {
     fun listRows(c: Context, mode: String): List<NoteItem> {
         val all = notes(c).filter { !special(it) && (it.title.isNotBlank() || it.content.isNotBlank()) }
         return when (mode) {
+            MODE_ALL -> all.take(100)
             MODE_PINNED -> all.filter { it.pin }.take(12)
             MODE_MEMORY -> {
                 val old = all.filter { it.ts > 0 && System.currentTimeMillis() - it.ts > 45L * 86400000L && it.content.trim().length >= 40 }

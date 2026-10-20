@@ -40,7 +40,6 @@ class NoteWidget : AppWidgetProvider() {
             val mgr = AppWidgetManager.getInstance(context)
             val ids = mgr.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
             for (id in ids) updateWidget(context, mgr, id)
-            QuickWidget.refreshAll(context)
             NotesListWidget.refreshAll(context)
         }
 

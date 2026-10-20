@@ -55,6 +55,8 @@
             android:layout_marginTop="6dp"
             android:divider="@null"
             android:dividerHeight="0dp"
+            android:clipToPadding="false"
+            android:paddingBottom="70dp"
             android:scrollbars="none"/>
 
         <TextView
@@ -67,4 +69,13 @@
             android:textSize="13sp"
             android:visibility="gone"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/l_add"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:src="@drawable/ic_fab"
+        android:contentDescription="@null"/>
 </FrameLayout>

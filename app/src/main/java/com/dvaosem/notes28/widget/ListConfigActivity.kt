@@ -23,8 +23,8 @@ class ListConfigActivity : AppCompatActivity() {
     }
 
     private fun askMode() {
-        val modes = arrayOf(WidgetPrefs.MODE_RECENT, WidgetPrefs.MODE_PINNED, WidgetPrefs.MODE_MEMORY)
-        val labels = arrayOf(getString(R.string.l_mode_recent), getString(R.string.l_mode_pinned), getString(R.string.l_mode_memory))
+        val modes = arrayOf(WidgetPrefs.MODE_ALL, WidgetPrefs.MODE_RECENT, WidgetPrefs.MODE_PINNED, WidgetPrefs.MODE_MEMORY)
+        val labels = arrayOf(getString(R.string.l_mode_all), getString(R.string.l_mode_recent), getString(R.string.l_mode_pinned), getString(R.string.l_mode_memory))
         var sel = modes.indexOf(WidgetPrefs.lMode(this, widgetId)).coerceAtLeast(0)
         AlertDialog.Builder(this)
             .setTitle(R.string.l_cfg_what)
