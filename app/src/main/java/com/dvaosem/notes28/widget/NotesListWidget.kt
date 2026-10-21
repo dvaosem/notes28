@@ -33,10 +33,17 @@ class NotesListWidget : AppWidgetProvider() {
             else -> Palette(Color.rgb(38, 38, 36), Color.rgb(243, 242, 236), Color.rgb(200, 198, 190), Color.rgb(168, 166, 157), Color.rgb(176, 132, 99), Color.rgb(52, 51, 48))
         }
 
+        private val lastHas = HashMap<Int, Boolean>()
+
+        /** Data-only refresh (no full redraw, so no flicker / scroll jump); a full update only when empty<->filled changes. */
         fun refreshAll(context: Context) {
             val mgr = AppWidgetManager.getInstance(context)
             val ids = mgr.getAppWidgetIds(ComponentName(context, NotesListWidget::class.java))
-            for (id in ids) updateWidget(context, mgr, id)
+            for (id in ids) {
+                val has = WidgetPrefs.listRows(context, WidgetPrefs.lMode(context, id)).isNotEmpty()
+                if (lastHas[id] != has) { lastHas[id] = has; updateWidget(context, mgr, id) }
+                else mgr.notifyAppWidgetViewDataChanged(id, R.id.l_list)
+            }
         }
 
         private fun flags() = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -60,6 +67,7 @@ class NotesListWidget : AppWidgetProvider() {
             views.setTextColor(R.id.l_empty, p.muted)
 
             val has = WidgetPrefs.listRows(context, mode).isNotEmpty()
+            lastHas[id] = has
             views.setViewVisibility(R.id.l_list, if (has) View.VISIBLE else View.GONE)
             views.setViewVisibility(R.id.l_empty, if (has) View.GONE else View.VISIBLE)
             views.setTextViewText(R.id.l_empty, context.getString(if (mode == WidgetPrefs.MODE_PINNED) R.string.l_empty_pinned else R.string.l_empty))
