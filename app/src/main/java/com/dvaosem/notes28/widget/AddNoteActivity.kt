@@ -29,5 +29,6 @@ class AddNoteActivity : AppCompatActivity() {
             startActivity(Intent(this, DictateActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); finish()
         }
         findViewById<View>(R.id.a_photo).setOnClickListener { openApp(MainActivity.EXTRA_SCAN); finish() }
+        findViewById<View>(R.id.a_draw).setOnClickListener { openApp(MainActivity.EXTRA_DRAW); finish() }
     }
 }

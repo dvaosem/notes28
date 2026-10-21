@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_QUICK = "n28_quick"
         const val EXTRA_SCAN = "n28_scan"
         const val EXTRA_NEWLIST = "n28_newlist"
+        const val EXTRA_DRAW = "n28_draw"
         private val OWN_HOSTS = setOf("dvaosem.com", "www.dvaosem.com")
         private val URL_RE = Regex("https?://\\S+")
         private const val OFFLINE_HTML = "<html><head><meta name='viewport' content='width=device-width,initial-scale=1'></head>" +
@@ -128,6 +129,8 @@ class MainActivity : AppCompatActivity() {
             js("window.n28Scan&&window.n28Scan()")
         } else if (intent.getBooleanExtra(EXTRA_NEWLIST, false)) {
             js("window.n28NewList&&window.n28NewList()")
+        } else if (intent.getBooleanExtra(EXTRA_DRAW, false)) {
+            js("window.n28Draw&&window.n28Draw()")
         }
         clearLaunchExtras(intent)
         if (pageLoaded) deliverShare()
@@ -140,6 +143,7 @@ class MainActivity : AppCompatActivity() {
             i?.getBooleanExtra(EXTRA_QUICK, false) == true -> "$START_URL?quick=1"
             i?.getBooleanExtra(EXTRA_SCAN, false) == true -> "$START_URL?scan=1"
             i?.getBooleanExtra(EXTRA_NEWLIST, false) == true -> "$START_URL?newlist=1"
+            i?.getBooleanExtra(EXTRA_DRAW, false) == true -> "$START_URL?draw=1"
             else -> START_URL
         }
     }
@@ -149,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         i?.removeExtra(EXTRA_QUICK)
         i?.removeExtra(EXTRA_SCAN)
         i?.removeExtra(EXTRA_NEWLIST)
+        i?.removeExtra(EXTRA_DRAW)
     }
 
     /** A link shared from the browser (Share -> N28): remembered until the page is ready. */

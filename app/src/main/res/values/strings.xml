@@ -40,6 +40,8 @@
     <string name="add_list">Zoznam</string>
     <string name="add_voice">Hlasová poznámka</string>
     <string name="add_photo">Foto poznámka</string>
+    <string name="add_draw">Kresba</string>
+    <string name="l_opacity">Priehľadnosť pozadia</string>
     <string name="pick_title">Vyber poznámku</string>
     <string name="pick_empty">Zatiaľ nič. Otvor appku N28, nech sa poznámky načítajú.</string>
 </resources>

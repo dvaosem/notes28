@@ -42,8 +42,22 @@ class ListConfigActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle(R.string.cfg_style)
             .setSingleChoiceItems(labels, sel) { _, which -> sel = which }
+            .setPositiveButton(R.string.l_next) { _, _ -> askOpacity(mode, styles[sel]) }
+            .setNegativeButton(R.string.q_cancel) { _, _ -> finish() }
+            .setOnCancelListener { finish() }
+            .show()
+    }
+
+    private fun askOpacity(mode: String, style: String) {
+        val values = intArrayOf(100, 90, 75, 50, 25, 0)
+        val labels = arrayOf("Plné (100 %)", "90 %", "75 %", "50 %", "25 %", "Priehľadné (0 %)")
+        val cur = WidgetPrefs.lOpacity(this, widgetId)
+        var sel = values.indices.minByOrNull { Math.abs(values[it] - cur) } ?: 1
+        AlertDialog.Builder(this)
+            .setTitle(R.string.l_opacity)
+            .setSingleChoiceItems(labels, sel) { _, which -> sel = which }
             .setPositiveButton(R.string.cfg_save) { _, _ ->
-                WidgetPrefs.saveList(this, widgetId, mode, styles[sel], WidgetPrefs.lOpacity(this, widgetId))
+                WidgetPrefs.saveList(this, widgetId, mode, style, values[sel])
                 NotesListWidget.updateWidget(this, AppWidgetManager.getInstance(this), widgetId)
                 setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
                 finish()
