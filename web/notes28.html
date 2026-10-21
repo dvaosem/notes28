@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v101">
+<meta name="n28-build" content="n28-v102">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -634,6 +634,15 @@ html:not(.app-ready) #fab2{opacity:0!important;pointer-events:none;}
 /* Android WebView inak pri ťuknutí zafarbí kartu na modro (systémový tap highlight) */
 *{-webkit-tap-highlight-color:transparent;}
 .resurface{animation:none!important;}
+#fab2{display:none!important;}
+.cs-head{font-size:.78rem;font-weight:700;letter-spacing:.02em;color:var(--text2);padding:.1rem .6rem .45rem;}
+.draw-tool{width:36px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:#222;border:1px solid #333;border-radius:10px;color:#aaa;cursor:pointer;flex-shrink:0;padding:0;}
+.draw-tool.active{border-color:#b08463;color:#f3f2ec;background:#2c2a27;}
+.draw-ib{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:none;border:none;color:#ddd;cursor:pointer;flex-shrink:0;padding:0;}
+#draw-palette{display:none;position:absolute;top:56px;left:8px;z-index:3;background:#1f1e1d;border:1px solid #444;border-radius:14px;padding:10px;grid-template-columns:repeat(6,30px);gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+#draw-palette.open{display:grid;}
+#draw-palette .draw-color{width:30px;height:30px;border-radius:50%;border:2px solid #555;cursor:pointer;padding:0;}
+#draw-palette .draw-color.active{border-color:#fff;}
 /* telefón: rozmazané pozadie editora (backdrop-filter) je v WebView drahé a pri otváraní trhá */
 @media(pointer:coarse){.modal-box{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--surface)!important;}}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.28s;}
@@ -992,32 +1001,23 @@ html.vt-on .n28-modal{animation:none!important;}
 </div>
 <!-- DRAW OVERLAY -->
 <div id="draw-overlay" style="display:none;position:fixed;inset:0;z-index:2000;background:#1a1a1a;flex-direction:column;">
-  <div id="draw-toolbar" style="display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;background:#111;border-bottom:1px solid #333;flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+  <div id="draw-toolbar" style="display:flex;align-items:center;gap:.45rem;padding:.55rem .8rem;background:#111;border-bottom:1px solid #333;flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
     <button id="draw-close" style="background:none;border:none;color:#aaa;font-size:1.3rem;cursor:pointer;padding:.2rem .4rem;flex-shrink:0;">✕</button>
     <div style="width:1px;height:20px;background:#333;flex-shrink:0;"></div>
-    <!-- tools -->
-    <button class="draw-tool active" data-tool="pen" style="background:#222;border:1px solid #444;border-radius:8px;color:#fff;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">Pero</button>
-    <button class="draw-tool" data-tool="eraser" style="background:#222;border:1px solid #333;border-radius:8px;color:#aaa;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">⬜ Guma</button>
+    <button class="draw-tool active" data-tool="pen" title="Pero" aria-label="Pero"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+    <button class="draw-tool" data-tool="eraser" title="Guma" aria-label="Guma"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4l10-10a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4L11 21Z"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg></button>
     <div style="width:1px;height:20px;background:#333;flex-shrink:0;"></div>
-    <!-- colors -->
-    <div id="draw-colors" style="display:flex;gap:.3rem;align-items:center;flex-shrink:0;">
-      <button class="draw-color active" data-color="#ffffff" style="width:22px;height:22px;border-radius:50%;background:#ffffff;border:2px solid #fff;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#000000" style="width:22px;height:22px;border-radius:50%;background:#000000;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#ef4444" style="width:22px;height:22px;border-radius:50%;background:#ef4444;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#f97316" style="width:22px;height:22px;border-radius:50%;background:#f97316;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#eab308" style="width:22px;height:22px;border-radius:50%;background:#eab308;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#22c55e" style="width:22px;height:22px;border-radius:50%;background:#22c55e;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#3b82f6" style="width:22px;height:22px;border-radius:50%;background:#3b82f6;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-      <button class="draw-color" data-color="#a855f7" style="width:22px;height:22px;border-radius:50%;background:#a855f7;border:2px solid #555;cursor:pointer;flex-shrink:0;"></button>
-    </div>
-    <div style="width:1px;height:20px;background:#333;flex-shrink:0;"></div>
-    <!-- size -->
-    <input id="draw-size" type="range" min="1" max="40" value="4" style="width:70px;accent-color:#3b82f6;flex-shrink:0;">
+    <button id="draw-color-btn" title="Farba" aria-label="Farba" style="width:28px;height:28px;border-radius:50%;background:#ffffff;border:2px solid #777;cursor:pointer;flex-shrink:0;padding:0;"></button>
+    <input id="draw-size" type="range" min="1" max="40" value="4" style="width:70px;accent-color:#b08463;flex-shrink:0;">
     <div id="draw-size-preview" style="width:12px;height:12px;border-radius:50%;background:#fff;flex-shrink:0;"></div>
+    <div style="width:1px;height:20px;background:#333;flex-shrink:0;"></div>
+    <button id="draw-undo" class="draw-ib" title="Späť" aria-label="Späť"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+    <button id="draw-redo" class="draw-ib" title="Dopredu" aria-label="Dopredu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
     <div style="width:1px;height:20px;background:#333;flex-shrink:0;margin-left:auto;"></div>
     <button id="draw-clear" style="background:#333;border:none;border-radius:8px;color:#aaa;padding:.3rem .6rem;font-size:.82rem;cursor:pointer;flex-shrink:0;">Vymazať</button>
-    <button id="draw-save" style="background:#3b82f6;border:none;border-radius:8px;color:#fff;padding:.3rem .75rem;font-size:.82rem;cursor:pointer;font-weight:600;flex-shrink:0;">Uložiť</button>
+    <button id="draw-save" style="background:#b08463;border:none;border-radius:8px;color:#1f1e1d;padding:.3rem .75rem;font-size:.82rem;cursor:pointer;font-weight:700;flex-shrink:0;">Uložiť</button>
   </div>
+  <div id="draw-palette"><button class="draw-color active" data-color="#ffffff" style="background:#ffffff;" aria-label="Farba #ffffff"></button><button class="draw-color" data-color="#a8a69d" style="background:#a8a69d;" aria-label="Farba #a8a69d"></button><button class="draw-color" data-color="#000000" style="background:#000000;" aria-label="Farba #000000"></button><button class="draw-color" data-color="#ef4444" style="background:#ef4444;" aria-label="Farba #ef4444"></button><button class="draw-color" data-color="#f97316" style="background:#f97316;" aria-label="Farba #f97316"></button><button class="draw-color" data-color="#eab308" style="background:#eab308;" aria-label="Farba #eab308"></button><button class="draw-color" data-color="#22c55e" style="background:#22c55e;" aria-label="Farba #22c55e"></button><button class="draw-color" data-color="#14b8a6" style="background:#14b8a6;" aria-label="Farba #14b8a6"></button><button class="draw-color" data-color="#3b82f6" style="background:#3b82f6;" aria-label="Farba #3b82f6"></button><button class="draw-color" data-color="#a855f7" style="background:#a855f7;" aria-label="Farba #a855f7"></button><button class="draw-color" data-color="#ec4899" style="background:#ec4899;" aria-label="Farba #ec4899"></button><button class="draw-color" data-color="#b08463" style="background:#b08463;" aria-label="Farba #b08463"></button></div>
   <canvas id="draw-canvas" style="flex:1;touch-action:none;cursor:crosshair;display:block;"></canvas>
 </div>
 
@@ -4403,86 +4403,84 @@ document.getElementById('modal-export-word').onclick = () => {
     ctx.lineJoin = 'round';
   }
 
-  document.getElementById('draw-btn').onclick = openDraw;
-  document.getElementById('draw-close').onclick = () => { overlay.style.display = 'none'; window.removeEventListener('resize', onViewportChange); };
-  document.getElementById('draw-clear').onclick = () => {
-    ctx.fillStyle = '#2a2a2a';
-    ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-  };
+  // ── ťahy sa pamätajú ako vektory → Späť / Dopredu bez ťažkých snímok plátna
+  const BG = '#2a2a2a';
+  let strokes = [], redoStack = [], cur = null;
+  const palette = document.getElementById('draw-palette'), colorBtn = document.getElementById('draw-color-btn');
+  const undoBtn = document.getElementById('draw-undo'), redoBtn = document.getElementById('draw-redo');
+  function strokeStyleOf(s) { return { col: s.tool === 'eraser' ? BG : s.color, w: s.tool === 'eraser' ? s.size * 2.5 : s.size }; }
+  function paintStroke(s) {
+    const { col, w } = strokeStyleOf(s), p = s.pts; if (!p || !p.length) return;
+    ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (p.length === 1) { ctx.beginPath(); ctx.arc(p[0][0], p[0][1], w / 2, 0, Math.PI * 2); ctx.fill(); return; }
+    ctx.beginPath(); ctx.moveTo(p[0][0], p[0][1]); for (let i = 1; i < p.length; i++) ctx.lineTo(p[i][0], p[i][1]); ctx.stroke();
+  }
+  function updUR() { undoBtn.style.opacity = strokes.length ? 1 : .35; redoBtn.style.opacity = redoStack.length ? 1 : .35; }
+  function redraw() {
+    ctx.fillStyle = BG; ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    let from = 0; strokes.forEach((s, i) => { if (s.clear) from = i + 1; });
+    for (let i = from; i < strokes.length; i++) paintStroke(strokes[i]);
+    updUR();
+  }
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1, cssW = canvas.offsetWidth, cssH = canvas.offsetHeight;
+    if (!cssW || !cssH) return;
+    canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    redraw();
+  }
+  undoBtn.onclick = () => { if (!strokes.length) return; redoStack.push(strokes.pop()); redraw(); };
+  redoBtn.onclick = () => { if (!redoStack.length) return; strokes.push(redoStack.pop()); redraw(); };
+  document.getElementById('draw-btn').onclick = () => { strokes = []; redoStack = []; openDraw(); };
+  document.getElementById('draw-close').onclick = () => { overlay.style.display = 'none'; palette.classList.remove('open'); window.removeEventListener('resize', onViewportChange); };
+  document.getElementById('draw-clear').onclick = () => { if (!strokes.length || strokes[strokes.length - 1].clear) return; strokes.push({ clear: true }); redoStack = []; redraw(); };
 
-  // tools
-  document.querySelectorAll('.draw-tool').forEach(btn => {
+  // nástroje
+  const toolBtns = document.querySelectorAll('.draw-tool');
+  toolBtns.forEach(btn => { btn.onclick = () => { toolBtns.forEach(b => b.classList.toggle('active', b === btn)); currentTool = btn.dataset.tool; canvas.style.cursor = currentTool === 'eraser' ? 'cell' : 'crosshair'; }; });
+
+  // farby: ťuknutie na aktuálnu farbu rozbalí paletu
+  colorBtn.onclick = e => { e.stopPropagation(); palette.classList.toggle('open'); };
+  palette.querySelectorAll('.draw-color').forEach(btn => {
     btn.onclick = () => {
-      document.querySelectorAll('.draw-tool').forEach(b => {
-        b.style.borderColor = '#333'; b.style.color = '#aaa';
-        b.classList.remove('active');
-      });
-      btn.style.borderColor = '#3b82f6'; btn.style.color = '#fff';
-      btn.classList.add('active');
-      currentTool = btn.dataset.tool;
-      canvas.style.cursor = currentTool === 'eraser' ? 'cell' : 'crosshair';
+      currentColor = btn.dataset.color; colorBtn.style.background = currentColor; sizePreview.style.background = currentColor;
+      palette.querySelectorAll('.draw-color').forEach(b => b.classList.toggle('active', b === btn));
+      palette.classList.remove('open');
+      if (currentTool === 'eraser') document.querySelector('.draw-tool[data-tool="pen"]').click();
     };
   });
 
-  // colors
-  document.querySelectorAll('.draw-color').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.draw-color').forEach(b => b.style.borderColor = '#555');
-      btn.style.borderColor = '#fff';
-      currentColor = btn.dataset.color;
-      if (currentTool === 'eraser') {
-        // switch back to pen when picking a color
-        document.querySelector('.draw-tool[data-tool="pen"]').click();
-      }
-    };
-  });
-
-  // size
+  // hrúbka
   const sizeInput = document.getElementById('draw-size');
   const sizePreview = document.getElementById('draw-size-preview');
   sizeInput.oninput = () => {
     currentSize = parseInt(sizeInput.value);
     const s = Math.max(4, Math.min(currentSize, 22));
-    sizePreview.style.width  = s + 'px';
-    sizePreview.style.height = s + 'px';
+    sizePreview.style.width = s + 'px'; sizePreview.style.height = s + 'px';
   };
 
-  // draw helpers
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
-    if (e.touches) {
-      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    }
+    if (e.touches) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
-
   function startDraw(e) {
-    e.preventDefault();
+    e.preventDefault(); palette.classList.remove('open');
     drawing = true;
-    const {x, y} = getPos(e);
-    lastX = x; lastY = y;
-    ctx.beginPath();
-    ctx.arc(x, y, (currentTool==='eraser' ? currentSize*2 : currentSize) / 2, 0, Math.PI*2);
-    ctx.fillStyle = currentTool === 'eraser' ? '#2a2a2a' : currentColor;
-    ctx.fill();
+    const { x, y } = getPos(e);
+    cur = { tool: currentTool, color: currentColor, size: currentSize, pts: [[x, y]] };
+    paintStroke(cur); lastX = x; lastY = y;
   }
-
   function doDraw(e) {
     e.preventDefault();
-    if (!drawing) return;
-    const {x, y} = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = currentTool === 'eraser' ? '#2a2a2a' : currentColor;
-    ctx.lineWidth   = currentTool === 'eraser' ? currentSize * 2.5 : currentSize;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.stroke();
+    if (!drawing || !cur) return;
+    const { x, y } = getPos(e), { col, w } = strokeStyleOf(cur);
+    cur.pts.push([x, y]);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y);
+    ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
     lastX = x; lastY = y;
   }
-
-  function endDraw(e) { drawing = false; }
+  function endDraw() { if (drawing && cur) { strokes.push(cur); redoStack = []; updUR(); } drawing = false; cur = null; }
 
   canvas.addEventListener('mousedown',  startDraw);
   canvas.addEventListener('mousemove',  doDraw);
@@ -4507,6 +4505,10 @@ document.getElementById('modal-export-word').onclick = () => {
         if (data.secure_url) {
           pendingImages.push({url: data.secure_url, publicId: data.public_id, name:'kresba.png', type:'image'});
           renderImagePreviews();
+          // nová poznámka bez názvu by sa neuložila — daj jej názov a ulož hneď
+          if (!inputTitle.value.trim()) inputTitle.value = 'Kresba ' + new Date().toLocaleDateString('sk-SK');
+          try { clearTimeout(_autosaveTimer); doAutosave(); } catch (e) {}
+          palette.classList.remove('open');
           overlay.style.display = 'none';
           window.removeEventListener('resize', onViewportChange);
           showToast('✏️ Kresba pridaná');
@@ -6598,9 +6600,12 @@ async function aiContinue() {
 
 // ── spodný panel rýchlych akcií + mini FAB
 const sheet = document.createElement('div'); sheet.id = 'cap-sheet';
-sheet.innerHTML = '<div class="cs-box"><div class="cs-grip"></div>' +
-  '<button type="button" class="cs-item" data-a="scan"><span class="cs-ico">' + ic.camera + '</span><span><div class="cs-t">Skenovať dokument</div><div class="cs-s">Odfoť papier alebo tabuľu, AI z toho urobí poznámku</div></span></button>' +
-  '<button type="button" class="cs-item" data-a="voice"><span class="cs-ico">' + ic.mic + '</span><span><div class="cs-t">Diktovať poznámku</div><div class="cs-s">Hovor, text sa prepíše a uprace</div></span></button>' +
+sheet.innerHTML = '<div class="cs-box"><div class="cs-grip"></div><div class="cs-head">Pridať poznámku</div>' +
+  '<button type="button" class="cs-item" data-a="text"><span class="cs-ico">' + svg('<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="11" x2="20" y2="11"/><line x1="4" y1="16" x2="14" y2="16"/>') + '</span><span><div class="cs-t">Textová poznámka</div><div class="cs-s">Nová poznámka s názvom</div></span></button>' +
+  '<button type="button" class="cs-item" data-a="list"><span class="cs-ico">' + ic.check + '</span><span><div class="cs-t">Zoznam</div><div class="cs-s">Úlohy na odškrtnutie</div></span></button>' +
+  '<button type="button" class="cs-item" data-a="voice"><span class="cs-ico">' + ic.mic + '</span><span><div class="cs-t">Hlasová poznámka</div><div class="cs-s">Hovor, text sa prepíše a uprace</div></span></button>' +
+  '<button type="button" class="cs-item" data-a="scan"><span class="cs-ico">' + ic.camera + '</span><span><div class="cs-t">Foto poznámka</div><div class="cs-s">Odfoť papier alebo tabuľu, AI z toho urobí poznámku</div></span></button>' +
+  '<button type="button" class="cs-item" data-a="draw"><span class="cs-ico">' + svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>') + '</span><span><div class="cs-t">Kresba</div><div class="cs-s">Nakresli prstom</div></span></button>' +
   '<button type="button" class="cs-item" data-a="quick"><span class="cs-ico">' + ic.bolt + '</span><span><div class="cs-t">Rýchla poznámka</div><div class="cs-s">Rovno do písania, bez názvu</div></span></button></div>';
 document.body.appendChild(sheet);
 const openSheet = () => sheet.classList.add('open');
@@ -6611,6 +6616,7 @@ sheet.addEventListener('click', e => {
   closeSheet();
   const a = b.dataset.a;
   if (a === 'scan') scanFlow('new'); else if (a === 'voice') dictateFlow('new'); else if (a === 'quick') openQuickNote();
+  else if (a === 'text') openModal(); else if (a === 'list') window.n28NewList && window.n28NewList(); else if (a === 'draw') window.n28Draw && window.n28Draw();
 });
 const fab2 = document.createElement('button'); fab2.id = 'fab2'; fab2.type = 'button'; fab2.title = 'Skenovať / diktovať'; fab2.setAttribute('aria-label', 'Rýchle akcie');
 fab2.innerHTML = ic.camera; fab.after(fab2);
@@ -6620,7 +6626,7 @@ new MutationObserver(() => fab2.classList.toggle('fab-hidden', fab.classList.con
   let tm = null, lp = false;
   fab.addEventListener('pointerdown', () => { lp = false; clearTimeout(tm); tm = setTimeout(() => { lp = true; haptic(20); openSheet(); }, 480); });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => fab.addEventListener(ev, () => clearTimeout(tm)));
-  fab.onclick = () => { if (lp) { lp = false; return; } openModal(); };
+  fab.onclick = () => { if (lp) { lp = false; return; } openSheet(); };
 })();
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSheet(); } });
 
