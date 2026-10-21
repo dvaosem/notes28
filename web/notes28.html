@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v103">
+<meta name="n28-build" content="n28-v104">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -1051,7 +1051,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, sig
   signOut, onAuthStateChanged, browserLocalPersistence, setPersistence } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
   collection, doc, addDoc, updateDoc, deleteDoc, setDoc, getDoc, getDocs,
-  onSnapshot, query, orderBy, serverTimestamp, arrayUnion, arrayRemove, where, writeBatch }
+  onSnapshot, query, orderBy, serverTimestamp, arrayUnion, arrayRemove, where, writeBatch, runTransaction }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -1496,7 +1496,7 @@ function subscribeSharedTabs() {
       sharedNotes[id] = [];
       const unsub = onSnapshot(query(sharedNotesRef(id), orderBy('createdAt','desc')), nSnap => {
         sharedNotes[id] = nSnap.docs.map(d=>({id:d.id,_shareId:id,...d.data()}));
-        renderNotes();
+        renderNotes(); n28OnRemote(sharedNotes[id]);
       });
       unsubShared.push(unsub);
     });
@@ -2128,7 +2128,7 @@ function subscribeNotes() {
       const ao=a.sortOrder??999999,bo=b.sortOrder??999999; if (ao!==bo) return ao-bo;
       return (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0);
     });
-    notes = raw; renderTagBar(); renderNotes();
+    notes = raw; renderTagBar(); renderNotes(); n28OnRemote(raw);
     // deep-link (widget/skratka): appku odkry až keď je editor otvorený — žiadne bliknutie zoznamu
     if (_noteParamHandled || !/[?&](note|quick|newlist|draw)=/.test(window.location.search)) bootReady(); else window.__n28Cold = true;
     if (!_notesReady) {
@@ -2262,6 +2262,7 @@ function openModal(note=null) {
   clearTimeout(_autosaveTimer);
   autosaveStatus.style.display = 'none';
   _origSnapshot = note ? takeSnapshot() : null;
+  window.__n28SyncBase = note ? { content: note.content || '', title: note.title || '' } : null;
   document.getElementById('tab-select-row').style.display = activeShareId?'none':'inline-flex';
   const tabSelect = document.getElementById('input-tab');
   const defTab = note?.tab&&note.tab!==LAST_TAB?note.tab:(currentTab!==LAST_TAB&&currentTab!==TRASH_TAB?currentTab:'');
@@ -2289,6 +2290,9 @@ function openModal(note=null) {
   if (lockBtn) lockBtn.innerHTML = locked ? (ICON_UNLOCK+'Odomknúť') : (ICON_LOCK+'Zamknúť poznámku');
   // cursor to end of editor
   setTimeout(() => {
+    // kresba / obrázok bez textu (alebo otvorenie rovno do kreslenia) → bez klávesnice
+    if (window.__n28NoFocus) { window.__n28NoFocus = false; return; }
+    if (note && !(note.content || '').replace(/<[^>]*>|&nbsp;/g, '').trim() && (note.images || []).length) return;
     if (note?.content) {
       editor.focus();
       const r = document.createRange();
@@ -2324,6 +2328,84 @@ function showAutosaveStatus() {
   autosaveStatus._hide = setTimeout(()=>{ autosaveStatus.style.display='none'; }, 2500);
 }
 
+// ─── ŽIVÁ SPOLUPRÁCA (ako Keep): zlúčenie zmien po položkách + živé obnovenie otvorenej poznámky ───
+// __n28SyncBase = obsah poznámky tak, ako bol naposledy zosynchronizovaný s DB (pri otvorení / po uložení).
+function n28Blocks(html) {
+  const t = document.createElement('div'); t.innerHTML = html || '';
+  return [...t.childNodes].filter(n => !(n.nodeType === 3 && !n.textContent.trim())).map(n => {
+    if (n.nodeType === 1) return n;
+    const d = document.createElement('div'); d.textContent = n.textContent; return d;
+  });
+}
+function n28Key(el) {
+  if (el.classList && el.classList.contains('check-row')) return 'c:' + ((el.querySelector('.check-label') || {}).textContent || '').trim();
+  return 'h:' + el.outerHTML;
+}
+function n28Chk(el) { const cb = el.querySelector && el.querySelector('.check-cb'); return !!(cb && (cb.checked || cb.hasAttribute('checked'))); }
+function n28SetChk(el, v) { const cb = el.querySelector('.check-cb'); if (!cb) return; if (v) cb.setAttribute('checked', ''); else cb.removeAttribute('checked'); }
+function n28Merge3(base, local, remote) {
+  if (local === base || remote === local) return remote;
+  if (remote === base) return local;
+  const B = n28Blocks(base), L = n28Blocks(local), R = n28Blocks(remote);
+  const kB = new Map(B.map(e => [n28Key(e), e])), kL = new Map(L.map(e => [n28Key(e), e]));
+  // 1) vzdialená verzia bez toho, čo som ja zmazal
+  const out = R.filter(e => { const k = n28Key(e); return !(kB.has(k) && !kL.has(k)); });
+  // 2) moje odškrtnutia / zrušenia odškrtnutia
+  out.forEach(e => { const k = n28Key(e); if (k.startsWith('c:') && kB.has(k) && kL.has(k)) { const b = n28Chk(kB.get(k)), l = n28Chk(kL.get(k)); if (b !== l) n28SetChk(e, l); } });
+  // 3) moje nové riadky — za riadok, ktorý je u mňa nad nimi
+  const keys = out.map(n28Key);
+  L.forEach((e, i) => {
+    const k = n28Key(e); if (kB.has(k) || keys.includes(k)) return;
+    let pos = -1;
+    for (let j = i - 1; j >= 0; j--) { const idx = keys.indexOf(n28Key(L[j])); if (idx >= 0) { pos = idx; break; } }
+    out.splice(pos + 1, 0, e.cloneNode(true)); keys.splice(pos + 1, 0, k);
+  });
+  const t = document.createElement('div'); out.forEach(e => t.appendChild(e)); return t.innerHTML;
+}
+function n28NoteRef(id) { return activeShareId ? doc(db, 'sharedTabs', activeShareId, 'notes', id) : doc(db, 'users', currentUser.uid, 'notes', id); }
+function n28ApplyRemote(content, title) {
+  const hadFocus = editor.contains(document.activeElement);
+  editor.innerHTML = sanitizeHtml(content || '');
+  try { restoreChecklists(); updateWordCounter(); } catch (e) {}
+  if (typeof title === 'string' && document.activeElement !== inputTitle) inputTitle.value = title;
+  if (hadFocus) { try { editor.focus(); const r = document.createRange(); r.selectNodeContents(editor); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {} }
+}
+async function n28SyncWrite(ref, data) {
+  const base = window.__n28SyncBase, local = data.content, forId = editingId;
+  const plain = () => updateDoc(ref, data).catch(err => showToast('❌ ' + err.message, 'warn', 4000));
+  if (!base || !navigator.onLine) { window.__n28SyncBase = { content: local, title: data.title }; return plain(); }
+  window.__n28Writing = true;
+  try {
+    let merged = local;
+    await runTransaction(db, async tx => {
+      const s = await tx.get(ref);
+      if (!s.exists()) throw new Error('missing');
+      merged = n28Merge3(base.content, local, s.data().content || '');
+      tx.update(ref, { ...data, content: merged });
+    });
+    window.__n28SyncBase = { content: merged, title: data.title };
+    if (merged !== local && editingId === forId && modal.classList.contains('open') && !autosaveStatus.classList.contains('pending')) n28ApplyRemote(merged, data.title);
+  } catch (e) {
+    window.__n28SyncBase = { content: local, title: data.title }; plain();
+  } finally { window.__n28Writing = false; }
+}
+function n28OnRemote(list) {
+  try {
+    if (!editingId || !modal.classList.contains('open') || window.__n28Writing || !list) return;
+    const n = list.find(x => x.id === editingId); if (!n) return;
+    if ((n._shareId || null) !== (activeShareId || null)) return;
+    const base = window.__n28SyncBase, rc = n.content || '', rt = n.title || '';
+    if (base && rc === base.content && rt === base.title) return;
+    if (autosaveStatus.classList.contains('pending')) return; // mám neuložené zmeny → zlúči sa pri uložení
+    let cur = ''; try { cur = linkifyForSave(editor.innerHTML); } catch (e) {}
+    window.__n28SyncBase = { content: rc, title: rt };
+    if (rc === cur && rt === inputTitle.value.trim()) return;
+    n28ApplyRemote(rc, rt);
+    const who = (n.authorEmail || '').split('@')[0];
+    if (who && n.authorEmail !== currentUser.email) showToast('Upravil(a) ' + who, 'info');
+  } catch (e) {}
+}
+
 async function doAutosave() {
   editor.querySelectorAll('.check-cb').forEach(cb => {
     if (cb.checked) cb.setAttribute('checked',''); else cb.removeAttribute('checked');
@@ -2339,8 +2421,16 @@ async function doAutosave() {
     folder: activeShareId?null:(document.getElementById('input-folder').value||null),
   };
   if (editingId) {
-    checkpointBeforeOverwrite(editingId, data.title, data.content);
-    updateDoc(doc(db,'users',currentUser.uid,'notes',editingId), data).catch(err=>showToast('❌ '+err.message,'warn',4000));
+    if (!activeShareId) checkpointBeforeOverwrite(editingId, data.title, data.content);
+    n28SyncWrite(n28NoteRef(editingId), data);
+  } else if (activeShareId && (data.title || data.content)) {
+    // nová poznámka v zdieľanej záložke patrí do zdieľanej kolekcie (nie do mojich poznámok)
+    data.folder = null; data.createdAt = serverTimestamp();
+    const sref = doc(sharedNotesRef(activeShareId));
+    setDoc(sref, data).catch(err=>showToast('❌ '+err.message,'warn',4000));
+    editingId = sref.id; window.__n28SyncBase = { content: data.content, title: data.title };
+    modalDelete.style.display = 'flex';
+    modalDelete.innerHTML = ICON_TRASH + 'Zmazať';
   } else if (data.title || data.content) {
     // auto-create new note on first autosave
     data.tab = resolveNoteTab();
@@ -2349,6 +2439,7 @@ async function doAutosave() {
     const ref = doc(notesRef());
     setDoc(ref, data).catch(err=>showToast('❌ '+err.message,'warn',4000));
     editingId = ref.id;
+    window.__n28SyncBase = { content: data.content, title: data.title };
     window._lastCreatedNoteId = ref.id;
     modalDelete.style.display = 'flex';
     modalDelete.innerHTML = ICON_TRASH + 'Zmazať';
@@ -3516,7 +3607,7 @@ modalSave.onclick = async () => {
     });
     const data = { title:inputTitle.value.trim(), content:linkifyForSave(editor.innerHTML), dueDate:inputDue.value||null, color:getSelectedColor(), images:pendingImages, authorEmail:currentUser.email };
     if (activeShareId) {
-      if (editingId) updateDoc(doc(db,'sharedTabs',activeShareId,'notes',editingId),{...data,updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000));
+      if (editingId) n28SyncWrite(n28NoteRef(editingId),{...data,updatedAt:serverTimestamp()});
       else addDoc(sharedNotesRef(activeShareId),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000));
     } else {
       data.tab = resolveNoteTab();
@@ -3524,7 +3615,7 @@ modalSave.onclick = async () => {
       _sdata = data; _sid = editingId;
       if (editingId) {
         checkpointBeforeOverwrite(editingId, data.title, data.content);
-        updateDoc(doc(db,'users',currentUser.uid,'notes',editingId),{...data,updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000));
+        n28SyncWrite(n28NoteRef(editingId),{...data,updatedAt:serverTimestamp()});
         saveVersion(editingId, data, 'uložené').catch(()=>{});
       }
       else { const tn=notes.filter(n=>n.tab===data.tab); const newRef=doc(notesRef()); setDoc(newRef,{...data,sortOrder:0,createdAt:serverTimestamp(),updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000)); window._lastCreatedNoteId=newRef.id; _sid=newRef.id; tn.forEach((n,i)=>updateDoc(doc(db,'users',currentUser.uid,'notes',n.id),{sortOrder:i+1}).catch(()=>{})); }
@@ -4453,7 +4544,7 @@ document.getElementById('modal-export-word').onclick = () => {
   }
   undoBtn.onclick = () => { if (!strokes.length) return; redoStack.push(strokes.pop()); redraw(); };
   redoBtn.onclick = () => { if (!redoStack.length) return; strokes.push(redoStack.pop()); redraw(); };
-  document.getElementById('draw-btn').onclick = () => { strokes = []; redoStack = []; openDraw(); };
+  document.getElementById('draw-btn').onclick = () => { strokes = []; redoStack = []; try { document.activeElement && document.activeElement.blur(); } catch (e) {} openDraw(); };
   document.getElementById('draw-close').onclick = () => { overlay.style.display = 'none'; palette.classList.remove('open'); window.removeEventListener('resize', onViewportChange); };
   document.getElementById('draw-clear').onclick = () => { if (!strokes.length || strokes[strokes.length - 1].clear) return; strokes.push({ clear: true }); redoStack = []; redraw(); };
 
@@ -6752,7 +6843,7 @@ async function shareImage() {
 })();
 
 window.n28Scan = () => scanFlow('new');
-window.n28Draw = () => { openModal(); setTimeout(() => { try { document.getElementById('draw-btn').click(); } catch (e) {} }, 150); };
+window.n28Draw = () => { window.__n28NoFocus = true; openModal(); setTimeout(() => { try { document.getElementById('draw-btn').click(); } catch (e) {} }, 150); };
 window.n28NewList = () => { openModal(); setTimeout(() => { try { $id('btn-checklist').onmousedown(new Event('mousedown')); } catch (e) {} }, 120); };
 window.n28Plus = { version: '2026-10-20' };
 })();
