@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private var fileCallback: ValueCallback<Array<Uri>>? = null
     private var pendingShare: String? = null
     private var pageLoaded = false
+    private var notifAsked = false
     @Volatile private var pendingUpdateUrl: String? = null
 
     private val fileChooser = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
@@ -326,6 +327,33 @@ class MainActivity : AppCompatActivity() {
         fun clearTitledInbox(n: Int) {
             WidgetPrefs.clearTitled(this@MainActivity, n)
             NoteWidget.refreshAll(this@MainActivity)
+        }
+
+        /** Full list of timed reminders [{id,title,text,at}] from the web app; (re)schedules the alarms. */
+        @JavascriptInterface
+        fun scheduleReminders(json: String) {
+            if (json.length > 500_000) return
+            com.dvaosem.notes28.reminder.Reminders.ensureChannel(this@MainActivity)
+            com.dvaosem.notes28.reminder.Reminders.apply(this@MainActivity, json)
+            if (android.os.Build.VERSION.SDK_INT >= 33 && json.length > 2 &&
+                checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED &&
+                !notifAsked
+            ) {
+                notifAsked = true
+                runOnUiThread { requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 77) }
+            }
+        }
+
+        @JavascriptInterface
+        fun canExactAlarms(): Boolean = com.dvaosem.notes28.reminder.Reminders.canExact(this@MainActivity)
+
+        @JavascriptInterface
+        fun openExactAlarmSettings() {
+            if (android.os.Build.VERSION.SDK_INT >= 31) runOnUiThread {
+                try {
+                    startActivity(Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:$packageName")))
+                } catch (e: Exception) { }
+            }
         }
 
         @JavascriptInterface
