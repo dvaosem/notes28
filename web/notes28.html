@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v113">
+<meta name="n28-build" content="n28-v114">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -7204,11 +7204,14 @@ function n28Ago(ms) {
 
   var css = document.createElement('style');
   css.textContent =
-    '#n28-scratch{display:none;position:fixed;right:.65rem;top:calc(var(--topbar-h,62px) + 1.3rem);bottom:.65rem;width:330px;flex-direction:column;gap:.5rem;padding:.7rem;box-sizing:border-box;border-radius:16px;background:color-mix(in srgb, var(--surface) 92%, transparent);border:1px solid var(--border);z-index:45;}' +
+    '#n28-scratch{display:none;position:fixed;right:.65rem;top:calc(var(--topbar-h,62px) + 1.3rem);bottom:.65rem;width:var(--sp-w,330px);flex-direction:column;gap:.5rem;padding:.7rem;box-sizing:border-box;border-radius:16px;background:color-mix(in srgb, var(--surface) 92%, transparent);border:1px solid var(--border);z-index:45;}' +
     '#n28-scratch .sp-head{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;font-weight:700;color:var(--text2);}' +
     '#n28-scratch .sp-head button{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;line-height:1;}' +
     '#sp-text{flex:1 1 auto;min-height:80px;resize:none;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);padding:.55rem .65rem;font:inherit;font-size:.9rem;outline:none;white-space:pre-wrap;}' +
-    '@media(min-width:1100px){body.n28-sp-on #n28-scratch{display:flex;}body.n28-sp-on #app-screen{padding-right:350px;box-sizing:border-box;}body.n28-sp-on #fab{right:calc(330px + 2rem);}}';
+    '@media(min-width:1100px){body.n28-sp-on #n28-scratch{display:flex;}body.n28-sp-on #app-screen{padding-right:calc(var(--sp-w,330px) + 20px);box-sizing:border-box;}body.n28-sp-on #fab{right:calc(var(--sp-w,330px) + 2rem);}}' +
+    '#n28-scratch .sp-grip{position:absolute;left:-7px;top:0;bottom:0;width:14px;cursor:col-resize;touch-action:none;z-index:2;}' +
+    '#n28-scratch .sp-grip::after{content:"";position:absolute;left:5px;top:50%;width:4px;height:44px;margin-top:-22px;border-radius:2px;background:var(--border);transition:background .15s;}' +
+    '#n28-scratch .sp-grip:hover::after,#n28-scratch .sp-grip.drag::after{background:var(--text2);}';
   document.head.appendChild(css);
 
   var host = document.getElementById('app-screen') || document.body;
@@ -7216,7 +7219,24 @@ function n28Ago(ms) {
   p.innerHTML =
     '<div class="sp-head"><span>Rýchly zošit</span><button id="sp-x" type="button" title="Skryť" aria-label="Skryť">×</button></div>' +
     '<textarea id="sp-text" placeholder="Píš sem…" spellcheck="false"></textarea>';
+  var grip = document.createElement('div'); grip.className = 'sp-grip'; grip.title = 'Ťahaj pre zmenu šírky (dvojklik = pôvodná)'; p.appendChild(grip);
   host.appendChild(p);
+
+  // šírka panela: ťahanie za ľavý okraj, pamätá sa
+  var WK = 'n28-scratch-w';
+  function setW(w, keep) {
+    w = Math.max(240, Math.min(Math.round(w), Math.min(720, Math.round(window.innerWidth * 0.6))));
+    document.documentElement.style.setProperty('--sp-w', w + 'px');
+    if (keep) { try { localStorage.setItem(WK, String(w)); } catch (e) {} }
+  }
+  try { var w0 = parseInt(localStorage.getItem(WK), 10); if (w0) setW(w0); } catch (e) {}
+  grip.addEventListener('pointerdown', function (e) {
+    e.preventDefault(); try { grip.setPointerCapture(e.pointerId); } catch (_) {} grip.classList.add('drag');
+    var mv = function (ev) { setW(window.innerWidth - ev.clientX - 10, false); };
+    var up = function (ev) { grip.classList.remove('drag'); grip.removeEventListener('pointermove', mv); grip.removeEventListener('pointerup', up); grip.removeEventListener('pointercancel', up); setW(window.innerWidth - ev.clientX - 10, true); };
+    grip.addEventListener('pointermove', mv); grip.addEventListener('pointerup', up); grip.addEventListener('pointercancel', up);
+  });
+  grip.addEventListener('dblclick', function () { document.documentElement.style.removeProperty('--sp-w'); try { localStorage.removeItem(WK); } catch (e) {} });
 
   var ta = p.querySelector('#sp-text'); ta.value = st.text;
   var t1; ta.addEventListener('input', function () { clearTimeout(t1); t1 = setTimeout(function () { st.text = ta.value; save(); }, 400); });
