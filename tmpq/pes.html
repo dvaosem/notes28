@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PesVáha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c14; --bg-card:#0f1622; --bg-elev:#16202f; --border:#1e2a3d;
+  --lime:#c8f135; --lime-soft:#c8f562;
+  --text:#e6edf5; --text-dim:#8a98ab; --text-mute:#4d5a6e;
+  --ok:#3ad07a; --warn:#f5c542; --down:#ef5a5a;
+  --radius:14px; --gap:16px;
+}
+*{box-sizing:border-box;}
+body{margin:0; font-family:'Space Mono',monospace; background:var(--bg); color:var(--text); padding:16px; padding-bottom:60px;}
+h1{font-family:'Syne',sans-serif; font-weight:800; letter-spacing:-0.02em; font-size:22px; margin:0 0 4px;}
+.back{display:inline-block; font-size:12px; color:var(--text-dim); text-decoration:none; border:1px solid var(--border); padding:4px 9px; border-radius:8px; margin-bottom:10px;}
+.back:active{border-color:var(--lime); color:var(--lime);}
+.sub{color:var(--text-dim); font-size:13px; margin-bottom:20px;}
+.card{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:var(--gap); margin-bottom:16px;}
+label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:6px;}
+input[type=number], input[type=date]{
+  width:100%; background:var(--bg-elev); border:1px solid var(--border); color:var(--text);
+  font-family:'Space Mono',monospace; font-size:16px; padding:12px; border-radius:10px; margin-bottom:14px;
+}
+.row{display:flex; gap:12px;}
+.row > div{flex:1;}
+.btn-primary{
+  background:var(--lime); color:#06090f; border:none; font-family:'Space Mono',monospace; font-weight:700;
+  padding:14px 18px; border-radius:var(--radius); cursor:pointer; width:100%; font-size:15px; min-height:44px;
+}
+.btn-primary:active{background:var(--lime-soft);}
+.btn-ghost{
+  background:transparent; color:var(--text); border:1px solid var(--border);
+  padding:10px 14px; border-radius:var(--radius); cursor:pointer; font-family:'Space Mono',monospace; min-height:44px;
+}
+.export-row{display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;}
+.export-row .btn-ghost{flex:1; font-size:13px; min-width:100px;}
+.trend-note{font-size:12px; color:var(--text-dim); margin-top:8px; line-height:1.5;}
+.trend-note b{color:var(--lime);}
+table{width:100%; border-collapse:collapse; font-size:13px;}
+th,td{padding:8px 6px; text-align:left; border-bottom:1px solid var(--border);}
+th{color:var(--text-dim); font-weight:400; font-size:11px; text-transform:uppercase; letter-spacing:.03em;}
+td.num{font-weight:700;}
+.del{background:none; border:none; color:var(--down); cursor:pointer; font-size:16px; padding:6px; min-width:32px;}
+.actions{display:flex; gap:4px; align-items:center; justify-content:flex-end; white-space:nowrap;}
+.edit{background:none; border:1px solid var(--border); color:var(--text-dim); cursor:pointer; font-size:11px; padding:6px 8px; border-radius:8px; font-family:'Space Mono',monospace;}
+.edit:active{border-color:var(--lime); color:var(--lime);}
+.empty{color:var(--text-mute); text-align:center; padding:24px 0; font-size:13px;}
+.toast{
+  position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+  background:var(--bg-elev); border:1px solid var(--border); color:var(--text);
+  padding:10px 18px; border-radius:10px; font-size:13px; opacity:0; transition:opacity .25s;
+  pointer-events:none; z-index:50; white-space:nowrap;
+}
+.toast.show{opacity:1;}
+.toast.ok{border-color:var(--ok); color:var(--ok);}
+.toast.err{border-color:var(--down); color:var(--down);}
+svg text{font-family:'Space Mono',monospace; fill:var(--text-dim);}
+.tablewrap{overflow-x:auto;}
+</style>
+</head>
+<body>
+
+<h1>PesVáha</h1>
+<a href="/app/app.html" class="back">← Hub</a>
+<div class="sub">váha psa a granule — jednoduchý denník</div>
+
+<div class="card">
+  <label>Dátum</label>
+  <input type="date" id="datum">
+  <div class="row">
+    <div>
+      <label>Váha psa (kg)</label>
+      <input type="number" id="vahaPsa" step="0.1" inputmode="decimal" placeholder="napr. 24.5">
+    </div>
+    <div>
+      <label>Granule (g)</label>
+      <input type="number" id="vahaGranul" step="1" inputmode="numeric" placeholder="napr. 350">
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div>
+      <label>Spolu s psom (kg)</label>
+      <input type="number" id="vahaSpolu" step="0.1" inputmode="decimal" placeholder="vážim sa spolu">
+    </div>
+    <div>
+      <label>Moja váha (kg)</label>
+      <input type="number" id="mojaVaha" step="0.1" inputmode="decimal" placeholder="sám bez psa">
+    </div>
+  </div>
+  <div class="sub" id="vazimNote" style="margin:6px 0 12px;min-height:1.2em"></div>
+  <button class="btn-primary" onclick="ulozitZaznam()">Uložiť záznam</button>
+</div>
+
+<div class="card">
+  <label style="margin-bottom:12px;">Vývoj váhy psa (kg)</label>
+  <div class="row">
+    <div>
+      <label>Cieľová váha (kg)</label>
+      <input type="number" id="cielovaVaha" step="0.1" value="13" onchange="ulozitCiel(); render();">
+    </div>
+  </div>
+  <div id="chart"></div>
+  <div class="trend-note" id="trendNote"></div>
+  <div class="export-row" style="margin-top:12px;">
+    <button class="btn-ghost" onclick="exportChartJPG()">Zdieľať graf (JPG)</button>
+  </div>
+</div>
+
+<div class="card">
+  <label style="margin-bottom:12px;">Záznamy</label>
+  <div class="tablewrap" id="tabulka"></div>
+  <div class="export-row">
+    <button class="btn-ghost" onclick="document.getElementById('importFile').click()">Import dát</button>
+    <button class="btn-ghost" onclick="exportCSV()">Export CSV</button>
+    <button class="btn-ghost" onclick="exportJSON()">Export JSON</button>
+  </div>
+  <input type="file" id="importFile" accept=".json,.csv" style="display:none" onchange="importSubor(event)">
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+// --- Firebase / Firestore ---
+// auth-guard.js (nahraný vyššie) sa postará o prihlásenie a skryje stránku, kým nie je potvrdené.
+// Firestore sa pripája až po evente 'dvaosem-auth-ok' — inak by prvé čítanie prišlo skôr,
+// než Firebase obnoví reláciu, pravidlá by ho odmietli a appka by tíško spadla na lokálnu kópiu.
+// Kolekcia 'pesvaha', doc id = dátum (YYYY-MM-DD). Cieľová váha: 'pesvaha_config/nastavenia'.
+const STORE_KEY = 'pesvaha_zaznamy';
+const CIEL_KEY = 'pesvaha_ciel';
+
+let zaznamyCache = nacitatLokalne();
+let cielCache = nacitatCielLokalne();
+let db = null;
+
+function todayStr(){
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off*60000).toISOString().slice(0,10);
+}
+document.getElementById('datum').value = todayStr();
+
+function poslednaGranul(data){
+  for(let i = data.length - 1; i >= 0; i--){
+    if(data[i].vahaGranul != null) return data[i].vahaGranul;
+  }
+  return null;
+}
+function prefillGranul(){
+  const g = poslednaGranul(nacitat());
+  const pole = document.getElementById('vahaGranul');
+  if(g != null && !pole.value) pole.value = g;
+}
+
+function nacitatCielLokalne(){
+  const v = parseFloat(localStorage.getItem(CIEL_KEY));
+  return isNaN(v) ? 13 : v;
+}
+function nacitatCiel(){
+  return cielCache;
+}
+function ulozitCiel(){
+  const v = parseFloat(document.getElementById('cielovaVaha').value);
+  if(isNaN(v)) return;
+  cielCache = v;
+  localStorage.setItem(CIEL_KEY, v);
+  if(db) db.collection('pesvaha_config').doc('nastavenia').set({cielovaVaha: v}, {merge:true})
+    .catch(err => toast('Cieľ sa neuložil online: ' + err.message, 'err'));
+}
+document.getElementById('cielovaVaha').value = nacitatCiel();
+
+function nacitatLokalne(){
+  try{
+    return JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+  }catch{ return []; }
+}
+function nacitat(){
+  return zaznamyCache;
+}
+function ulozitLokalneCache(data){
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+}
+
+// Spustí sa raz, keď auth-guard.js potvrdí prihlásenie.
+document.addEventListener('dvaosem-auth-ok', () => {
+  db = firebase.firestore();
+  try{ db.enablePersistence({synchronizeTabs:true}).catch(()=>{}); }catch(e){}
+
+  let prveNacitanie = true;
+  db.collection('pesvaha').orderBy('datum').onSnapshot(snap => {
+    if(prveNacitanie && snap.empty && zaznamyCache.length){
+      // Prvý beh po zapnutí Firestore: lokálne dáta z predtým offline appky ešte nie sú online — nahraj ich.
+      migrujLokalneDoFirestore(zaznamyCache);
+    }
+    prveNacitanie = false;
+    zaznamyCache = snap.docs.map(d => d.data());
+    ulozitLokalneCache(zaznamyCache);
+    render();
+    prefillGranul();
+  }, err => {
+    toast('Offline — zobrazujem lokálnu kópiu', 'err');
+  });
+
+  db.collection('pesvaha_config').doc('nastavenia').onSnapshot(doc => {
+    if(doc.exists && typeof doc.data().cielovaVaha === 'number'){
+      cielCache = doc.data().cielovaVaha;
+      localStorage.setItem(CIEL_KEY, cielCache);
+      document.getElementById('cielovaVaha').value = cielCache;
+      render();
+    } else if(cielCache != null){
+      db.collection('pesvaha_config').doc('nastavenia').set({cielovaVaha: cielCache}, {merge:true}).catch(()=>{});
+    }
+  });
+});
+
+function migrujLokalneDoFirestore(zaznamy){
+  const batch = db.batch();
+  zaznamy.forEach(z => batch.set(db.collection('pesvaha').doc(z.datum), z, {merge:true}));
+  batch.commit()
+    .then(() => toast(`Nahraných ${zaznamy.length} starších záznamov online`))
+    .catch(err => toast('Migrácia starých dát zlyhala: ' + err.message, 'err'));
+}
+
+function ulozitZaznamDoFirestore(zaznam){
+  if(!db) return Promise.reject(new Error('Firestore ešte nie je pripravený'));
+  return db.collection('pesvaha').doc(zaznam.datum).set(zaznam, {merge:true});
+}
+
+function toast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(()=> t.className='toast', 1800);
+}
+
+function ulozitZaznam(){
+  const datum = document.getElementById('datum').value || todayStr();
+  const vp = parseFloat(document.getElementById('vahaPsa').value);
+  let vg = parseFloat(document.getElementById('vahaGranul').value);
+
+  if(isNaN(vp) && isNaN(vg)){
+    toast('Zadaj aspoň jednu hodnotu', 'err');
+    return;
+  }
+
+  let data = nacitat();
+  const existujuci = data.find(z => z.datum === datum);
+
+  // Nový záznam bez zadaných granúl → prevezmi poslednú známu hodnotu (aj keby prefill v poli zlyhal).
+  if(isNaN(vg) && !existujuci){
+    const posl = poslednaGranul(data);
+    if(posl != null) vg = posl;
+  }
+
+  const zaznam = existujuci ? {...existujuci} : {datum, vahaPsa:null, vahaGranul:null};
+  if(!isNaN(vp)) zaznam.vahaPsa = vp;
+  if(!isNaN(vg)) zaznam.vahaGranul = vg;
+
+  // optimisticky do lokálneho cache, onSnapshot to aj tak čoskoro potvrdí/prepíše
+  if(existujuci) Object.assign(existujuci, zaznam);
+  else data.push(zaznam);
+  data.sort((a,b)=> a.datum.localeCompare(b.datum));
+  ulozitLokalneCache(data);
+  render();
+
+  document.getElementById('vahaPsa').value = '';
+  ulozitZaznamDoFirestore(zaznam)
+    .then(() => toast('Uložené'))
+    .catch(err => toast('Neuložené online: ' + err.message, 'err'));
+}
+
+function zmazatZaznam(datum){
+  let data = nacitat().filter(z => z.datum !== datum);
+  ulozitLokalneCache(data);
+  render();
+  db.collection('pesvaha').doc(datum).delete()
+    .catch(err => toast('Zmazanie zlyhalo online: ' + err.message, 'err'));
+}
+
+function upravitZaznam(datum){
+  const z = nacitat().find(zz => zz.datum === datum);
+  if(!z) return;
+  document.getElementById('datum').value = z.datum;
+  document.getElementById('vahaPsa').value = z.vahaPsa ?? '';
+  document.getElementById('vahaGranul').value = z.vahaGranul ?? '';
+  document.getElementById('vahaPsa').focus();
+  document.querySelector('.card').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderTabulka(data){
+  const el = document.getElementById('tabulka');
+  if(!data.length){
+    el.innerHTML = '<div class="empty">Zatiaľ žiadne záznamy</div>';
+    return;
+  }
+  const rows = [...data].reverse().map(z => `
+    <tr>
+      <td>${z.datum}</td>
+      <td class="num">${z.vahaPsa ?? '—'}</td>
+      <td class="num">${z.vahaGranul ?? '—'}</td>
+      <td class="actions">
+        <button class="edit" onclick="upravitZaznam('${z.datum}')" aria-label="Upraviť">Upraviť</button>
+        <button class="del" onclick="zmazatZaznam('${z.datum}')" aria-label="Zmazať">✕</button>
+      </td>
+    </tr>`).join('');
+  el.innerHTML = `
+    <table>
+      <thead><tr><th>Dátum</th><th>Pes (kg)</th><th>Granule (g)</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function dniOdEpochy(datumStr){
+  return Math.round(new Date(datumStr+'T00:00:00').getTime() / 86400000);
+}
+function formatDatum(d){
+  return d.toLocaleDateString('sk-SK', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+function linRegresia(body){
+  const n = body.length;
+  const xs = body.map(z => dniOdEpochy(z.datum));
+  const x0 = xs[0];
+  const xr = xs.map(x => x - x0);
+  const ys = body.map(z => z.vahaPsa);
+  const sumX = xr.reduce((a,b)=>a+b,0), sumY = ys.reduce((a,b)=>a+b,0);
+  const sumXY = xr.reduce((a,x,i)=>a+x*ys[i],0), sumXX = xr.reduce((a,x)=>a+x*x,0);
+  const denom = (n*sumXX - sumX*sumX);
+  const slope = denom === 0 ? 0 : (n*sumXY - sumX*sumY) / denom;
+  const intercept = (sumY - slope*sumX) / n;
+  return {slope, intercept, x0};
+}
+
+function pripravTrend(body, ciel){
+  const {slope, intercept, x0} = linRegresia(body);
+  const prvy = body[0];
+  const posledny = body[body.length-1];
+  const poslednyX = dniOdEpochy(posledny.datum) - x0;
+  const regY = xi => intercept + slope*xi;
+
+  const potrebnyRozdiel = ciel - posledny.vahaPsa;
+  const smerujeKCielu = (potrebnyRozdiel > 0 && slope > 0.0003) || (potrebnyRozdiel < 0 && slope < -0.0003);
+  let cielDni = null;
+  if(Math.abs(slope) > 0.0003) cielDni = (ciel - intercept) / slope;
+
+  let note;
+  if(Math.abs(potrebnyRozdiel) < 0.05){
+    note = `Cieľových <b>${ciel} kg</b> už dosiahol.`;
+  } else if(!smerujeKCielu || cielDni === null || cielDni <= poslednyX){
+    const smer = potrebnyRozdiel > 0 ? 'nerastie' : 'neklesá';
+    note = `Podľa doterajšieho trendu váha ${smer} smerom k cieľu — odhad na ${ciel} kg sa nedá spočítať.`;
+  } else {
+    const datumCiel = new Date((x0 + cielDni) * 86400000);
+    const dniZvysne = Math.round(cielDni - poslednyX);
+    const tempo = Math.abs(slope*7).toFixed(2);
+    const smerSlovo = potrebnyRozdiel > 0 ? 'priberá' : 'chudne';
+    note = `Pri aktuálnom tempe (${smerSlovo} ${tempo} kg/týž.) dosiahne <b>${ciel} kg</b> okolo <b>${formatDatum(datumCiel)}</b> (za ~${dniZvysne} dní).`;
+  }
+
+  const trendXmax = (smerujeKCielu && cielDni !== null && cielDni > poslednyX)
+    ? Math.min(cielDni, poslednyX + 365)
+    : poslednyX;
+
+  return {prvy, posledny, poslednyX, x0, regY, trendXmax, note};
+}
+
+function svgObsah(body, ciel, w, h, pad, popiskyFontSize){
+  const {prvy, posledny, poslednyX, x0, regY, trendXmax} = pripravTrend(body, ciel);
+  const {padL, padR, padT, padB} = pad;
+  const fs = popiskyFontSize || 10;
+  const celkoveXmax = Math.max(poslednyX, trendXmax);
+
+  const vals = body.map(z => z.vahaPsa);
+  const trendVals = [regY(0), regY(trendXmax)];
+  const yMinData = Math.min(...vals, ...trendVals, ciel);
+  const yMaxData = Math.max(...vals, ...trendVals, ciel);
+  const range = (yMaxData - yMinData) || 1;
+  const yMin = yMinData - range*0.12, yMax = yMaxData + range*0.12;
+
+  const x = xi => padL + (xi/(celkoveXmax || 1)) * (w - padL - padR);
+  const y = v => h - padB - ((v - yMin)/(yMax - yMin)) * (h - padT - padB);
+
+  const pts = body.map(z => `${x(dniOdEpochy(z.datum)-x0)},${y(z.vahaPsa)}`).join(' ');
+  const dots = body.map(z => `<circle cx="${x(dniOdEpochy(z.datum)-x0)}" cy="${y(z.vahaPsa)}" r="${fs*0.35}" fill="#c8f135"/>`).join('');
+
+  const trendLine = `<line x1="${x(0)}" y1="${y(regY(0))}" x2="${x(trendXmax)}" y2="${y(regY(trendXmax))}" stroke="#5ab4f5" stroke-width="1.8" stroke-dasharray="5,4"/>`;
+
+  const cielLine = `<line x1="${padL}" y1="${y(ciel)}" x2="${w-padR}" y2="${y(ciel)}" stroke="#f5c542" stroke-width="1" stroke-dasharray="2,4"/>
+    <text x="${w-padR}" y="${y(ciel)-4}" font-size="${fs}" text-anchor="end" fill="#f5c542">cieľ ${ciel} kg</text>`;
+
+  const firstLabel = prvy.datum.slice(5);
+  const lastLabel = posledny.datum.slice(5);
+  const legenda = `
+    <g font-size="${fs}">
+      <circle cx="${padL+4}" cy="${padT-4}" r="${fs*0.3}" fill="#c8f135"/><text x="${padL+fs+1}" y="${padT-1}" fill="#8a98ab">záznamy</text>
+      <line x1="${padL+fs*7}" y1="${padT-4}" x2="${padL+fs*8.4}" y2="${padT-4}" stroke="#5ab4f5" stroke-width="2" stroke-dasharray="4,3"/><text x="${padL+fs*8.8}" y="${padT-1}" fill="#8a98ab">trend</text>
+    </g>`;
+
+  return `
+      <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="#1e2a3d"/>
+      ${cielLine}
+      ${trendLine}
+      <polyline points="${pts}" fill="none" stroke="#c8f135" stroke-width="2"/>
+      ${dots}
+      ${legenda}
+      <text x="${padL}" y="${h-8}" font-size="${fs}" fill="#8a98ab">${firstLabel}</text>
+      <text x="${x(poslednyX)}" y="${h-8}" font-size="${fs}" text-anchor="middle" fill="#8a98ab">${lastLabel}</text>`;
+}
+
+function renderChart(data){
+  const el = document.getElementById('chart');
+  const note = document.getElementById('trendNote');
+  const body = data.filter(z => z.vahaPsa != null);
+  if(body.length < 2){
+    el.innerHTML = '<div class="empty">Potrebné aspoň 2 záznamy s váhou psa</div>';
+    note.innerHTML = '';
+    return;
+  }
+  const ciel = nacitatCiel();
+  note.innerHTML = pripravTrend(body, ciel).note;
+
+  const w = el.clientWidth || 320, h = 190;
+  const pad = {padL:36, padR:10, padT:16, padB:26};
+  el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}">${svgObsah(body, ciel, w, h, pad, 10)}</svg>`;
+}
+
+function exportChartJPG(){
+  const data = nacitat();
+  const body = data.filter(z => z.vahaPsa != null);
+  if(body.length < 2){
+    toast('Potrebné aspoň 2 záznamy s váhou', 'err');
+    return;
+  }
+  const ciel = nacitatCiel();
+  const posledny = body[body.length-1];
+  const { note } = pripravTrend(body, ciel);
+  const noteText = note.replace(/<[^>]+>/g,'');
+
+  const w = 1000, h = 620;
+  const pad = {padL:60, padR:40, padT:90, padB:60};
+  const graf = svgObsah(body, ciel, w, h, pad, 15);
+  const dnes = formatDatum(new Date());
+
+  const noteLines = wrapText(noteText, 90);
+  const noteSvg = noteLines.map((l,i)=> `<text x="${pad.padL}" y="${h-18+i*20}" font-size="15" fill="#8a98ab">${escXml(l)}</text>`).join('');
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h+noteLines.length*20}" width="${w}" height="${h+noteLines.length*20}" font-family="'Courier New', monospace">
+    <rect x="0" y="0" width="${w}" height="${h+noteLines.length*20}" fill="#080c14"/>
+    <text x="${pad.padL}" y="36" font-size="26" font-weight="700" fill="#e6edf5">PesVáha — vývoj</text>
+    <text x="${pad.padL}" y="60" font-size="15" fill="#8a98ab">Aktuálne: ${posledny.vahaPsa} kg (${posledny.datum})  •  Cieľ: ${ciel} kg  •  export ${dnes}</text>
+    ${graf}
+    ${noteSvg}
+  </svg>`;
+
+  const svgBlob = new Blob([svg], {type:'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = w*2; canvas.height = (h+noteLines.length*20)*2;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#080c14';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(blob => {
+      const subor = new File([blob], 'pesvaha-graf.jpg', {type:'image/jpeg'});
+      if(navigator.canShare && navigator.canShare({files:[subor]})){
+        navigator.share({
+          files:[subor],
+          title: 'PesVáha',
+          text: `Aktuálne: ${posledny.vahaPsa} kg, cieľ ${ciel} kg`
+        }).catch(err => {
+          if(err.name !== 'AbortError'){
+            stiahnutBlob(blob, 'pesvaha-graf.jpg');
+            toast('Zdieľanie zlyhalo, graf stiahnutý', 'err');
+          }
+        });
+      } else {
+        stiahnutBlob(blob, 'pesvaha-graf.jpg');
+        toast('Graf stiahnutý (zdieľanie tu nie je podporované)');
+      }
+    }, 'image/jpeg', 0.92);
+  };
+  img.onerror = () => { toast('Export sa nepodaril', 'err'); URL.revokeObjectURL(url); };
+  img.src = url;
+}
+
+function stiahnutBlob(blob, filename){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function wrapText(text, maxChars){
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  words.forEach(word => {
+    if((line + ' ' + word).trim().length > maxChars){
+      lines.push(line.trim());
+      line = word;
+    } else {
+      line = (line + ' ' + word).trim();
+    }
+  });
+  if(line) lines.push(line);
+  return lines;
+}
+function escXml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function render(){
+  const data = nacitat();
+  renderTabulka(data);
+  renderChart(data);
+}
+
+function toCSVValue(v){
+  return v === null || v === undefined ? '' : v;
+}
+function exportCSV(){
+  const data = nacitat();
+  if(!data.length){ toast('Žiadne dáta na export', 'err'); return; }
+  const rows = [['Dátum','Vaha psa (kg)','Granule (g)']];
+  data.forEach(z => rows.push([z.datum, toCSVValue(z.vahaPsa), toCSVValue(z.vahaGranul)]));
+  const csv = rows.map(r => r.join(';')).join('\r\n');
+  stiahnut(csv, 'pesvaha.csv', 'text/csv;charset=utf-8');
+  toast('CSV exportované');
+}
+function exportJSON(){
+  const data = nacitat();
+  if(!data.length){ toast('Žiadne dáta na export', 'err'); return; }
+  stiahnut(JSON.stringify(data, null, 2), 'pesvaha.json', 'application/json');
+  toast('JSON exportované');
+}
+function parseCSVImport(text){
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length);
+  const out = [];
+  let start = 0;
+  if(lines.length && /dátum|datum/i.test(lines[0])) start = 1;
+  for(let i = start; i < lines.length; i++){
+    const sep = lines[i].includes(';') ? ';' : ',';
+    const parts = lines[i].split(sep).map(s => s.trim());
+    const datum = (parts[0] || '').slice(0,10);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(datum)) continue;
+    const vp = parseFloat(parts[1]);
+    const vg = parseFloat(parts[2]);
+    out.push({
+      datum,
+      vahaPsa: isNaN(vp) ? null : vp,
+      vahaGranul: isNaN(vg) ? null : vg
+    });
+  }
+  return out;
+}
+
+function importSubor(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    let novy = [];
+    try{
+      if(file.name.toLowerCase().endsWith('.json')){
+        const parsed = JSON.parse(e.target.result);
+        novy = Array.isArray(parsed) ? parsed.filter(z => z && /^\d{4}-\d{2}-\d{2}$/.test(z.datum)) : [];
+      } else {
+        novy = parseCSVImport(e.target.result);
+      }
+    }catch{
+      toast('Súbor sa nepodarilo prečítať', 'err');
+      ev.target.value = '';
+      return;
+    }
+    if(!novy.length){
+      toast('V súbore nie sú žiadne platné záznamy', 'err');
+      ev.target.value = '';
+      return;
+    }
+    let data = nacitat();
+    let pridane = 0, aktualizovane = 0;
+    const batch = db.batch();
+    novy.forEach(z => {
+      const existujuci = data.find(d => d.datum === z.datum);
+      const zaznam = existujuci ? {...existujuci} : {datum: z.datum, vahaPsa: null, vahaGranul: null};
+      if(z.vahaPsa != null) zaznam.vahaPsa = z.vahaPsa;
+      if(z.vahaGranul != null) zaznam.vahaGranul = z.vahaGranul;
+      if(existujuci){ Object.assign(existujuci, zaznam); aktualizovane++; }
+      else { data.push(zaznam); pridane++; }
+      batch.set(db.collection('pesvaha').doc(zaznam.datum), zaznam, {merge:true});
+    });
+    data.sort((a,b)=> a.datum.localeCompare(b.datum));
+    ulozitLokalneCache(data);
+    ev.target.value = '';
+    render();
+    prefillGranul();
+    batch.commit()
+      .then(() => toast(`Import hotový: +${pridane}, upravené ${aktualizovane}`))
+      .catch(err => toast('Import: časť sa neuložila online — ' + err.message, 'err'));
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function stiahnut(content, filename, mime){
+  const blob = new Blob([content], {type: mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+render();
+prefillGranul();
+window.addEventListener('resize', render);
+</script>
+<script>
+// Kalkulačka: spolu (ja + pes) − moja váha = váha psa. Výsledok sa dosadí do poľa, stačí Uložiť záznam. Moja váha sa pamätá.
+(function(){
+  var spolu = document.getElementById('vahaSpolu'), moja = document.getElementById('mojaVaha'),
+      pes = document.getElementById('vahaPsa'), note = document.getElementById('vazimNote');
+  if(!spolu || !moja || !pes || !note) return;
+  try { var m0 = localStorage.getItem('pesvaha_moja'); if(m0) moja.value = m0; } catch(e) {}
+  function num(el){ return parseFloat(String(el.value).replace(',', '.')); }
+  function calc(){
+    var s = num(spolu), m = num(moja);
+    if(!isNaN(m)) { try { localStorage.setItem('pesvaha_moja', String(m)); } catch(e) {} }
+    if(isNaN(s) || isNaN(m)) { note.textContent = ''; return; }
+    var d = Math.round((s - m) * 10) / 10;
+    if(d <= 0) { note.textContent = 'Spolu musí byť viac než tvoja váha'; return; }
+    pes.value = d;
+    note.textContent = 'Pes = ' + s + ' − ' + m + ' = ' + d + ' kg → stačí Uložiť záznam';
+  }
+  spolu.addEventListener('input', calc); moja.addEventListener('input', calc);
+  var orig = window.ulozitZaznam;
+  if(typeof orig === 'function') window.ulozitZaznam = function(){
+    var r = orig.apply(this, arguments);
+    if(pes.value === '') { spolu.value = ''; note.textContent = ''; }
+    return r;
+  };
+})();
+</script>
+</body>
+</html>

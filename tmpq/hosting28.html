@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Hosting28</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Warm-grey earthy palette. Risk colours are muted and always paired with a text label. */
+:root{--bg:#1e1c1a;--s1:#272422;--s2:#312d2a;--ln:#3d3833;--tx:#ebe6de;--mu:#a1998d;--btn:#b89573;--btnt:#1e1c1a;
+--hi:#d0806a;--me:#cfa94f;--lo:#a0ab8b;--in:#928c83;--ok:#9db38a;--r:10px}
+@media (prefers-color-scheme:light){:root{--bg:#f3efe8;--s1:#fbf9f5;--s2:#ece7de;--ln:#d9d2c6;--tx:#2a2622;--mu:#6f675c;--btn:#7d5f43;--btnt:#fff;
+--hi:#a8472f;--me:#8a6410;--lo:#5f6b52;--in:#6f685f;--ok:#5a7347}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 14px/1.5 'Space Mono',ui-monospace,Menlo,monospace;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:Syne,system-ui,sans-serif;font-weight:700;margin:0}
+a{color:inherit}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--btn);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--ln);padding:calc(10px + env(safe-area-inset-top)) 0 10px}
+.hrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.logo{font-family:Syne,sans-serif;font-weight:700;font-size:20px;margin-right:auto}
+.logo small{display:block;font:400 11px 'Space Mono',monospace;color:var(--mu)}
+.btn{min-height:44px;min-width:44px;padding:0 14px;border:1px solid var(--ln);background:var(--s1);border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:var(--s2)}
+.btn.primary{background:var(--btn);color:var(--btnt);border-color:var(--btn);font-weight:700}
+.btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+@media(max-width:560px){.wrap{padding:0 12px}.lbl{display:none}.logo small{display:none}.logo{font-size:18px}.hrow{flex-wrap:nowrap}.hrow .btn{padding:0;width:44px}.hrow .btn.lang{width:auto;padding:0 10px}header{padding-bottom:6px}.tabs{padding-top:6px}.tab{min-height:40px;padding:0 12px}.actions .btn{flex:1 1 30%;padding:0 8px}}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}.actions .btn{flex:1 1 auto}
+.tabs{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:24px}
+.skel{height:92px;border-radius:var(--r);background:linear-gradient(90deg,var(--s1),var(--s2),var(--s1));background-size:200% 100%;animation:sh 1.2s infinite;margin-bottom:12px}@keyframes sh{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.skel{animation:none}}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none;position:relative}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--ln);background:transparent;cursor:pointer}
+.tab[aria-selected=true]{background:var(--s2);border-color:var(--btn);font-weight:700}
+main{padding-top:16px}
+.card{background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card h2{font-size:16px;margin-bottom:8px}
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:640px){.grid4{grid-template-columns:repeat(4,1fr)}}
+.stat{min-height:44px;text-align:left;padding:12px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);cursor:pointer}
+.stat b{display:block;font-size:28px;line-height:1.1}
+.stat span{color:var(--mu);font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:baseline;background:var(--in)}
+.dot.high{background:var(--hi)}.dot.medium{background:var(--me)}.dot.low{background:var(--lo)}.dot.ok{background:var(--ok)}
+.status{font-size:16px;font-family:Syne,sans-serif;font-weight:700}
+.muted{color:var(--mu)}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:0}
+dt{color:var(--mu)}dd{margin:0;word-break:break-word}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.bar input,.bar select{min-height:44px;padding:0 12px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--r)}
+.bar input[type=search]{flex:1;min-width:160px}
+.bar label{display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.bar input[type=checkbox]{min-height:0;width:20px;height:20px}
+.tscroll{overflow:auto;max-height:68vh;border:1px solid var(--ln);border-radius:var(--r);background:var(--s1)}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--ln);vertical-align:top}
+th{position:sticky;top:0;background:var(--s2);z-index:1;padding:0}
+.thb{width:100%;min-height:44px;text-align:left;padding:0 12px;border:0;background:transparent;cursor:pointer;font-weight:700}
+td.name{word-break:break-all}
+.cnt{color:var(--mu);font-size:12px;margin:0 0 6px}
+.empty{color:var(--mu);padding:20px 4px}
+.chip{display:inline-block;border:1px solid var(--ln);border-radius:999px;padding:0 8px;margin:2px 4px 2px 0;font-size:12px;background:var(--s2);white-space:nowrap}
+.chip.warn{border-color:var(--me);color:var(--me)}.chip.bad{border-color:var(--hi);color:var(--hi)}.chip.good{border-color:var(--ok);color:var(--ok)}
+.find{padding:10px 0;border-bottom:1px solid var(--ln);display:flex;gap:10px}
+.find:last-child{border-bottom:0}
+.find .lv{flex:none;width:76px;font-size:12px;color:var(--mu)}
+.find code{word-break:break-all;font-weight:700}
+.find p{margin:2px 0 0;color:var(--mu)}
+ul.plain{margin:0;padding-left:18px}ul.plain li{margin:4px 0}
+textarea{width:100%;min-height:200px;padding:12px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);resize:vertical}
+details{margin-top:8px}summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--s2);padding:12px;border-radius:var(--r);margin:0;font-size:12px}
+.day{margin:14px 0 4px;font-family:Syne,sans-serif;font-weight:700}
+.diffcol{display:grid;gap:12px}
+@media(min-width:720px){.diffcol{grid-template-columns:1fr 1fr}}
+.add{color:var(--ok)}.rem{color:var(--hi)}
+#toasts{position:fixed;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:8px;z-index:50;pointer-events:none;padding:0 16px}
+.toast{pointer-events:auto;background:var(--s2);border:1px solid var(--ln);border-left:6px solid var(--in);border-radius:var(--r);padding:10px 14px;max-width:560px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.toast.ok{border-left-color:var(--ok)}.toast.warn{border-left-color:var(--me)}.toast.err{border-left-color:var(--hi)}
+.toast button{min-height:44px;border:0;background:transparent;text-decoration:underline;cursor:pointer;font-weight:700}
+footer{text-align:center;color:var(--mu);font-size:12px;padding:24px 0}
+.apphead{display:flex;justify-content:space-between;align-items:center;gap:8px}.apphead h2{margin:0;word-break:break-all}
+#w-root .fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:56px;height:56px;padding:0;border-radius:50%;z-index:40;background:var(--btn);color:var(--btnt);border:0;box-shadow:0 6px 20px rgba(0,0,0,.35);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+#w-root .fab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#w-root .sheet{position:fixed;left:0;right:0;bottom:0;z-index:45;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--s1) 84%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border-top:1px solid var(--ln);box-shadow:0 -10px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.1);border-radius:18px 18px 0 0}
+#w-root .sin{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+#w-root .sin textarea{width:100%;min-height:110px;max-height:40vh;padding:12px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:var(--r);font:inherit;resize:vertical}
+#w-root .cmb{position:relative;flex:1;min-width:0}
+#w-root .cmb-in{width:100%;box-sizing:border-box;min-height:44px;padding:0 12px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:var(--r)}
+#w-root .cmb-list{display:none;max-height:32vh;overflow:auto;margin-top:6px;background:var(--bg);border:1px solid var(--ln);border-radius:var(--r)}
+#w-root .cmb-i{display:block;width:100%;text-align:left;min-height:40px;padding:0 12px;background:none;border:0;border-bottom:1px solid var(--ln);color:var(--tx)}
+#w-root .cmb-i.on{font-weight:700;color:var(--btn)}
+#w-root .cmb-n{padding:10px 12px;color:var(--mu)}
+#w-root .sin select{min-height:44px;padding:0 12px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:var(--r);flex:1;min-width:0}
+#w-root .srow{display:flex;gap:8px;align-items:center}#w-root .srow .grow{flex:1}
+#w-root .btn.rec-on{border-color:var(--hi);color:var(--hi);animation:wpulse 1.2s ease-in-out infinite}
+@keyframes wpulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--hi) 25%,transparent)}}
+main.wrap{padding-bottom:120px}
+#w-root .dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;display:flex;gap:2px;padding:6px;border-radius:999px;background:color-mix(in srgb,var(--s1) 78%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--ln);box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12)}
+#w-root .dk{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:68px;min-height:52px;padding:4px 10px;border:0;border-radius:999px;background:transparent;color:var(--tx);font:inherit;font-size:11px;text-decoration:none;cursor:pointer}
+#w-root .dk.pri{background:var(--btn);color:var(--btnt)}
+#w-root .dk svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#toasts{bottom:calc(88px + env(safe-area-inset-bottom))}
+.btn.danger{border-color:var(--hi);color:var(--hi)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.confirm{border:1px solid var(--hi);border-radius:var(--r);padding:12px;margin:8px 0}.confirm input{min-height:44px;width:100%;padding:0 12px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--r)}
+.card.app a{word-break:break-all}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.mini button{min-height:44px;padding:6px 4px;text-align:center;background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);cursor:pointer}
+.mini b{display:block;font-size:20px;line-height:1.1}.mini span{font-size:11px;color:var(--mu)}
+.mini .dot{width:8px;height:8px;margin-right:4px}
+.head2{display:flex;align-items:center;gap:10px}.head2 .st{flex:1;min-width:0}.head2 small{display:block;color:var(--mu);font-size:11px}
+.sech{font:700 12px 'Space Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:0 0 4px}
+.irow{border-bottom:1px solid var(--ln)}.irow:last-child{border-bottom:0}
+.itop{display:flex;align-items:center;min-height:44px}
+.ititle{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+a.ititle.lnk{display:block;line-height:44px;text-decoration:underline dotted;text-underline-offset:4px}
+a.lnkx{text-decoration:underline dotted;text-underline-offset:3px}
+.ibtn{min-width:44px;min-height:44px;border:0;background:transparent;cursor:pointer;color:var(--mu);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.ibtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ibtn[aria-expanded=true]{color:var(--btn)}
+.idetail{padding:0 4px 12px 18px;color:var(--mu);font-size:13px;word-break:break-word}.idetail p{margin:0 0 6px}.idetail code{color:var(--tx);font-weight:700}
+.big{width:100%;min-height:52px;font-size:16px}
+.alist{padding:0 12px}.arow{border-bottom:1px solid var(--ln)}.arow:last-child{border-bottom:0}
+.arow .itop{gap:2px}.atxt{flex:1;min-width:0;padding:6px 0}.atxt b{display:block;font-family:Syne,sans-serif;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atxt small{display:block;color:var(--mu);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adet{padding:0 0 12px}.adet .actions{margin-top:8px}.adet .actions .btn{min-height:40px}
+.rec{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.rec .btn{min-height:40px;font-size:13px}
+html,body{max-width:100%;overflow-x:hidden}.hrow{min-width:0}.logo{min-width:0}
+.manual{margin-top:14px}.manual summary{color:var(--mu);font-size:13px}
+/* manage: compact trash row */
+.trow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tcnt{flex:1;min-width:120px;display:flex;align-items:center;gap:10px}
+.tcnt svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;color:var(--mu)}
+.tdet{margin-top:10px}
+/* notes: list of cards + full-screen editor */
+.nlist{display:grid;gap:10px}
+.ncard{display:block;width:100%;min-height:44px;text-align:left;padding:12px 14px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);cursor:pointer}
+.ncard:hover{background:var(--s2)}
+.ncard b{display:block;font-family:Syne,sans-serif;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ncard .npv{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--mu);font-size:13px;margin:2px 0 4px;word-break:break-word}
+.ncard small{color:var(--mu);font-size:11px}
+body.editing header,body.editing footer{display:none}
+body.editing main{padding-top:0}
+body.editing main.wrap{padding-bottom:40px}
+.ntool{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:15;background:var(--bg);padding:calc(8px + env(safe-area-inset-top)) 0 8px;border-bottom:1px solid var(--ln)}
+.nst{flex:1;min-width:0;color:var(--mu);font-size:12px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nst.ok{color:var(--ok)}.nst.err{color:var(--hi)}
+.ntitle{display:block;width:100%;min-height:52px;margin:14px 0 0;padding:0;background:transparent;border:0;border-bottom:1px solid var(--ln);border-radius:0;font:700 24px/1.25 Syne,system-ui,sans-serif;color:var(--tx)}
+.ntitle:focus-visible,.nbody:focus-visible{outline:none}
+.ntitle:focus{border-bottom-color:var(--btn)}
+.nbody{display:block;width:100%;min-height:55vh;margin:12px 0 0;padding:0;background:transparent;border:0;border-radius:0;resize:none;overflow:hidden;color:var(--tx);font:400 16px/1.7 'Space Mono',ui-monospace,Menlo,monospace}
+.nmeta{color:var(--mu);font-size:11px;margin-top:16px}
+</style>
+</head>
+<body>
+<header><div class="wrap" id="head"></div></header>
+<main class="wrap" id="app"></main>
+<footer>hosting28 · by <a href="https://dvaosem.com" target="_blank" rel="noopener">dvaosem</a></footer>
+<div id="toasts" role="status" aria-live="polite"></div>
+<script src="firebase-config.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(() => {
+'use strict';
+// Parser for the dvaosem audit-hostingu.php text output -> plain JSON snapshot.
+// Pure function, no DOM. The Slovak section names below are what the PHP script prints.
+function parseAudit(text) {
+  const out = {
+    v: 1, ts: '', root: '', phpVersion: '', server: '', disk: '', files: 0, dirs: 0, total: '',
+    counts: { high: 0, medium: 0, low: 0, info: 0 },
+    findings: { high: [], medium: [], low: [], info: [] },
+    ini: {}, cache: '', htaccess: '', php: [], dupes: [], missing: [], groups: [], recent: [], recentTruncated: false, rootList: []
+  };
+  const LV = { 'VYSOKÉ': 'high', 'STREDNÉ': 'medium', 'NÍZKE': 'low', 'INFO': 'info' };
+  const FLAGS = {
+    'zapisuje/maže': 'writes', 'číta vstup': 'input', 'volá sieť': 'network', 'CORS *': 'cors',
+    'SPÚŠŤA PRÍKAZY': 'exec', 'INCLUDE Z VSTUPU': 'include', 'má overenie': 'auth',
+    'bez viditeľného overenia': 'noauth', 'kontroluje len pôvod (Origin/Referer)': 'origin'
+  };
+  const SIZE = '([\\d.]+ (?:B|kB|MB))';
+  const reRecent = new RegExp('^(\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d)\\s+' + SIZE + '\\s+(.+)$');
+  const reDir = /^\[DIR\]\s+(\S.*?)\s+zmena (\d{4}-\d\d-\d\d \d\d:\d\d)\s+práva (\d{4})$/;
+  const reFile = new RegExp('^\\s{7}(\\S.*?)\\s+' + SIZE + '\\s+zmena (\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d)\\s+práva (\\d{4})$');
+  const rePhp = new RegExp('^(\\S+)\\s+' + SIZE + '\\s+(.+)$');
+
+  let sec = '', lvl = '', curMissing = null, curGroup = null;
+  const ht = [];
+  for (const raw of text.replace(/\r/g, '').split('\n')) {
+    const line = raw.replace(/\s+$/, '');
+    const head = /^=== (.+?) ===$/.exec(line);
+    if (head) {
+      const n = head[1];
+      sec = n.startsWith('SÚHRN') ? 'sum' : n.startsWith('PROSTREDIE') ? 'env' : n.startsWith('.HTACCESS') ? 'ht'
+        : n.startsWith('PHP SKRIPTY') ? 'php' : n.startsWith('DUPLICITNÉ') ? 'dup' : n.startsWith('ODKAZY') ? 'miss'
+        : n.startsWith('SKUPINY') ? 'grp' : n.startsWith('ZMENENÉ') ? 'rec' : n.startsWith('OBSAH ROOTU') ? 'root' : '';
+      continue;
+    }
+    if (line.startsWith('--- koniec')) break;
+    if (!line) { if (sec === 'ht') ht.push(''); continue; }
+
+    if (sec === 'sum') {
+      let m = /^(VYSOKÉ|STREDNÉ|NÍZKE|INFO): (\d+)$/.exec(line);
+      if (m) { out.counts[LV[m[1]]] = +m[2]; continue; }
+      m = /^--- (VYSOKÉ|STREDNÉ|NÍZKE|INFO) ---$/.exec(line);
+      if (m) { lvl = LV[m[1]]; continue; }
+      if (lvl && line.startsWith('• ')) out.findings[lvl].push(line.slice(2));
+    } else if (sec === 'env') {
+      parseEnvLine(line, out);
+    } else if (sec === 'ht') {
+      ht.push(line);
+    } else if (sec === 'php') {
+      const m = rePhp.exec(line);
+      if (m) out.php.push({ name: m[1], size: m[2], flags: m[3].split(', ').map(f => FLAGS[f] || f) });
+    } else if (sec === 'dup') {
+      if (line.includes('  =  ')) out.dupes.push(line.split('  =  '));
+    } else if (sec === 'miss') {
+      const m = /^\s+chýba: (.+)$/.exec(raw);
+      if (m && curMissing) curMissing.refs.push(m[1]);
+      else if (/^\S.*:$/.test(line)) { curMissing = { src: line.slice(0, -1), refs: [] }; out.missing.push(curMissing); }
+    } else if (sec === 'grp') {
+      const m = /^(\d{4}-\d\d-\d\d \d\d:\d\d)\s+\((\d+) súborov\)$/.exec(line);
+      if (m) { curGroup = { t: m[1], n: +m[2], sample: [] }; out.groups.push(curGroup); }
+      else if (curGroup && /^\s{4}\S/.test(raw) && !line.trim().startsWith('...')) curGroup.sample.push(line.trim());
+    } else if (sec === 'rec') {
+      const m = reRecent.exec(line);
+      if (m) out.recent.push({ t: m[1], size: m[2], path: m[3] });
+      else if (line.includes('skrátené')) out.recentTruncated = true;
+    } else if (sec === 'root') {
+      let m = reDir.exec(raw);
+      if (m) { out.rootList.push({ name: m[1], dir: true, size: '', mod: m[2], perm: m[3] }); continue; }
+      m = reFile.exec(raw);
+      if (m) out.rootList.push({ name: m[1], dir: false, size: m[2], mod: m[3], perm: m[4] });
+    }
+  }
+  out.htaccess = ht.join('\n').trim();
+  return out;
+}
+
+function parseEnvLine(line, out) {
+  let m;
+  if ((m = /^Root: (.+)$/.exec(line))) out.root = m[1];
+  else if ((m = /^PHP: (\S+) \| Server: (.+?) \| Čas: (.+)$/.exec(line))) { out.phpVersion = m[1]; out.server = m[2]; out.ts = m[3]; }
+  else if ((m = /^Voľné miesto: (.+?) \| Súborov: (\d+) \| Priečinkov: (\d+) \| Spolu: (.+)$/.exec(line))) { out.disk = m[1]; out.files = +m[2]; out.dirs = +m[3]; out.total = m[4]; }
+  else if ((m = /^Cache priečinok: (.+)$/.exec(line))) out.cache = m[1];
+  else if ((m = /^\s{2}(\S+) =\s?(.*)$/.exec(line))) out.ini[m[1]] = m[2].replace(/^'(.*)'$/, '$1');
+}
+
+
+
+
+// ---------- storage ----------
+const LS = 'hosting28.';
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(LS + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(LS + k, JSON.stringify(v)); return true; } catch (e) { toast(t('storeFull'), 'err'); return false; } }
+};
+
+// ---------- i18n (SK default) ----------
+const T = {
+  sk: {
+    notes: 'Poznámky', nNew: 'Nová poznámka', nBack: 'Späť', nTitlePh: 'Nadpis', nBodyPh: 'Píš sem…', nSaving: 'Ukladám…', nSaved: 'Uložené', nErr: 'Uloženie zlyhalo', nDeleted: 'Poznámka zmazaná', nHelp: 'Poznámky pre nás dvoch. Pridaj cez pero dole vpravo (prepni na Poznámka), vidím ich aj ja v chate.', nOpen: 'Otvoriť Notes28', nCopy: 'Kopírovať', nEmpty: 'Zatiaľ žiadne poznámky.', wKTask: 'Úloha', wKNote: 'Poznámka', wPhNote: 'Napíš alebo nadiktuj poznámku.', wSentNote: 'Poznámka uložená.',
+    qEditBtn: 'Upraviť', qSave: 'Uložiť',
+    qWorking: 'pracujem', qError: 'chyba', qNeeds: 'potrebujem doplniť',
+    bTask: 'Úloha', bNote: 'Poznámka', bVoice: 'Hlas', bChat: 'Chat',
+    wFab: 'Napísať Claudovi', wTitle: 'Čo mám upraviť?', wApp: '— appka (nepovinné) —', wPh: 'Napíš alebo nadiktuj, čo chceš zmeniť. Napr. „notes28: zmeň font“.', wSend: 'Odoslať', wMic: 'Diktovať', wStop: 'Zastaviť', wNoMic: 'Diktovanie v tomto prehliadači nejde. Použi mikrofón na klávesnici.', wDenied: 'Mikrofón nie je povolený.', wSent: 'Odoslané. V chate napíš Claudovi „fronta“.', wClose: 'Zavrieť',
+    manage: 'Správa', mLoad: 'Načítať aplikácie', mReload: 'Obnoviť', mEmpty: 'Zatiaľ nič nenačítané. Stlač „Načítať aplikácie“.', mSearch: 'Hľadať aplikáciu…', mApps: 'aplikácií', mNoMatch: 'Nič sa nenašlo.', mOpen: 'Otvoriť', mFiles: 'Súbory', mUpload: 'Nahrať', mDelete: 'Vymazať', mDelApp: 'Vymazať aplikáciu',
+    mConfirmT: 'Na potvrdenie napíš názov aplikácie', mConfirmGo: 'Presunúť do koša', mCancel: 'Zrušiť', mTrash: 'Kôš', mRestore: 'Obnoviť', mNoTrash: 'Kôš je prázdny.', mOther: 'Ostatné súbory v roote', mFilesN: 'súborov',
+    mTrashShow: 'Zobraziť detail', mTrashHide: 'Skryť detail', mTrashEmpty: 'Vymazať kôš', mTrashConfirm: 'Natrvalo zmaže všetko v koši, aj staré verzie súborov. Nedá sa vrátiť.', mTrashGo: 'Vymazať natrvalo', mTrashEmptied: 'Kôš vymazaný',
+    mMoved: 'Presunuté do koša', mRestored: 'Obnovené', mUploaded: 'Nahrané', mExists: 'Súbor už existuje.', mOverwrite: 'Prepísať', mBlocked: 'Tento typ súboru sa nahrávať nedá (php, .htaccess…).', mProt: 'Chránená položka, nedá sa vymazať.', mBig: 'Súbor je väčší ako 5 MB.', mBadName: 'Nepovolený názov súboru (len písmená, čísla, . _ -).', mFail: 'Operácia zlyhala.', mTrashNote: 'Vymazané veci ostávajú v koši, kým ho nevymažeš.', mSkipped: 'preskočené (už existujú)',
+    sub: 'Prehľad hostingu z auditu', import: 'Importovať', run: 'Spustiť audit', running: 'Audit beží…', logout: 'Odhlásiť', errAuth: 'Prihlásenie vypršalo, prihlás sa znova.', errForbidden: 'Tento účet nemá prístup k auditu.', errWait: 'Počkaj pár sekúnd a skús znova.', errConf: 'Audit skript nemá nastavený povolený účet (ALLOWED_UIDS).', errNet: 'Audit sa nepodarilo načítať.', errBad: 'Server vrátil neplatnú odpoveď.', overview: 'Prehľad', findings: 'Nálezy', apps: 'Aplikácie', php: 'PHP', changes: 'Zmeny', links: 'Odkazy', compare: 'Porovnanie',
+    high: 'Vysoké', medium: 'Stredné', low: 'Nízke', info: 'Info', actionable: 'Vysoké + stredné + nízke', all: 'Všetko',
+    importTitle: 'Vlož výstup auditu', importHelp: 'Spusti audit skript na hostingu a výstup vlož sem. Dáta ostanú len v tomto prehliadači, na server sa nič neposiela.',
+    paste: 'Sem vlož text auditu alebo exportované JSON…', loadFile: 'Načítať súbor', parse: 'Spracovať', cancel: 'Zrušiť',
+    badInput: 'Toto nevyzerá ako výstup auditu.', saved: 'Audit uložený', storeFull: 'Úložisko prehliadača je plné, zmaž staré snímky.',
+    noData: 'Zatiaľ žiadny audit', runHint: 'Stlač a appka si audit hostingu spustí sama.', manual: 'Importovať ručne', details: 'Detaily', topFind: 'Hlavné nálezy', nextT: 'Čo ďalej', allClear: 'Nič naliehavé.', rerun: 'Spustiť znova', tDisp: 'display_errors zapnuté', tWrite: 'Zápis bez overenia', tProxy: 'Proxy bez overenia', tDupes: 'Duplicitné súbory', tMissing: 'Chýbajúce odkazy', noDataHelp: 'Importuj výstup audit skriptu, aby sa zobrazil prehľad.', delCopy: 'Vymazať', health: 'Zdravie', hRun: 'Spustiť kontrolu', hNone: 'Zatiaľ žiadna kontrola', hNoneHelp: 'Stlač a appka skontroluje funkčnosť: odpovede stránok, PHP, odkazy, ikony, certifikát a miesto.', hOk: 'Všetko beží', hWarn: 'Sú upozornenia', hFail: 'Sú chyby', hDone: 'Kontrola hotová', hOkList: 'V poriadku', hPages: 'Stránky', hHidden: 'Skryté kontroly', toTrash: 'Do koša', okHide: 'OK, nezobrazovať', okHidden: 'Skryté. Nájdeš ich dole v „Skryté nálezy“.', hiddenT: 'Skryté nálezy', unhide: 'Zobraziť znova', moreF: 'Všetky nálezy', queue: 'Fronta', qSend: 'Pošli Claudovi', qSent: 'Odoslané. V chate napíš Claudovi „fronta“.', qEmpty: 'Fronta je prázdna.', qHelp: 'Úlohy pre Claude. V chate napíš „fronta“: prečítam ich, navrhnem riešenie a nasadím ho po tvojom súhlase.', qOpen: 'čaká', qDone: 'hotové', qDel: 'Zmazať úlohu', qFull: 'Fronta je plná (100).', qReply: 'Odpoveď', askClaude: 'Skopírovať pre Claude', askPrompt: 'Hosting28 audit – navrhni riešenie a po mojom súhlase ho nasaď: ',
+    noHigh: 'Bez vysokých rizík', hasHigh: 'Sú tu vysoké riziká', hasMedium: 'Bez vysokých rizík, ale sú stredné nálezy',
+    snapshot: 'Snímka', delete: 'Zmazať snímku', deleted: 'Snímka zmazaná', undo: 'Späť', export: 'Export JSON', copy: 'Kopírovať súhrn', copied: 'Súhrn skopírovaný',
+    env: 'Prostredie', root: 'Koreň', server: 'Server', files: 'Súbory', dirs: 'Priečinky', size: 'Veľkosť', disk: 'Voľné miesto', cache: 'Cache', audited: 'Audit z',
+    topIssues: 'Hlavné nálezy', openFindings: 'Otvoriť všetky nálezy', next: 'Čo ďalej', nothingNext: 'Nič naliehavé.',
+    hDisplayErrors: 'Vypni display_errors v PHP nastaveniach hostingu (chyby sa zobrazujú návštevníkom)',
+    hWriteNoAuth: 'Skripty zapisujú bez viditeľného overenia – prečítaj ich zdrojáky', hProxies: 'Proxy skripty s CORS * bez overenia – over, že volajú len pevné adresy',
+    hDupes: 'Duplicitné súbory – zmaž kópiu', hMissing: 'Odkazy na chýbajúce súbory – môžu byť zámerné (napr. tajomstvá mimo webu)',
+    search: 'Hľadať…', level: 'Úroveň', rows: 'Riadkov', first500: 'zobrazených prvých 500', empty: 'Nič na zobrazenie.', showInfo: 'Zobraziť aj info',
+    name: 'Názov', type: 'Typ', modified: 'Zmena', age: 'Dní', perms: 'Práva', flags: 'Vlastnosti', script: 'Skript', path: 'Cesta',
+    tFolder: 'priečinok', tPage: 'stránka', tPhp: 'php', tFile: 'súbor', allTypes: 'Všetky typy',
+    hideCache: 'Skryť cache', phpNote: 'Heuristika, nie dôkaz. „Bez overenia“ môže byť falošný poplach, ak overenie rieši iný súbor.', anyFlag: 'Všetky',
+    f_writes: 'zapisuje', f_input: 'číta vstup', f_network: 'volá sieť', f_cors: 'CORS *', f_exec: 'spúšťa príkazy', f_include: 'include zo vstupu', f_auth: 'má overenie', f_noauth: 'bez overenia', f_origin: 'len pôvod',
+    dupes: 'Duplicitné súbory', missingRefs: 'Odkazy na súbory, ktoré chýbajú', none: 'Nič', htaccess: 'Root .htaccess',
+    cmpBase: 'Porovnať s', needTwo: 'Na porovnanie potrebuješ aspoň dve snímky. Spusti audit znova neskôr a importuj ho.', newF: 'Nové nálezy', goneF: 'Vyriešené nálezy',
+    newP: 'Nové / zmenené PHP skripty', goneP: 'Odstránené PHP skripty', newR: 'Nové položky v roote', goneR: 'Odstránené položky v roote', chgR: 'Zmenené položky v roote', noDiff: 'Bez zmien.',
+    daysAgo: 'd', recentNote: 'Zmeny za posledných 14 dní', truncated: 'Zoznam je skrátený na 100 položiek.', groups: 'Hromadné zmeny (naraz)', files_n: 'súborov'
+  },
+  en: {
+    notes: 'Notes', nNew: 'New note', nBack: 'Back', nTitlePh: 'Title', nBodyPh: 'Write here…', nSaving: 'Saving…', nSaved: 'Saved', nErr: 'Save failed', nDeleted: 'Note deleted', nHelp: 'Notes for the two of us. Add via the pen button at the bottom right (switch to Note); I can read them in the chat too.', nOpen: 'Open Notes28', nCopy: 'Copy', nEmpty: 'No notes yet.', wKTask: 'Task', wKNote: 'Note', wPhNote: 'Type or dictate a note.', wSentNote: 'Note saved.',
+    qEditBtn: 'Edit', qSave: 'Save',
+    qWorking: 'working', qError: 'error', qNeeds: 'need more info',
+    bTask: 'Task', bNote: 'Note', bVoice: 'Voice', bChat: 'Chat',
+    wFab: 'Write to Claude', wTitle: 'What should I change?', wApp: '— app (optional) —', wPh: 'Type or dictate what you want changed, e.g. "notes28: change the font".', wSend: 'Send', wMic: 'Dictate', wStop: 'Stop', wNoMic: 'Dictation is not available in this browser. Use the keyboard microphone.', wDenied: 'Microphone is not allowed.', wSent: 'Sent. Tell Claude "queue" in the chat.', wClose: 'Close',
+    manage: 'Manage', mLoad: 'Load apps', mReload: 'Refresh', mEmpty: 'Nothing loaded yet. Press “Load apps”.', mSearch: 'Search apps…', mApps: 'apps', mNoMatch: 'Nothing found.', mOpen: 'Open', mFiles: 'Files', mUpload: 'Upload', mDelete: 'Delete', mDelApp: 'Delete app',
+    mConfirmT: 'Type the app name to confirm', mConfirmGo: 'Move to trash', mCancel: 'Cancel', mTrash: 'Trash', mRestore: 'Restore', mNoTrash: 'Trash is empty.', mOther: 'Other files in root', mFilesN: 'files',
+    mTrashShow: 'Show details', mTrashHide: 'Hide details', mTrashEmpty: 'Empty trash', mTrashConfirm: 'Permanently deletes everything in the trash, including old file versions. This cannot be undone.', mTrashGo: 'Delete permanently', mTrashEmptied: 'Trash emptied',
+    mMoved: 'Moved to trash', mRestored: 'Restored', mUploaded: 'Uploaded', mExists: 'File already exists.', mOverwrite: 'Overwrite', mBlocked: 'This file type cannot be uploaded (php, .htaccess…).', mProt: 'Protected item, cannot be deleted.', mBig: 'File is larger than 5 MB.', mBadName: 'File name not allowed (letters, digits, . _ - only).', mFail: 'Operation failed.', mTrashNote: 'Deleted items stay in the trash until you empty it.', mSkipped: 'skipped (already exist)',
+    sub: 'Hosting overview from audit', import: 'Import', run: 'Run audit', running: 'Audit running…', logout: 'Log out', errAuth: 'Session expired, please log in again.', errForbidden: 'This account has no access to the audit.', errWait: 'Wait a few seconds and try again.', errConf: 'The audit script has no allowed account set (ALLOWED_UIDS).', errNet: 'Could not load the audit.', errBad: 'The server returned an invalid response.', overview: 'Overview', findings: 'Findings', apps: 'Apps', php: 'PHP', changes: 'Changes', links: 'Links', compare: 'Compare',
+    high: 'High', medium: 'Medium', low: 'Low', info: 'Info', actionable: 'High + medium + low', all: 'All',
+    importTitle: 'Paste the audit output', importHelp: 'Run the audit script on the hosting and paste its output here. Data stays in this browser only; nothing is sent to a server.',
+    paste: 'Paste the audit text or exported JSON here…', loadFile: 'Load file', parse: 'Parse', cancel: 'Cancel',
+    badInput: "This doesn't look like audit output.", saved: 'Audit saved', storeFull: 'Browser storage is full, delete old snapshots.',
+    noData: 'No audit yet', runHint: 'Tap and the app runs the hosting audit by itself.', manual: 'Import manually', details: 'Details', topFind: 'Top findings', nextT: 'What next', allClear: 'Nothing urgent.', rerun: 'Run again', tDisp: 'display_errors is on', tWrite: 'Writes without auth', tProxy: 'Proxy without auth', tDupes: 'Duplicate files', tMissing: 'Missing links', noDataHelp: 'Import the audit script output to see the overview.', delCopy: 'Delete', health: 'Health', hRun: 'Run check', hNone: 'No check yet', hNoneHelp: 'Tap and the app checks that things work: page responses, PHP, links, icons, certificate and disk.', hOk: 'Everything works', hWarn: 'There are warnings', hFail: 'There are errors', hDone: 'Check done', hOkList: 'Passed', hPages: 'Pages', hHidden: 'Hidden checks', toTrash: 'To trash', okHide: 'OK, hide it', okHidden: 'Hidden. Find them below under "Hidden findings".', hiddenT: 'Hidden findings', unhide: 'Show again', moreF: 'All findings', queue: 'Queue', qSend: 'Send to Claude', qSent: 'Sent. Tell Claude "queue" in the chat.', qEmpty: 'Queue is empty.', qHelp: 'Tasks for Claude. Say "queue" in the chat: Claude reads them, proposes a fix and deploys it after your approval.', qOpen: 'waiting', qDone: 'done', qDel: 'Delete task', qFull: 'Queue is full (100).', qReply: 'Reply', askClaude: 'Copy for Claude', askPrompt: 'Hosting28 audit: propose a fix and deploy it after I approve: ',
+    noHigh: 'No high-risk findings', hasHigh: 'There are high-risk findings', hasMedium: 'No high-risk findings, but there are medium ones',
+    snapshot: 'Snapshot', delete: 'Delete snapshot', deleted: 'Snapshot deleted', undo: 'Undo', export: 'Export JSON', copy: 'Copy summary', copied: 'Summary copied',
+    env: 'Environment', root: 'Root', server: 'Server', files: 'Files', dirs: 'Folders', size: 'Size', disk: 'Free space', cache: 'Cache', audited: 'Audited',
+    topIssues: 'Top findings', openFindings: 'Open all findings', next: 'What next', nothingNext: 'Nothing urgent.',
+    hDisplayErrors: 'Turn off display_errors in the hosting PHP settings (errors are shown to visitors).',
+    hWriteNoAuth: 'Scripts write files with no visible auth: read their source', hProxies: 'Proxy scripts with CORS * and no auth: check they only call fixed addresses',
+    hDupes: 'Duplicate files: delete the copy', hMissing: 'Links to missing files: may be intentional (e.g. secrets kept outside the web)',
+    search: 'Search…', level: 'Level', rows: 'Rows', first500: 'first 500 shown', empty: 'Nothing to show.', showInfo: 'Include info',
+    name: 'Name', type: 'Type', modified: 'Modified', age: 'Days', perms: 'Perms', flags: 'Traits', script: 'Script', path: 'Path',
+    tFolder: 'folder', tPage: 'page', tPhp: 'php', tFile: 'file', allTypes: 'All types',
+    hideCache: 'Hide cache', phpNote: 'Heuristic, not proof. "No auth" can be a false alarm if another file handles auth.', anyFlag: 'All',
+    f_writes: 'writes', f_input: 'reads input', f_network: 'calls network', f_cors: 'CORS *', f_exec: 'runs commands', f_include: 'include from input', f_auth: 'has auth', f_noauth: 'no auth', f_origin: 'origin only',
+    dupes: 'Duplicate files', missingRefs: 'Links to missing files', none: 'None', htaccess: 'Root .htaccess',
+    cmpBase: 'Compare with', needTwo: 'You need at least two snapshots to compare. Run the audit again later and import it.', newF: 'New findings', goneF: 'Resolved findings',
+    newP: 'New / changed PHP scripts', goneP: 'Removed PHP scripts', newR: 'New root items', goneR: 'Removed root items', chgR: 'Changed root items', noDiff: 'No changes.',
+    daysAgo: 'd', recentNote: 'Changes in the last 14 days', truncated: 'List is cut at 100 items.', groups: 'Bulk changes (at once)', files_n: 'files'
+  }
+};
+const t = k => (T[S.lang] && T[S.lang][k]) || T.en[k] || k;
+
+// ---------- state ----------
+const S = {
+  lang: store.get('lang', 'sk'), tab: store.get('tab', 'queue'), snaps: store.get('snaps', []), sel: store.get('sel', null),
+  showImport: false, sort: {}, f: store.get('filters', { findLvl: 'actionable', findQ: '', appsQ: '', appsType: 'all', phpQ: '', phpFlag: 'all', chQ: '', chCache: true })
+};
+const TABS = ['queue', 'notes', 'manage', 'overview', 'health', 'findings', 'apps', 'php', 'changes', 'links', 'compare'];
+if (!TABS.includes(S.tab)) S.tab = 'queue';
+const LVL = ['high', 'medium', 'low', 'info'];
+const cur = () => S.snaps.find(s => s.id === S.sel) || S.snaps[0] || null;
+const save = () => { store.set('lang', S.lang); store.set('tab', S.tab); store.set('sel', S.sel); store.set('filters', S.f); };
+
+// ---------- helpers ----------
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k.startsWith('aria-') && typeof v === 'boolean') { e.setAttribute(k, String(v)); continue; }
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'value' || k === 'checked' || k === 'selected') e[k] = v;
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat(2)) { if (c == null || c === false) continue; e.append(c.nodeType ? c : document.createTextNode(String(c))); }
+  return e;
+}
+const ICONS = {
+  upload: '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>', download: '<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',
+  logout: '<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>', import: '<path d="M12 20V8M7 13l5-5 5 5M4 4h16"/>', search: '<circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/>',
+  check: '<path d="M5 12l5 5 9-10"/>',
+  open: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  refresh: '<path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5"/>', info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.1"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>', trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>', note: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>', pen: '<path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/>', x: '<path d="M6 6l12 12M18 6L6 18"/>',
+  back: '<path d="M15 6l-6 6 6 6"/>', plus: '<path d="M12 5v14M5 12h14"/>'
+};
+function icon(name) { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true'); s.innerHTML = ICONS[name]; return s; }
+function toast(msg, kind = 'info', action) {
+  const box = document.getElementById('toasts');
+  const el = h('div', { class: 'toast ' + kind }, h('span', null, msg));
+  const close = () => el.remove();
+  if (action) el.append(h('button', { onclick: () => { action.fn(); close(); } }, action.label));
+  box.append(el); setTimeout(close, action ? 8000 : 3500);
+}
+const sizeBytes = s => { const m = /^([\d.]+) (B|kB|MB)$/.exec(s || ''); return m ? parseFloat(m[1]) * ({ B: 1, kB: 1024, MB: 1048576 }[m[2]]) : 0; };
+const toDate = s => new Date(String(s).slice(0, 16).replace(' ', 'T'));
+const daysBetween = (a, b) => Math.max(0, Math.floor((toDate(a) - toDate(b)) / 86400000));
+const cmp = (a, b) => (typeof a === 'number' && typeof b === 'number') ? a - b : String(a).localeCompare(String(b), 'sk');
+const matches = (q, ...fields) => !q || fields.some(f => String(f).toLowerCase().includes(q.toLowerCase()));
+const rootLabel = n => n.replace(/\/$/, '');
+// Opens a new Claude chat with the finding and the action to take as the first message.
+const askUrl = text => 'https://claude.ai/new?q=' + encodeURIComponent((t('askPrompt') + text).slice(0, 1800));
+// replaceChildren() stringifies arrays and null, so flatten and drop empties first.
+const fill = (el, ...kids) => el.replaceChildren(...kids.flat(2).filter(c => c != null && c !== false));
+
+function sortableTable(id, cols, getRows, def) {
+  const box = h('div');
+  const st = S.sort[id] || (S.sort[id] = { k: def.k, d: def.d });
+  const paint = () => {
+    const rows = getRows().slice();
+    const col = cols.find(c => c.k === st.k) || cols[0];
+    rows.sort((a, b) => cmp(col.val(a), col.val(b)) * st.d);
+    const head = h('tr', null, cols.map(c => h('th', { scope: 'col', 'aria-sort': st.k === c.k ? (st.d > 0 ? 'ascending' : 'descending') : 'none' },
+      h('button', { class: 'thb', onclick: () => { if (st.k === c.k) st.d *= -1; else { st.k = c.k; st.d = 1; } paint(); } }, c.label, st.k === c.k ? (st.d > 0 ? ' ▲' : ' ▼') : ''))));
+    const body = rows.slice(0, 500).map(r => h('tr', null, cols.map(c => h('td', { class: c.cls || '' }, c.cell ? c.cell(r) : c.val(r)))));
+    fill(box, 
+      h('p', { class: 'cnt' }, t('rows') + ': ' + rows.length + (rows.length > 500 ? ' (' + t('first500') + ')' : '')),
+      h('div', { class: 'tscroll' }, h('table', null, h('thead', null, head), h('tbody', null, body))),
+      rows.length ? null : h('p', { class: 'empty' }, t('empty')));
+  };
+  paint();
+  return { el: box, paint };
+}
+function searchBox(key, onChange) {
+  return h('input', { type: 'search', placeholder: t('search'), 'aria-label': t('search'), value: S.f[key], oninput: e => { S.f[key] = e.target.value; save(); onChange(); } });
+}
+function selectBox(key, options, onChange, label) {
+  return h('select', { 'aria-label': label, onchange: e => { S.f[key] = e.target.value; save(); onChange(); } },
+    options.map(([v, l]) => h('option', { value: v, selected: S.f[key] === v }, l)));
+}
+
+// ---------- shell ----------
+function renderHead() {
+  const head = document.getElementById('head');
+  const snap = cur();
+  const row = h('div', { class: 'hrow' },
+    h('div', { class: 'logo' }, 'Hosting28', h('small', null, t('sub'))),
+    h('button', { class: 'btn primary', 'aria-label': t(S.tab === 'health' ? 'hRun' : (S.tab === 'queue' || S.tab === 'notes') ? 'mReload' : 'run'), disabled: S.busy || H.busy || ((S.tab === 'queue' || S.tab === 'notes') && Q.busy), onclick: () => (S.tab === 'health' ? runHealth() : (S.tab === 'queue' || S.tab === 'notes') ? qLoad() : runAudit()) }, icon('refresh'), h('span', { class: 'lbl' }, S.busy || H.busy ? t('running') : t(S.tab === 'health' ? 'hRun' : (S.tab === 'queue' || S.tab === 'notes') ? 'mReload' : 'run'))),
+    h('button', { class: 'btn', 'aria-label': t('import'), onclick: () => { S.showImport = !S.showImport; render(); } }, icon('import'), h('span', { class: 'lbl' }, t('import'))),
+    h('button', { class: 'btn lang', 'aria-label': 'Language', onclick: () => { S.lang = S.lang === 'sk' ? 'en' : 'sk'; save(); document.documentElement.lang = S.lang; render(); } }, S.lang === 'sk' ? 'SK' : 'EN'),
+    h('button', { class: 'btn', 'aria-label': t('logout'), onclick: logout }, icon('logout'), h('span', { class: 'lbl' }, t('logout'))));
+  const tabs = h('div', { class: 'tabs', role: 'tablist' }, TABS.map(k => h('button', { class: 'tab', role: 'tab', 'aria-selected': S.tab === k, onclick: () => { S.tab = k; S.showImport = false; save(); render(); window.scrollTo(0, 0); } }, t(k))));
+  // keep the tab strip where the user left it; only scroll when the selected tab is out of view
+  const old = head.querySelector('.tabs'), keep = old ? old.scrollLeft : 0;
+  fill(head, row, tabs);
+  tabs.scrollLeft = keep;
+  const sel = tabs.querySelector('[aria-selected=true]');
+  if (sel && tabs.clientWidth) {
+    const l = sel.offsetLeft, r = l + sel.offsetWidth;
+    if (l < tabs.scrollLeft || r > tabs.scrollLeft + tabs.clientWidth - 24) tabs.scrollLeft = l - (tabs.clientWidth - sel.offsetWidth) / 2;
+  }
+}
+function render() {
+  renderHead();
+  // the app list is loaded once on any tab: the Manage tab and the task widget's app dropdown both use it
+  if (!M.apps && !M.busy && !M.tried && window.DVAOSEM_USER) { M.tried = true; setTimeout(mLoad, 0); }
+  const app = document.getElementById('app');
+  const snap = cur();
+  if (S.tab !== 'manage' && !Q.items && !Q.busy && !Q.tried && window.DVAOSEM_USER) { Q.tried = true; setTimeout(qLoad, 0); }
+  if (S.tab === 'queue') { fill(app, viewQueue()); return; }
+  if (S.tab === 'notes') { fill(app, viewNotes()); return; }
+  if (S.tab === 'health') { if (!S.health && !H.tried && !H.busy && window.DVAOSEM_USER) { H.tried = true; setTimeout(runHealth, 0); } fill(app, viewHealth()); return; }
+  if (!snap && S.tab !== 'manage' && !S.autoTried && !S.busy && window.DVAOSEM_USER) { S.autoTried = true; setTimeout(runAudit, 0); }
+  if (S.tab === 'manage' && !S.showImport) { fill(app, viewManage()); return; }
+  if (S.showImport || !snap) { fill(app, renderImport(!!snap)); return; }
+  const views = { manage: viewManage, overview: viewOverview, findings: viewFindings, apps: viewApps, php: viewPhp, changes: viewChanges, links: viewLinks, compare: viewCompare };
+  fill(app, (views[S.tab] || viewOverview)(snap));
+}
+
+// ---------- import ----------
+function renderImport(hasData) {
+  const ta = h('textarea', { placeholder: t('paste'), 'aria-label': t('importTitle') });
+  const file = h('input', { type: 'file', accept: '.txt,.json,text/plain,application/json', hidden: true, onchange: async e => { const f = e.target.files[0]; if (f) ta.value = await f.text(); } });
+  const form = [ta, file, h('div', { class: 'bar', style: 'margin-top:12px' },
+    h('button', { class: 'btn primary', onclick: () => importText(ta.value) }, t('parse')),
+    h('button', { class: 'btn', onclick: () => file.click() }, t('loadFile')),
+    hasData ? h('button', { class: 'btn', onclick: () => { S.showImport = false; render(); } }, t('cancel')) : null)];
+  if (hasData) return h('section', { class: 'card' }, h('h2', null, t('importTitle')), h('p', { class: 'muted' }, t('importHelp')), form);
+  return h('section', { class: 'card' }, h('h2', null, t('noData')), h('p', { class: 'muted' }, t('runHint')),
+    h('button', { class: 'btn primary big', disabled: S.busy, onclick: runAudit }, icon('refresh'), S.busy ? t('running') : t('run')),
+    h('details', { class: 'manual' }, h('summary', null, t('manual')), h('p', { class: 'muted' }, t('importHelp')), form));
+}
+const AUDIT_URL = 'hosting-audit.php';
+async function runAudit() {
+  if (S.busy) return;
+  const user = window.DVAOSEM_USER;
+  if (!user) { toast(t('errAuth'), 'err'); return; }
+  S.busy = true; render();
+  try {
+    const token = await user.getIdToken();
+    const r = await fetch(AUDIT_URL, { method: 'POST', cache: 'no-store', headers: { Authorization: 'Bearer ' + token } });
+    let j = null; try { j = await r.json(); } catch (e) { /* handled below */ }
+    if (!r.ok) { toast(t({ 401: 'errAuth', 403: 'errForbidden', 429: 'errWait', 503: 'errConf' }[r.status] || 'errNet'), 'err'); return; }
+    if (!j || j.v !== 1) { toast(t('errBad'), 'err'); return; }
+    addSnap(j);
+  } catch (e) { toast(t('errNet'), 'err'); }
+  finally { S.busy = false; render(); }
+}
+function logout() { try { firebase.auth().signOut(); } catch (e) { location.reload(); } }
+function importText(text) {
+  let snap = null;
+  try { if (text.trim().startsWith('{')) { const j = JSON.parse(text); if (j && j.v === 1 && j.ts) snap = j; } } catch (e) { /* fall through to text parse */ }
+  if (!snap) snap = parseAudit(text);
+  const ok = snap.ts && (snap.php.length || snap.rootList.length || snap.counts.high + snap.counts.medium + snap.counts.low + snap.counts.info);
+  if (!ok) { toast(t('badInput'), 'err'); return; }
+  addSnap(snap);
+}
+function addSnap(snap) {
+  snap.id = snap.id || Date.now().toString(36);
+  S.snaps = [snap, ...S.snaps.filter(s => s.ts !== snap.ts)].slice(0, 12);
+  S.sel = snap.id; S.tab = 'overview'; S.showImport = false;
+  if (store.set('snaps', S.snaps)) toast(t('saved'), 'ok');
+  save(); render();
+}
+function deleteSnap(snap) {
+  const prev = S.snaps; S.snaps = S.snaps.filter(s => s.id !== snap.id); S.sel = null;
+  store.set('snaps', S.snaps); save(); render();
+  toast(t('deleted'), 'info', { label: t('undo'), fn: () => { S.snaps = prev; S.sel = snap.id; store.set('snaps', S.snaps); save(); render(); } });
+}
+
+// ---------- overview ----------
+function overallStatus(c) { return c.high ? ['high', t('hasHigh')] : c.medium ? ['medium', t('hasMedium')] : ['ok', t('noHigh')]; }
+const isAck = k => Q.acks.some(a => a.key === k);
+const visCount = (snap, l) => Math.max(0, snap.counts[l] - snap.findings[l].filter(isAck).length);
+const visCounts = snap => ({ high: visCount(snap, 'high'), medium: visCount(snap, 'medium'), low: visCount(snap, 'low'), info: visCount(snap, 'info') });
+function hints(snap) {
+  const out = [];
+  if (snap.dupes.length) out.push({ key: 'hint:dupes:' + snap.dupes.map(g => g.join('=')).join('|'), l: 'low', title: t('tDupes') + ' (' + snap.dupes.length + ')', text: t('hDupes') + ' (' + snap.dupes.length + ')',
+    detail: snap.dupes.slice(0, 8).map(g => h('div', null, g.map(f => h('div', { class: 'rec' }, h('code', null, f), h('button', { class: 'btn danger', onclick: () => delFile(f) }, icon('trash'), t('delCopy')))))), advice: t('hDupes'), noAsk: true,
+    files: snap.dupes.slice(0, 8).map(g => g.join(' = ')).join('; ') });
+  const mr = snap.missing.reduce((a, m) => a + m.refs.length, 0);
+  if (mr) out.push({ key: 'hint:missing:' + mr, l: 'low', title: t('tMissing') + ' (' + mr + ')', text: t('hMissing') + ' (' + mr + ')',
+    detail: [h('code', null, snap.missing.slice(0, 8).map(m => m.src).join(', '))], advice: t('hMissing'), files: snap.missing.slice(0, 8).map(m => m.src).join(', ') });
+  return out.filter(x => !isAck(x.key));
+}
+function summaryText(snap) {
+  const c = snap.counts;
+  return ['Hosting28 – ' + snap.ts, t('high') + ': ' + c.high + ', ' + t('medium') + ': ' + c.medium + ', ' + t('low') + ': ' + c.low + ', ' + t('info') + ': ' + c.info,
+    'PHP ' + snap.phpVersion + ' · ' + snap.server + ' · ' + snap.files + ' ' + t('files').toLowerCase() + ', ' + snap.total, '', ...hints(snap).map(x => '• ' + x.text)].join('\n');
+}
+async function delFile(f, m) {
+  const res = await api({ action: 'delete', paths: [f] });
+  if (!res) return;
+  if (res.status !== 200) { apiError(res); return; }
+  const sn = cur();
+  if (sn) {
+    sn.dupes = sn.dupes.map(g => g.filter(x => x !== f)).filter(g => g.length > 1);
+    if (m) for (const l of LVL) { const n = sn.findings[l].length; sn.findings[l] = sn.findings[l].filter(x => x !== m); if (sn.findings[l].length < n) sn.counts[l] = Math.max(0, sn.counts[l] - 1); }
+    store.set('snaps', S.snaps);
+  }
+  undoTrash(res.j.trashId, t('mMoved') + ': ' + f); render();
+}
+async function ack(key, title) { if (await qCall({ action: 'ack', key, title })) toast(t('okHidden'), 'ok', { label: t('undo'), fn: () => qCall({ action: 'unack', key }) }); }
+const TRASHABLE = /(záloha|archív|log súbor|testovací|Pomocný skript|jednorazový audit|nebezpečný|\.env súbor|súkromný kľúč)/;
+function splitFinding(m) { const i = m.indexOf(' — '); return i > 0 ? [m.slice(0, i), m.slice(i + 3)] : ['', m]; }
+function findingRow(l, m) {
+  const [where, msg] = splitFinding(m);
+  const path = where.replace(/:\d+$/, '');
+  const canTrash = /^[\w.\-\/]+\.[A-Za-z0-9]+$/.test(path) && !path.startsWith('_trash/') && TRASHABLE.test(m);
+  const acts = h('div', { class: 'rec' },
+    canTrash ? h('button', { class: 'btn danger', onclick: () => delFile(path, m) }, icon('trash'), t('toTrash')) : null,
+    h('button', { class: 'btn', onclick: () => qSend(where || msg.slice(0, 80), m, 'task') }, icon('upload'), t('qSend')),
+    h('button', { class: 'btn', onclick: () => ack(m, where || msg.slice(0, 80)) }, icon('check'), t('okHide')));
+  return infoRowL(l, where || msg, askUrl(m), h('p', null, msg), acts);
+}
+function infoRow(l, title, ...detail) { return infoRowL(l, title, null, ...detail); }
+// href set -> the title is a link that opens a Claude chat with the finding; the info button still shows the details
+function infoRowL(l, title, href, ...detail) {
+  const d = h('div', { class: 'idetail', hidden: true }, detail);
+  const b = h('button', { class: 'ibtn', 'aria-label': t('details'), 'aria-expanded': 'false', onclick: () => { const open = d.hidden; d.hidden = !open; b.setAttribute('aria-expanded', String(open)); } }, icon('info'));
+  const ttl = href ? h('a', { class: 'ititle lnk', href, target: '_blank', rel: 'noopener' }, title) : h('span', { class: 'ititle' }, title);
+  return h('div', { class: 'irow' }, h('div', { class: 'itop' }, h('span', { class: 'dot ' + l }), ttl, b), d);
+}
+function viewOverview(snap) {
+  const vc = visCounts(snap);
+  const [lv, label] = overallStatus(vc);
+  const mini = LVL.map(l => h('button', { 'aria-label': t(l) + ': ' + vc[l], onclick: () => { S.tab = 'findings'; S.f.findLvl = l; save(); render(); } },
+    h('b', null, vc[l]), h('span', null, h('span', { class: 'dot ' + l }), t(l))));
+  const env = [[t('audited'), snap.ts], [t('root'), snap.root], ['PHP', snap.phpVersion], [t('server'), snap.server], [t('files'), snap.files + ' / ' + snap.dirs + ' ' + t('dirs').toLowerCase()],
+    [t('size'), snap.total], [t('disk'), snap.disk], [t('cache'), snap.cache], ['display_errors', snap.ini.display_errors || '–'], ['open_basedir', snap.ini.open_basedir ? '✓' : '–']];
+  const all = ['high', 'medium', 'low'].flatMap(l => snap.findings[l].filter(m => !isAck(m)).map(m => ({ l, m })));
+  const top = all.slice(0, 10).map(x => findingRow(x.l, x.m));
+  const hs = hints(snap).map(x => infoRowL(x.l, x.title, askUrl(x.title + ': ' + x.text + (x.files ? ' [' + x.files + ']' : '')), x.advice ? h('p', null, x.advice) : h('p', null, x.text), x.detail,
+    h('div', { class: 'rec' }, x.noAsk ? null : h('button', { class: 'btn', onclick: () => qSend(x.title, x.text + (x.files ? ' [' + x.files + ']' : ''), 'task') }, icon('upload'), t('qSend')),
+      h('button', { class: 'btn', onclick: () => ack(x.key, x.title) }, icon('check'), t('okHide')))));
+  const hidden = Q.acks.length ? h('details', { class: 'card' }, h('summary', null, t('hiddenT') + ' (' + Q.acks.length + ')'),
+    Q.acks.map(a => infoRow('ok', a.title || a.key, h('p', null, a.key.startsWith('hint:') ? a.title : a.key), h('div', { class: 'rec' },
+      h('button', { class: 'btn', onclick: () => qCall({ action: 'unack', key: a.key }) }, icon('refresh'), t('unhide')))))) : null;
+  return h('div', null,
+    h('section', { class: 'card' }, h('div', { class: 'head2' },
+      h('span', { class: 'dot ' + lv }), h('div', { class: 'st' }, h('div', { class: 'status' }, label), h('small', null, snap.ts)),
+      h('button', { class: 'btn primary', disabled: S.busy, 'aria-label': t('rerun'), onclick: runAudit }, icon('refresh'), h('span', null, S.busy ? t('running') : t('rerun'))))),
+    S.snaps.length > 1 ? h('div', { class: 'bar' }, h('select', { 'aria-label': t('snapshot'), style: 'flex:1;min-width:0', onchange: e => { S.sel = e.target.value; save(); render(); } }, S.snaps.map(x => h('option', { value: x.id, selected: x.id === snap.id }, x.ts)))) : null,
+    h('div', { class: 'mini' }, mini),
+    top.length || hs.length ? h('section', { class: 'card' }, top.length ? [h('div', { class: 'sech' }, t('topFind')), top] : null, hs.length ? [h('div', { class: 'sech', style: top.length ? 'margin-top:12px' : '' }, t('nextT')), hs] : null,
+      all.length > 10 ? h('div', { class: 'bar', style: 'margin:10px 0 0' }, h('button', { class: 'btn', onclick: () => { S.tab = 'findings'; save(); render(); } }, t('moreF') + ' (' + all.length + ')')) : null)
+      : h('section', { class: 'card' }, h('p', { class: 'muted', style: 'margin:0' }, t('allClear'))),
+    hidden,
+    h('section', { class: 'card' }, infoRow('info', t('env'), h('dl', null, env.map(([k, v]) => [h('dt', null, k), h('dd', null, v)])))),
+    h('div', { class: 'bar' },
+      h('button', { class: 'btn', onclick: () => exportJson(snap) }, icon('download'), t('export')),
+      h('button', { class: 'btn', onclick: () => copyText(summaryText(snap)) }, icon('copy'), t('copy')),
+      h('button', { class: 'btn', onclick: () => deleteSnap(snap) }, icon('trash'), t('delete'))));
+}
+function exportJson(snap) {
+  const a = h('a', { href: URL.createObjectURL(new Blob([JSON.stringify(snap)], { type: 'application/json' })), download: 'hosting28-' + snap.ts.slice(0, 16).replace(/[: ]/g, '-') + '.json' });
+  document.body.append(a); a.click(); a.remove();
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); toast(t('copied'), 'ok'); } catch (e) { toast('Clipboard blocked', 'warn'); }
+}
+
+// ---------- findings ----------
+function viewFindings(snap) {
+  const list = h('div', { class: 'card alist' });
+  const paint = () => {
+    const q = S.f.findQ, sel = S.f.findLvl;
+    const levels = sel === 'actionable' ? ['high', 'medium', 'low'] : sel === 'all' ? LVL : [sel];
+    const items = levels.flatMap(l => snap.findings[l].map(m => ({ l, m }))).filter(x => !isAck(x.m) && matches(q, x.m));
+    fill(list, h('p', { class: 'cnt', style: 'padding-top:8px' }, t('rows') + ': ' + items.length),
+      items.length ? items.map(({ l, m }) => findingRow(l, m)) : h('p', { class: 'empty' }, t('empty')));
+  };
+  const opts = [['actionable', t('actionable')], ['all', t('all')], ...LVL.map(l => [l, t(l)])];
+  const bar = h('div', { class: 'bar' }, selectBox('findLvl', opts, paint, t('level')), searchBox('findQ', paint));
+  paint(); return h('div', null, bar, list);
+}
+
+// ---------- apps (root listing) ----------
+function appRows(snap) {
+  return snap.rootList.map(r => {
+    const n = rootLabel(r.name), ext = (n.split('.').pop() || '').toLowerCase();
+    const type = r.dir ? 'tFolder' : /^html?$/.test(ext) ? 'tPage' : ext === 'php' ? 'tPhp' : 'tFile';
+    return { name: n, type, size: r.size, bytes: sizeBytes(r.size), mod: r.mod, age: daysBetween(snap.ts, r.mod), perm: r.perm };
+  });
+}
+function viewApps(snap) {
+  const rows = appRows(snap);
+  const cols = [
+    { k: 'name', label: t('name'), val: r => r.name, cls: 'name' }, { k: 'type', label: t('type'), val: r => t(r.type) },
+    { k: 'bytes', label: t('size'), val: r => r.bytes, cell: r => r.size || '–' }, { k: 'mod', label: t('modified'), val: r => r.mod },
+    { k: 'age', label: t('age'), val: r => r.age }, { k: 'perm', label: t('perms'), val: r => r.perm }];
+  const tbl = sortableTable('apps', cols, () => rows.filter(r => matches(S.f.appsQ, r.name) && (S.f.appsType === 'all' || r.type === S.f.appsType)), { k: 'mod', d: -1 });
+  const types = [['all', t('allTypes')], ['tPage', t('tPage')], ['tFolder', t('tFolder')], ['tPhp', t('tPhp')], ['tFile', t('tFile')]];
+  return h('div', null, h('div', { class: 'bar' }, selectBox('appsType', types, tbl.paint, t('type')), searchBox('appsQ', tbl.paint)), tbl.el);
+}
+
+// ---------- php ----------
+function viewPhp(snap) {
+  const flagName = f => t('f_' + f);
+  const cols = [
+    { k: 'name', label: t('script'), val: r => r.name, cls: 'name' }, { k: 'bytes', label: t('size'), val: r => sizeBytes(r.size), cell: r => r.size },
+    { k: 'flags', label: t('flags'), val: r => r.flags.length, cell: r => r.flags.map(f => h('span', { class: 'chip ' + (['noauth', 'exec', 'include'].includes(f) ? 'bad' : ['cors', 'writes', 'origin'].includes(f) ? 'warn' : f === 'auth' ? 'good' : '') }, flagName(f))) }];
+  const tbl = sortableTable('php', cols, () => snap.php.filter(r => matches(S.f.phpQ, r.name) && (S.f.phpFlag === 'all' || r.flags.includes(S.f.phpFlag))), { k: 'name', d: 1 });
+  const flags = [['all', t('anyFlag')], ...['writes', 'input', 'network', 'cors', 'exec', 'include', 'auth', 'noauth', 'origin'].map(f => [f, flagName(f)])];
+  return h('div', null, h('p', { class: 'muted' }, t('phpNote')), h('div', { class: 'bar' }, selectBox('phpFlag', flags, tbl.paint, t('flags')), searchBox('phpQ', tbl.paint)), tbl.el);
+}
+
+// ---------- changes ----------
+function viewChanges(snap) {
+  const box = h('div');
+  const paint = () => {
+    const rows = snap.recent.filter(r => (!S.f.chCache || !r.path.startsWith('cache/')) && matches(S.f.chQ, r.path));
+    const days = {}; rows.forEach(r => (days[r.t.slice(0, 10)] = days[r.t.slice(0, 10)] || []).push(r));
+    fill(box, h('p', { class: 'cnt' }, t('recentNote') + ' · ' + t('rows') + ': ' + rows.length + (snap.recentTruncated ? ' · ' + t('truncated') : '')),
+      Object.keys(days).sort().reverse().map(d => h('div', null, h('div', { class: 'day' }, d),
+        h('div', { class: 'card' }, days[d].map(r => h('div', { class: 'find' }, h('div', { class: 'lv' }, r.t.slice(11), h('br'), r.size), h('code', null, r.path)))))),
+      rows.length ? null : h('p', { class: 'empty' }, t('empty')),
+      snap.groups.length ? h('details', null, h('summary', null, t('groups')), snap.groups.map(g => h('p', null, g.t + ' · ' + g.n + ' ' + t('files_n') + (g.sample.length ? ' — ' + g.sample[0] : '')))) : null);
+  };
+  const cacheBox = h('label', null, h('input', { type: 'checkbox', checked: S.f.chCache, onchange: e => { S.f.chCache = e.target.checked; save(); paint(); } }), t('hideCache'));
+  paint(); return h('div', null, h('div', { class: 'bar' }, cacheBox, searchBox('chQ', paint)), box);
+}
+
+// ---------- links, dupes, htaccess ----------
+function viewLinks(snap) {
+  const okRef = x => /^[\w.\/\-]+\.[A-Za-z0-9]{1,6}(\?.*)?$/.test(x);
+  const missing = snap.missing.map(m => ({ src: m.src, refs: m.refs.filter(okRef) })).filter(m => okRef(m.src) && m.refs.length);
+  const miss = missing.length ? missing.map(m => h('div', { class: 'find' }, h('div', null, h('code', null, m.src), h('p', null, m.refs.join('  ·  '))))) : h('p', { class: 'muted' }, t('none'));
+  const dup = snap.dupes.length ? snap.dupes.map(g => h('p', null, g.join('  =  '))) : h('p', { class: 'muted' }, t('none'));
+  return h('div', null,
+    h('section', { class: 'card' }, h('h2', null, t('missingRefs')), miss),
+    h('section', { class: 'card' }, h('h2', null, t('dupes')), dup),
+    h('section', { class: 'card' }, h('h2', null, t('htaccess')), h('pre', null, snap.htaccess || '–')));
+}
+
+// ---------- compare ----------
+const diffSets = (a, b) => ({ added: b.filter(x => !a.includes(x)), removed: a.filter(x => !b.includes(x)) });
+function diffSnap(base, now) {
+  const fOf = s => LVL.flatMap(l => s.findings[l].map(m => l + '|' + m));
+  const f = diffSets(fOf(base), fOf(now));
+  const pk = p => p.name + '|' + p.size + '|' + p.flags.join(',');
+  const p = diffSets(base.php.map(pk), now.php.map(pk));
+  const rk = r => r.name + '|' + r.size + '|' + r.mod;
+  const nameOf = k => k.split('|')[0];
+  const r = diffSets(base.rootList.map(rk), now.rootList.map(rk));
+  const baseNames = base.rootList.map(x => x.name), nowNames = now.rootList.map(x => x.name);
+  return {
+    newF: f.added.map(x => x.split('|').slice(1).join('|')), goneF: f.removed.map(x => x.split('|').slice(1).join('|')),
+    newP: p.added.map(nameOf), goneP: p.removed.map(nameOf).filter(n => !now.php.some(x => x.name === n)),
+    newR: r.added.map(nameOf).filter(n => !baseNames.includes(n)), goneR: r.removed.map(nameOf).filter(n => !nowNames.includes(n)),
+    chgR: r.added.map(nameOf).filter(n => baseNames.includes(n))
+  };
+}
+// link = true: each item opens a Claude chat with the item and the action to take
+function diffCard(title, items, cls, link) {
+  return h('section', { class: 'card' }, h('h2', null, title + ' (' + items.length + ')'), items.length ? h('ul', { class: 'plain' }, items.slice(0, 60).map(x => h('li', { class: cls }, link ? h('a', { class: 'lnkx', href: askUrl(title + ': ' + x), target: '_blank', rel: 'noopener' }, x) : x))) : h('p', { class: 'muted' }, t('noDiff')));
+}
+function viewCompare(snap) {
+  const others = S.snaps.filter(s => s.id !== snap.id);
+  if (!others.length) return h('section', { class: 'card' }, h('p', null, t('needTwo')));
+  const holder = h('div');
+  const paint = id => { const d = diffSnap(others.find(s => s.id === id) || others[0], snap);
+    fill(holder, h('div', { class: 'diffcol' }, diffCard(t('newF'), d.newF, 'rem', true), diffCard(t('goneF'), d.goneF, 'add'),
+      diffCard(t('newP'), d.newP, 'rem', true), diffCard(t('goneP'), d.goneP, ''), diffCard(t('newR'), d.newR, 'add', true), diffCard(t('goneR'), d.goneR, 'rem')), diffCard(t('chgR'), d.chgR, '', true)); };
+  const sel = h('select', { class: 'btn', 'aria-label': t('cmpBase'), onchange: e => paint(e.target.value) }, others.map(s => h('option', { value: s.id }, s.ts)));
+  paint(others[0].id);
+  return h('div', null, h('div', { class: 'bar' }, h('span', { class: 'muted' }, t('cmpBase')), sel), holder);
+}
+
+// ---------- health (functional checks) ----------
+const H = { busy: false, tried: false };
+S.health = store.get('health', null);
+async function runHealth() {
+  if (H.busy) return;
+  const user = window.DVAOSEM_USER;
+  if (!user) { toast(t('errAuth'), 'err'); return; }
+  H.busy = true; render();
+  try {
+    const token = await user.getIdToken();
+    const r = await fetch('hosting-health.php', { method: 'POST', cache: 'no-store', headers: { Authorization: 'Bearer ' + token } });
+    let j = null; try { j = await r.json(); } catch (e) { /* handled below */ }
+    if (!r.ok) toast(t({ 401: 'errAuth', 403: 'errForbidden', 429: 'errWait', 503: 'errConf' }[r.status] || 'errNet'), 'err');
+    else if (!j || j.v !== 1) toast(t('errBad'), 'err');
+    else { S.health = j; store.set('health', j); toast(t('hDone'), 'ok'); }
+  } catch (e) { toast(t('errNet'), 'err'); }
+  finally { H.busy = false; render(); }
+}
+const hKey = c => 'health:' + c.id + ':' + c.count + ':' + (c.items[0] || '').slice(0, 200);
+function viewHealth() {
+  const d = S.health;
+  if (!d) return h('section', { class: 'card' }, h('h2', null, t('hNone')), h('p', { class: 'muted' }, t('hNoneHelp')),
+    h('button', { class: 'btn primary big', disabled: H.busy, onclick: runHealth }, icon('refresh'), H.busy ? t('running') : t('hRun')));
+  const dot = { fail: 'high', warn: 'medium', ok: 'ok', info: 'info' };
+  const rank = { fail: 0, warn: 1, info: 2, ok: 3 };
+  const checks = d.checks.filter(c => !isAck(hKey(c))).sort((a, b) => rank[a.level] - rank[b.level]);
+  const bad = checks.filter(c => c.level !== 'ok'), good = checks.filter(c => c.level === 'ok');
+  const nf = checks.filter(c => c.level === 'fail').length, nw = checks.filter(c => c.level === 'warn').length;
+  const [lv, label] = nf ? ['high', t('hFail')] : nw ? ['medium', t('hWarn')] : ['ok', t('hOk')];
+  const row = c => infoRowL(dot[c.level], c.title, c.level === 'ok' ? null : askUrl(c.title + (c.items.length ? ': ' + c.items.join('; ') : '')), c.hint ? h('p', null, c.hint) : null, c.items.map(i => h('p', null, h('code', null, i))),
+    c.count > c.items.length ? h('p', null, '+ ' + (c.count - c.items.length)) : null,
+    c.level === 'ok' ? null : h('div', { class: 'rec' },
+      h('button', { class: 'btn', onclick: () => qSend(c.title, c.title + (c.items.length ? ': ' + c.items.join('; ') : ''), 'task') }, icon('upload'), t('qSend')),
+      h('button', { class: 'btn', onclick: () => ack(hKey(c), c.title) }, icon('check'), t('okHide'))));
+  const hid = Q.acks.filter(a => a.key.startsWith('health:'));
+  return h('div', null,
+    h('section', { class: 'card' }, h('div', { class: 'head2' }, h('span', { class: 'dot ' + lv }),
+      h('div', { class: 'st' }, h('div', { class: 'status' }, label), h('small', null, d.ts + ' · ' + d.files + ' ' + t('files').toLowerCase())),
+      h('button', { class: 'btn primary', disabled: H.busy, 'aria-label': t('hRun'), onclick: runHealth }, icon('refresh'), h('span', null, H.busy ? t('running') : t('rerun'))))),
+    bad.length ? h('section', { class: 'card alist' }, bad.map(row)) : null,
+    good.length ? h('details', { class: 'card' }, h('summary', null, t('hOkList') + ' (' + good.length + ')'), good.map(row)) : null,
+    d.pages.length ? h('details', { class: 'card' }, h('summary', null, t('hPages') + ' (' + d.pages.length + ')'),
+      d.pages.map(p => h('div', { class: 'arow' }, h('div', { class: 'itop' }, h('span', { class: 'dot ' + (p.code >= 400 || !p.code ? 'high' : p.ms > 3000 ? 'medium' : 'ok') }),
+        h('div', { class: 'atxt' }, h('b', null, p.url), h('small', null, (p.code || '–') + ' · ' + p.ms + ' ms · ' + sizeLbl(p.size))))))) : null,
+    hid.length ? h('details', { class: 'card' }, h('summary', null, t('hHidden') + ' (' + hid.length + ')'),
+      hid.map(a => infoRow('ok', a.title || a.key, h('div', { class: 'rec' }, h('button', { class: 'btn', onclick: () => qCall({ action: 'unack', key: a.key }) }, icon('refresh'), t('unhide')))))) : null);
+}
+
+// ---------- queue (tasks for Claude) ----------
+const QUEUE_URL = 'h28-queue.php';
+const Q = { items: null, acks: [], busy: false, tried: false };
+// notes editor state: open = editor visible, id = server id (null until first save of a new note)
+const N = { open: false, id: null, title: '', body: '', st: '', t: null, q: '', busy: null };
+async function qCall(body) {
+  Q.busy = true; render();
+  const res = await api(body, QUEUE_URL);
+  Q.busy = false;
+  if (res && res.status === 200) { Q.items = res.j.items; Q.acks = res.j.acks || []; } else if (res) toast(t(res.j.error === 'full' ? 'qFull' : 'mFail'), 'err');
+  render();
+  return res && res.status === 200;
+}
+const qLoad = () => qCall({ action: 'list' });
+async function qSend(title, body, kind) { if (await qCall({ action: 'add', title, body, kind })) toast(t('qSent'), 'ok'); }
+// item status: set by Claude in claude/queue.json (open -> working -> done | error | needs_info)
+const QST = { open: { dot: 'info', chip: '', key: 'qOpen' }, working: { dot: 'medium', chip: 'warn', key: 'qWorking' }, done: { dot: 'ok', chip: 'good', key: 'qDone' }, error: { dot: 'high', chip: 'bad', key: 'qError' }, needs_info: { dot: 'medium', chip: 'warn', key: 'qNeeds' } };
+const qst = it => QST[it.status] || QST.open;
+setInterval(() => { if (!document.hidden && window.DVAOSEM_USER && (S.tab === 'queue' || S.tab === 'notes') && Q.items && !Q.busy && !Q.edit && !N.open) qCall({ action: 'list' }); }, 15000);
+function viewQueue() {
+  const head = null;
+  if (!Q.items) return h('div', null, head, Q.busy ? h('div', { class: 'skel' }) : null);
+  const rows = Q.items.filter(it => it.kind !== 'note').reverse().map(it => {
+    const r = infoRow(qst(it).dot, [h('span', { class: 'chip ' + qst(it).chip }, t(qst(it).key)), ' ', it.title],
+      h('p', null, h('code', null, it.ts + ' · ' + t(qst(it).key))), Q.edit === it.id ? editBox(it) : (it.body ? h('p', null, it.body) : null),
+      it.reply ? h('p', null, h('code', null, t('qReply') + ': '), it.reply) : null,
+      h('div', { class: 'rec' }, h('button', { class: 'btn', onclick: () => { Q.edit = it.id; render(); } }, icon('pen'), t('qEditBtn')), h('button', { class: 'btn danger', onclick: () => qCall({ action: 'remove', id: it.id }) }, icon('trash'), t('qDel'))));
+    // the row being edited stays expanded, otherwise the re-render collapses it and Edit looks like it did nothing
+    if (Q.edit === it.id) { const d = r.querySelector('.idetail'), b = r.querySelector('.ibtn'); if (d) d.hidden = false; if (b) b.setAttribute('aria-expanded', 'true'); }
+    return r;
+  });
+  return h('div', null, head, rows.length ? h('section', { class: 'card alist' }, rows) : h('p', { class: 'empty' }, t('qEmpty')));
+}
+
+function editBox(it) {
+  const ta = h('textarea', { 'aria-label': t('qEditBtn'), style: 'width:100%;min-height:90px;padding:12px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:var(--r);font:inherit' });
+  ta.value = it.body || it.title;
+  setTimeout(() => { try { ta.focus(); } catch (e) { /* ignore */ } }, 50);
+  const save = async () => {
+    const text = ta.value.trim();
+    if (!text) return;
+    const i = it.title.indexOf(': '), pre = i > 0 && i <= 30 && (it.body || '').indexOf(it.title.slice(0, i)) !== 0 ? it.title.slice(0, i + 2) : '';
+    Q.edit = null;
+    await qCall({ action: 'edit', id: it.id, title: pre + text.slice(0, 70) + (text.length > 70 ? '…' : ''), body: text });
+  };
+  return h('div', null, ta, h('div', { class: 'rec' }, h('button', { class: 'btn primary', onclick: save }, icon('check'), t('qSave')), h('button', { class: 'btn', onclick: () => { Q.edit = null; render(); } }, t('mCancel'))));
+}
+
+// ---------- notes: card list + editor (autosave into the same queue file, kind "note") ----------
+// Stored note: body = full text ("title\nrest" when a title is set), title = first line cut to 70 chars.
+const noteFull = it => it.body || it.title || '';
+function noteSplit(full) {
+  const i = full.indexOf('\n'), first = i < 0 ? full : full.slice(0, i);
+  if (first.length > 80) return ['', full];
+  return [first, i < 0 ? '' : full.slice(i + 1).replace(/^\n+/, '')];
+}
+const noteText = () => { const ti = N.title.trim(), bo = N.body.replace(/\s+$/, ''); return ti && bo ? ti + '\n' + bo : ti || bo; };
+function noteTitleOf(full) {
+  const f = (N.title.trim() || full.split('\n').find(l => l.trim()) || '').trim();
+  return f.slice(0, 70) + (f.length > 70 ? '…' : '');
+}
+function noteOpen(it) {
+  const [a, b] = noteSplit(it ? noteFull(it) : '');
+  N.open = true; N.id = it ? it.id : null; N.title = a; N.body = b; N.st = '';
+  render(); window.scrollTo(0, 0);
+  if (!it) setTimeout(() => { const el = document.getElementById('n-title'); if (el) el.focus(); }, 50);
+}
+const noteStLabel = () => N.st === 'saving' ? t('nSaving') : N.st === 'saved' ? t('nSaved') : N.st === 'err' ? t('nErr') : '';
+function notePaintSt() {
+  const el = document.getElementById('n-st');
+  if (!el) return;
+  el.textContent = noteStLabel();
+  el.className = 'nst' + (N.st === 'saved' ? ' ok' : N.st === 'err' ? ' err' : '');
+}
+function noteDirty() { N.st = 'saving'; notePaintSt(); clearTimeout(N.t); N.t = setTimeout(noteSave, 800); }
+// saves are chained so a new note is created once and later edits hit the same id
+function noteSave() {
+  clearTimeout(N.t); N.t = null;
+  N.busy = (N.busy || Promise.resolve()).then(noteSaveNow, noteSaveNow);
+  return N.busy;
+}
+async function noteSaveNow() {
+  const full = noteText();
+  if (!full) { N.st = ''; notePaintSt(); return; }
+  const title = noteTitleOf(full);
+  const res = N.id ? await api({ action: 'edit', id: N.id, title, body: full }, QUEUE_URL) : await api({ action: 'add', title, body: full, kind: 'note' }, QUEUE_URL);
+  if (res && res.status === 200) {
+    Q.items = res.j.items; Q.acks = res.j.acks || Q.acks;
+    if (!N.id) { const made = Q.items.slice().reverse().find(x => x.kind === 'note' && noteFull(x) === full); if (made) N.id = made.id; }
+    N.st = N.t ? 'saving' : 'saved';
+  } else N.st = 'err';
+  notePaintSt();
+}
+async function noteBack() {
+  if (N.t) await noteSave(); else if (N.busy) await N.busy;
+  N.open = false; N.id = null; N.st = '';
+  render(); window.scrollTo(0, 0);
+}
+async function noteDelete() {
+  clearTimeout(N.t); N.t = null;
+  if (N.busy) await N.busy;
+  const id = N.id, full = noteText(), title = noteTitleOf(full);
+  N.open = false; N.id = null; N.st = '';
+  if (id) await qCall({ action: 'remove', id }); else render();
+  window.scrollTo(0, 0);
+  if (full) toast(t('nDeleted'), 'info', { label: t('undo'), fn: () => qCall({ action: 'add', title, body: full, kind: 'note' }) });
+}
+const noteGrow = el => { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; };
+document.addEventListener('visibilitychange', () => { if (document.hidden && N.open && N.t) noteSave(); });
+window.addEventListener('pagehide', () => { if (N.open && N.t) noteSave(); });
+function noteCard(it) {
+  const full = noteFull(it), [a, b] = noteSplit(full);
+  let title = a, prev = b;
+  if (!a) { const flat = full.replace(/\s+/g, ' ').trim(); title = flat.slice(0, 60) + (flat.length > 60 ? '…' : ''); prev = flat.slice(60); }
+  prev = prev.replace(/\s+/g, ' ').trim();
+  return h('button', { class: 'ncard', onclick: () => noteOpen(it) }, h('b', null, title || '—'), prev ? h('span', { class: 'npv' }, prev) : null, h('small', null, it.ts));
+}
+function viewNoteEditor() {
+  const it = N.id ? Q.items.find(x => x.id === N.id) : null;
+  const ti = h('input', { id: 'n-title', class: 'ntitle', type: 'text', maxlength: '80', placeholder: t('nTitlePh'), 'aria-label': t('nTitlePh'), enterkeyhint: 'next', value: N.title,
+    oninput: e => { N.title = e.target.value; noteDirty(); }, onkeydown: e => { if (e.key === 'Enter') { e.preventDefault(); ta.focus(); } } });
+  const ta = h('textarea', { id: 'n-body', class: 'nbody', placeholder: t('nBodyPh'), 'aria-label': t('nBodyPh'), oninput: e => { N.body = e.target.value; noteGrow(e.target); noteDirty(); } });
+  ta.value = N.body;
+  requestAnimationFrame(() => noteGrow(ta));
+  const tool = h('div', { class: 'ntool' },
+    h('button', { class: 'btn', 'aria-label': t('nBack'), onclick: noteBack }, icon('back'), h('span', { class: 'lbl' }, t('nBack'))),
+    h('span', { id: 'n-st', class: 'nst' + (N.st === 'saved' ? ' ok' : N.st === 'err' ? ' err' : '') }, noteStLabel()),
+    h('button', { class: 'btn', 'aria-label': t('nCopy'), onclick: () => copyText(noteText()) }, icon('copy')),
+    h('button', { class: 'btn danger', 'aria-label': t('qDel'), onclick: noteDelete }, icon('trash')));
+  return h('div', null, tool, ti, ta, it ? h('p', { class: 'nmeta' }, it.ts) : null);
+}
+function viewNotes() {
+  if (N.open && Q.items) return viewNoteEditor();
+  const link = h('a', { class: 'btn', href: '/notes28.html', target: '_blank', rel: 'noopener', 'aria-label': t('nOpen') }, icon('open'), h('span', { class: 'lbl' }, t('nOpen')));
+  const add = h('button', { class: 'btn primary', style: 'flex:1;min-height:48px', onclick: () => noteOpen(null) }, icon('plus'), t('nNew'));
+  const head = h('div', { class: 'bar' }, add, link);
+  if (!Q.items) return h('div', null, head, Q.busy ? h('div', { class: 'skel' }) : null);
+  const notes = Q.items.filter(it => it.kind === 'note').reverse();
+  const list = h('div');
+  const paint = () => {
+    const q = N.q.trim().toLowerCase();
+    const items = notes.filter(it => !q || (it.title + ' ' + (it.body || '')).toLowerCase().includes(q));
+    fill(list, items.length ? h('div', { class: 'nlist' }, items.map(noteCard)) : h('p', { class: 'empty' }, t('nEmpty')));
+  };
+  const search = notes.length > 5 ? h('div', { class: 'bar' }, h('input', { type: 'search', placeholder: t('search'), 'aria-label': t('search'), value: N.q, oninput: e => { N.q = e.target.value; paint(); } })) : null;
+  paint();
+  return h('div', null, head, search, list);
+}
+
+// ---------- manage (apps, files, upload, trash) ----------
+const MANAGE_URL = 'hosting-manage.php';
+const M = { exp: {}, q: '', tried: false, apps: null, other: [], trash: [], open: {}, confirm: null, busy: false, trashOpen: false, trashConfirm: false };
+async function api(body, url = MANAGE_URL) {
+  const user = window.DVAOSEM_USER;
+  if (!user) { toast(t('errAuth'), 'err'); return null; }
+  try {
+    const token = await user.getIdToken();
+    const r = await fetch(url, { method: 'POST', cache: 'no-store', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    let j = null; try { j = await r.json(); } catch (e) { /* ignore */ }
+    return { status: r.status, j: j || {} };
+  } catch (e) { toast(t('errNet'), 'err'); return null; }
+}
+function apiError(res) {
+  const e = res.j.error, k = { 401: 'errAuth', 403: 'errForbidden', 429: 'errWait', 503: 'errConf' }[res.status];
+  toast(t(k && e !== 'type_blocked' && e !== 'protected' ? k : ({ type_blocked: 'mBlocked', protected: 'mProt', too_large: 'mBig', bad_name: 'mBadName', exists: 'mExists' }[e] || 'mFail')), 'err');
+}
+async function mLoad() {
+  M.busy = true; render();
+  const res = await api({ action: 'apps' });
+  M.busy = false;
+  if (res && res.status === 200) { M.apps = res.j.apps; M.other = res.j.other; M.trash = res.j.trash; } else if (res) apiError(res);
+  render();
+}
+async function mFiles(app) {
+  if (M.open[app.key]) { delete M.open[app.key]; render(); return; }
+  const files = [];
+  for (const it of app.items) { const res = await api({ action: 'files', path: it.replace(/\/$/, '') }); if (res && res.status === 200) files.push(...res.j.files.filter(f => !f.dir)); else if (res) { apiError(res); return; } }
+  M.open[app.key] = files; render();
+}
+function undoTrash(id, label) {
+  toast(label, 'ok', { label: t('undo'), fn: async () => { const r = await api({ action: 'restore', id }); if (r && r.status === 200) { toast(t('mRestored'), 'ok'); mLoad(); } else if (r) apiError(r); } });
+}
+async function mDelete(paths) {
+  const res = await api({ action: 'delete', paths });
+  if (res && res.status === 200) { undoTrash(res.j.trashId, t('mMoved') + ' (' + res.j.count + ')'); mLoad(); } else if (res) apiError(res);
+}
+async function mDeleteApp(app, typed) {
+  const res = await api({ action: 'deleteApp', key: app.key, confirm: typed });
+  M.confirm = null;
+  if (res && res.status === 200) { undoTrash(res.j.trashId, t('mMoved') + ': ' + app.key); mLoad(); } else { if (res) apiError(res); render(); }
+}
+// the only real deletion in the dashboard: wipes everything inside /_trash (server needs confirm "EMPTY")
+async function mEmptyTrash() {
+  const res = await api({ action: 'emptyTrash', confirm: 'EMPTY' });
+  M.trashConfirm = false; M.trashOpen = false;
+  if (res && res.status === 200) { toast(t('mTrashEmptied') + ' (' + res.j.files + ' ' + t('mFilesN') + ')', 'ok'); mLoad(); } else { if (res) apiError(res); render(); }
+}
+function toB64(buf) { let b = ''; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) b += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(b); }
+async function mUpload(app, file, overwrite) {
+  if (file.size > 5 * 1024 * 1024) { toast(t('mBig'), 'err'); return; }
+  const dir = app.dir ? app.key : '';
+  const res = await api({ action: 'upload', dir, name: file.name, b64: toB64(await file.arrayBuffer()), overwrite: !!overwrite });
+  if (!res) return;
+  if (res.status === 200) { toast(t('mUploaded') + ': ' + res.j.path, 'ok'); if (res.j.trashId) undoTrash(res.j.trashId, t('mMoved')); M.open = {}; mLoad(); }
+  else if (res.j.error === 'exists') toast(t('mExists') + ' ' + file.name, 'warn', { label: t('mOverwrite'), fn: () => mUpload(app, file, true) });
+  else apiError(res);
+}
+function appDetail(app) {
+  const pick = h('input', { type: 'file', hidden: true, onchange: e => { const f = e.target.files[0]; e.target.value = ''; if (f) mUpload(app, f, false); } });
+  const files = M.open[app.key];
+  const conf = M.confirm === app.key;
+  const typed = h('input', { type: 'text', placeholder: app.key, 'aria-label': t('mConfirmT'), autocomplete: 'off' });
+  const go = h('button', { class: 'btn danger', disabled: true, onclick: () => mDeleteApp(app, typed.value) }, t('mConfirmGo'));
+  typed.addEventListener('input', () => { go.disabled = typed.value !== app.key; });
+  return h('div', { class: 'adet' },
+    h('p', { style: 'margin:0' }, app.mod ? h('span', { class: 'chip' }, app.mod) : null, h('span', { class: 'chip' }, app.items.join(', '))),
+    h('div', { class: 'actions' },
+      h('button', { class: 'btn', 'aria-expanded': !!files, onclick: () => mFiles(app) }, t('mFiles')),
+      h('button', { class: 'btn', onclick: () => pick.click() }, icon('upload'), t('mUpload')), pick,
+      h('button', { class: 'btn danger', onclick: () => { M.confirm = conf ? null : app.key; render(); } }, icon('trash'), t('mDelApp'))),
+    conf ? h('div', { class: 'confirm' }, h('p', null, t('mConfirmT') + ': ', h('code', null, app.key)), typed,
+      h('div', { class: 'bar', style: 'margin-top:8px' }, go, h('button', { class: 'btn', onclick: () => { M.confirm = null; render(); } }, t('mCancel')))) : null,
+    files ? h('div', { class: 'tscroll' }, h('table', { style: 'min-width:0' }, h('tbody', null, files.map(f => h('tr', null,
+      h('td', { style: 'width:56px' }, h('button', { class: 'btn', 'aria-label': t('mDelete') + ' ' + f.path, onclick: () => mDelete([f.path]) }, icon('trash'))),
+      h('td', { class: 'name' }, h('a', { href: '/' + f.path, target: '_blank', rel: 'noopener' }, f.path), h('div', { class: 'muted' }, sizeLbl(f.size) + ' · ' + f.mod))))))) : null);
+}
+function appRow(app) {
+  const open = !!M.exp[app.key];
+  return h('div', { class: 'arow' }, h('div', { class: 'itop' },
+    h('div', { class: 'atxt' }, h('b', null, app.key), h('small', null, [app.desc, app.size, app.files + ' ' + t('mFilesN')].filter(Boolean).join(' · '))),
+    h('a', { class: 'ibtn', href: app.url, target: '_blank', rel: 'noopener', 'aria-label': t('mOpen') + ' ' + app.key }, icon('open')),
+    h('button', { class: 'ibtn', 'aria-expanded': open ? 'true' : 'false', 'aria-label': t('details') + ' ' + app.key, onclick: () => { M.exp[app.key] = !open; render(); } }, icon('info'))),
+    open ? appDetail(app) : null);
+}
+const sizeLbl = b => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : b >= 1024 ? Math.round(b / 1024) + ' kB' : b + ' B';
+// one compact row: icon + file count + [show details] [empty trash]; details and the confirm box open below it
+function viewTrash() {
+  const n = M.trash.reduce((a, x) => a + x.files, 0);
+  if (!M.trash.length) return h('section', { class: 'card' }, h('div', { class: 'trow' }, h('div', { class: 'tcnt' }, icon('trash'), h('span', { class: 'muted' }, t('mNoTrash')))));
+  const restore = async x => { const r = await api({ action: 'restore', id: x.id }); if (r && r.status === 200) { toast(t('mRestored') + (r.j.skipped.length ? ' · ' + r.j.skipped.length + ' ' + t('mSkipped') : ''), 'ok'); mLoad(); } else if (r) apiError(r); };
+  const detail = M.trashOpen ? h('div', { class: 'tdet' },
+    M.trash.map(x => h('div', { class: 'find' }, h('div', null, h('code', null, x.id), h('p', null, x.sample.join(', ') + (x.files > x.sample.length ? ' … (' + x.files + ')' : ''))),
+      h('button', { class: 'btn', onclick: () => restore(x) }, t('mRestore')))),
+    h('p', { class: 'muted' }, t('mTrashNote'))) : null;
+  const confirmBox = M.trashConfirm ? h('div', { class: 'confirm' }, h('p', { style: 'margin:0 0 8px' }, t('mTrashConfirm')),
+    h('div', { class: 'bar', style: 'margin:0' }, h('button', { class: 'btn danger', onclick: mEmptyTrash }, icon('trash'), t('mTrashGo')),
+      h('button', { class: 'btn', onclick: () => { M.trashConfirm = false; render(); } }, t('mCancel')))) : null;
+  return h('section', { class: 'card' },
+    h('div', { class: 'trow' }, h('div', { class: 'tcnt' }, icon('trash'), h('b', null, n + ' ' + t('mFilesN'))),
+      h('button', { class: 'btn', 'aria-expanded': M.trashOpen, onclick: () => { M.trashOpen = !M.trashOpen; render(); } }, t(M.trashOpen ? 'mTrashHide' : 'mTrashShow')),
+      h('button', { class: 'btn danger', onclick: () => { M.trashConfirm = !M.trashConfirm; render(); } }, t('mTrashEmpty'))),
+    confirmBox, detail);
+}
+function viewManage() {
+  const bar = h('div', { class: 'bar' }, h('button', { class: 'btn primary', disabled: M.busy, onclick: mLoad }, M.busy ? t('running') : (M.apps ? t('mReload') : t('mLoad'))));
+  if (!M.apps) return h('div', null, bar, M.busy ? [h('div', { class: 'skel' }), h('div', { class: 'skel' }), h('div', { class: 'skel' })] : h('p', { class: 'empty' }, t('mEmpty')));
+  const q = h('input', { type: 'search', placeholder: t('mSearch'), 'aria-label': t('mSearch'), value: M.q, autocomplete: 'off' });
+  q.addEventListener('input', () => { M.q = q.value; const pos = q.selectionStart; render(); const n = document.querySelector('#app input[type=search]'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) { /* ignore */ } } });
+  const list = M.apps.filter(a => matches(M.q, a.key, a.desc || '', a.items.join(' ')));
+  bar.prepend(q);
+  const other = h('details', { class: 'card' }, h('summary', null, t('mOther') + ' (' + M.other.length + ')'),
+    h('p', null, M.other.map(o => h('span', { class: 'chip' + (o.protected ? ' warn' : '') }, o.name + (o.dir ? '/' : '')))));
+  return h('div', null, bar, h('p', { class: 'cnt' }, list.length + ' / ' + M.apps.length + ' ' + t('mApps')), list.length ? h('section', { class: 'card alist' }, list.map(appRow)) : h('p', { class: 'empty' }, t('mNoMatch')), other, viewTrash());
+}
+
+// ---------- quick request widget (text + voice) -> queue ----------
+const W = { kind: 'task', open: false, rec: null, on: false, app: '', text: '', base: '', sig: '' };
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+function wStop() { if (W.rec) { try { W.rec.stop(); } catch (e) { /* already stopped */ } } W.on = false; }
+function wMic() {
+  if (window.H28Native) { W.on = false; try { window.H28Native.startDictation(S.lang === 'sk' ? 'sk-SK' : 'en-US'); } catch (e) { toast(t('wNoMic'), 'warn'); } return; }
+  if (!SR) { toast(t('wNoMic'), 'warn'); return; }
+  if (W.on) { wStop(); wPaint(true); return; }
+  const r = new SR();
+  r.lang = S.lang === 'sk' ? 'sk-SK' : 'en-US'; r.continuous = true; r.interimResults = true;
+  W.base = W.text ? W.text.replace(/\s+$/, '') + ' ' : '';
+  r.onresult = e => { let s = ''; for (let i = 0; i < e.results.length; i++) s += e.results[i][0].transcript; W.text = W.base + s; const ta = document.getElementById('w-text'); if (ta) ta.value = W.text; };
+  r.onend = () => { W.on = false; wPaint(true); };
+  r.onerror = e => { W.on = false; toast(t(e.error === 'not-allowed' ? 'wDenied' : 'wNoMic'), 'warn'); wPaint(true); };
+  W.rec = r; W.on = true;
+  try { r.start(); } catch (e) { W.on = false; }
+  wPaint(true);
+}
+async function wSend() {
+  const text = W.text.trim();
+  if (!text) return;
+  wStop();
+  const title = (W.app ? W.app + ': ' : '') + text.slice(0, 70) + (text.length > 70 ? '…' : '');
+  if (await qCall({ action: 'add', title, body: text, kind: W.kind })) { toast(t(W.kind === 'note' ? 'wSentNote' : 'wSent'), 'ok'); W.text = ''; W.open = false; wPaint(true); }
+}
+function wPaint(force) {
+  let root = document.getElementById('w-root');
+  if (!root) { root = h('div', { id: 'w-root' }); document.body.appendChild(root); }
+  const names = (M.apps || []).map(a => a.key);
+  const editing = S.tab === 'notes' && N.open;
+  const sig = [!!window.DVAOSEM_USER, W.open, W.on, W.kind, S.lang, names.length, editing].join('|');
+  if (!force && sig === W.sig) return;
+  W.sig = sig;
+  if (!window.DVAOSEM_USER) { fill(root); return; }
+  if (!W.open) {
+    if (editing) { fill(root); return; }
+    const open = (kind, mic) => () => { W.kind = kind; W.open = true; W.pendingMic = !!mic; wPaint(true); if (!mic) setTimeout(() => { const ta = document.getElementById('w-text'); if (ta) ta.focus(); }, 50); };
+    const dk = (ic, key, extra) => h('button', Object.assign({ class: 'dk', 'aria-label': t(key) }, extra), icon(ic), h('span', null, t(key)));
+    fill(root, h('nav', { class: 'dock', 'aria-label': t('wFab') },
+      dk('pen', 'bTask', { class: 'dk pri', onclick: open('task') }), dk('note', 'bNote', { onclick: open('note') }), dk('mic', 'bVoice', { onclick: open(S.tab === 'notes' ? 'note' : 'task', true) }),
+      h('a', { class: 'dk', href: 'https://claude.ai/new?q=fronta', target: '_blank', rel: 'noopener', 'aria-label': t('bChat') }, icon('chat'), h('span', null, t('bChat')))));
+    return;
+  }
+  const sorted = names.filter(n => n !== 'Hosting28').sort((a, b) => a.localeCompare(b, 'sk', { sensitivity: 'base' }));
+  const allApps = ['Hosting28'].concat(sorted);
+  const cmbInp = h('input', { type: 'search', class: 'cmb-in', placeholder: t('wApp'), 'aria-label': t('wApp'), autocomplete: 'off', value: W.app || '' });
+  const cmbList = h('div', { class: 'cmb-list' });
+  const cmbFill = q => {
+    const s = q.trim().toLowerCase(), m = allApps.filter(n => !s || n.toLowerCase().includes(s));
+    cmbList.textContent = '';
+    m.forEach(n => cmbList.appendChild(h('button', { type: 'button', class: 'cmb-i' + (n === W.app ? ' on' : ''), onmousedown: e => e.preventDefault(), onclick: () => { W.app = n; cmbInp.value = n; cmbList.style.display = 'none'; cmbInp.blur(); } }, n)));
+    if (!m.length) cmbList.appendChild(h('div', { class: 'cmb-n' }, '—'));
+    cmbList.style.display = 'block';
+  };
+  cmbInp.addEventListener('focus', () => { cmbInp.select(); cmbFill(''); });
+  cmbInp.addEventListener('input', () => { W.app = ''; cmbFill(cmbInp.value); });
+  cmbInp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const f = cmbList.querySelector('.cmb-i'); if (f) f.click(); } });
+  cmbInp.addEventListener('blur', () => setTimeout(() => {
+    cmbList.style.display = 'none';
+    const v = cmbInp.value.trim().toLowerCase();
+    if (!v) W.app = ''; else if (!W.app) { const m = allApps.filter(n => n.toLowerCase().includes(v)); if (m.length === 1) W.app = m[0]; }
+    cmbInp.value = W.app || '';
+  }, 150));
+  const sel = h('div', { class: 'cmb' }, cmbInp, cmbList);
+  const kinds = h('div', { class: 'srow' }, ['task', 'note'].map(k => h('button', { class: 'btn' + (W.kind === k ? ' primary' : ''), style: 'flex:1', 'aria-pressed': W.kind === k, onclick: () => { W.kind = k; wPaint(true); } }, t(k === 'task' ? 'wKTask' : 'wKNote'))));
+  const ta = h('textarea', { id: 'w-text', placeholder: t(W.kind === 'note' ? 'wPhNote' : 'wPh'), 'aria-label': t('wTitle'), oninput: e => { W.text = e.target.value; } });
+  ta.value = W.text;
+  fill(root, h('div', { class: 'sheet', role: 'dialog', 'aria-label': t('wTitle') }, h('div', { class: 'sin' },
+    h('div', { class: 'srow' }, h('b', { class: 'grow' }, t('wTitle')), h('button', { class: 'btn', 'aria-label': t('wClose'), onclick: () => { wStop(); W.open = false; wPaint(true); } }, icon('x'))),
+    kinds, sel, ta,
+    h('div', { class: 'srow' }, h('button', { class: 'btn' + (W.on ? ' rec-on' : ''), 'aria-label': W.on ? t('wStop') : t('wMic'), onclick: wMic }, icon('mic'), h('span', null, W.on ? t('wStop') : t('wMic'))),
+      h('span', { class: 'grow' }), h('button', { class: 'btn primary', onclick: wSend }, icon('upload'), t('wSend'))))));
+  if (W.pendingMic) { W.pendingMic = false; setTimeout(wMic, 250); }
+}
+// Android APK shell: native dictation result, and widget / shortcut deep links (#new, #note, #voice).
+window.h28Dictated = txt => {
+  W.text = (W.text ? W.text.replace(/\s+$/, '') + ' ' : '') + txt;
+  const ta = document.getElementById('w-text');
+  if (ta) ta.value = W.text; else { W.open = true; wPaint(true); }
+};
+function wHash() {
+  const m = /^#(new|note|voice)$/.exec(location.hash);
+  if (!m) return;
+  W.kind = m[1] === 'note' ? 'note' : 'task'; W.open = true; W.pendingMic = m[1] === 'voice';
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
+  wPaint(true);
+}
+window.addEventListener('hashchange', wHash);
+const render0 = render;
+// every re-render keeps the page scroll position (callers that want the top scroll there afterwards)
+render = function () { const y = window.scrollY; document.body.classList.toggle('editing', S.tab === 'notes' && N.open); render0(); wPaint(); if (window.scrollY !== y) window.scrollTo(0, y); };
+wHash();
+
+document.documentElement.lang = S.lang;
+render();
+// auth-guard sets DVAOSEM_USER asynchronously: re-render once it is there so the app list loads by itself.
+const authWait = setInterval(() => { if (window.DVAOSEM_USER) { clearInterval(authWait); render(); } }, 300);
+setTimeout(() => clearInterval(authWait), 20000);
+})();
+</script>
+</body>
+</html>
