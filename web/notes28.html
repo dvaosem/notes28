@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v110">
+<meta name="n28-build" content="n28-v111">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -715,11 +715,12 @@ input.n28-sw:checked::after{transform:translateX(17px);background:var(--accent-t
 #missed-pop .mp-a{display:flex;gap:.3rem;flex-shrink:0;}
 #missed-pop .mp-a button{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:.72rem;padding:.25rem .5rem;cursor:pointer;}
 /* termín + čas */
-#due-pop{z-index:330;}
+#due-pop{z-index:2600;align-items:center;padding:1rem;}
+#due-pop .modal-box{max-height:none;border-radius:16px;}
 #due-pop .dp-chips{display:flex;gap:.4rem;flex-wrap:wrap;}
 #due-pop .dp-chips button{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:999px;font-size:.78rem;padding:.3rem .7rem;cursor:pointer;}
 #due-pop label{display:flex;flex-direction:column;gap:.3rem;font-size:.78rem;color:var(--text2);}
-#due-pop input[type=date],#due-pop input[type=time]{padding:.5rem .6rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface2);color:var(--text);font:inherit;font-size:.95rem;color-scheme:dark light;}
+#due-pop input[type=date],#due-pop input[type=time]{display:block;width:100%;box-sizing:border-box;min-height:46px;padding:.5rem .7rem;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font:inherit;font-size:16px;-webkit-appearance:auto;appearance:auto;color-scheme:dark light;}
 </style>
 <body class="logged-out">
 
@@ -7061,7 +7062,10 @@ function n28Ago(ms) {
   const q = id => dp.querySelector(id);
   const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   function close() { dp.classList.remove('open'); }
-  window.n28OpenDue = () => { q('#dp-date').value = inputDue.value || ''; q('#dp-time').value = _dueTime || ''; dp.classList.add('open'); };
+  window.n28OpenDue = () => {
+    ['meta-more-menu', 'modal-more-menu'].forEach(id => { const m = document.getElementById(id); if (m) m.style.display = 'none'; });
+    try { document.activeElement && document.activeElement.blur(); } catch (e) {}
+    q('#dp-date').value = inputDue.value || ''; q('#dp-time').value = _dueTime || ''; dp.classList.add('open'); };
   q('#dp-x').onclick = close;
   dp.addEventListener('click', e => { if (e.target === dp) close(); });
   dp.querySelectorAll('.dp-chips button').forEach(b => b.onclick = () => { const d = new Date(); d.setDate(d.getDate() + +b.dataset.q); q('#dp-date').value = iso(d); });
