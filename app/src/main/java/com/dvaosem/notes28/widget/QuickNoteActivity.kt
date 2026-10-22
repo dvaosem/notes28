@@ -25,7 +25,7 @@ class QuickNoteActivity : AppCompatActivity() {
             val text = input.text.toString().trim()
             val title = findViewById<EditText>(R.id.q_title).text.toString().trim()
             if (text.isNotEmpty() || title.isNotEmpty()) {
-                if (title.isNotEmpty()) WidgetPrefs.addTitled(this, title, text) else WidgetPrefs.addInbox(this, text)
+                WidgetPrefs.addTitled(this, title, text)
                 NoteWidget.refreshAll(this)
                 Toast.makeText(this, R.string.q_saved, Toast.LENGTH_SHORT).show()
             }

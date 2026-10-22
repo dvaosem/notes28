@@ -325,6 +325,7 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun clearTitledInbox(n: Int) {
             WidgetPrefs.clearTitled(this@MainActivity, n)
+            NoteWidget.refreshAll(this@MainActivity)
         }
 
         @JavascriptInterface

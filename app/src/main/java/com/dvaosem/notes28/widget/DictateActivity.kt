@@ -20,7 +20,7 @@ class DictateActivity : AppCompatActivity() {
         if (res.resultCode == Activity.RESULT_OK) {
             val text = res.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.trim().orEmpty()
             if (text.isNotEmpty()) {
-                WidgetPrefs.addInbox(this, text)
+                WidgetPrefs.addTitled(this, "", text)
                 NoteWidget.refreshAll(this)
                 Toast.makeText(this, R.string.q_saved, Toast.LENGTH_SHORT).show()
             }

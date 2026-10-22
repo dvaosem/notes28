@@ -120,6 +120,18 @@ object WidgetPrefs {
         sp(c).edit().putString("inbox_titled", arr.toString()).apply()
     }
 
+    /** Notes typed in the widget that the web app has not written to Firestore yet (shown in the list widget meanwhile). */
+    fun pendingNotes(c: Context): List<NoteItem> = try {
+        val arr = JSONArray(titledJson(c))
+        val now = System.currentTimeMillis()
+        (0 until arr.length()).map {
+            val o = arr.getJSONObject(it)
+            NoteItem("pending$it", o.optString("n"), o.optString("t"), emptyList(), false, now - it)
+        }.reversed()
+    } catch (e: Exception) {
+        emptyList()
+    }
+
     @Synchronized
     fun clearTitled(c: Context, n: Int) {
         val arr = try { JSONArray(titledJson(c)) } catch (e: Exception) { JSONArray() }
@@ -159,7 +171,9 @@ object WidgetPrefs {
 
     /** Rows for the notes-list widget by [mode]. */
     fun listRows(c: Context, mode: String): List<NoteItem> {
-        val all = notes(c).filter { !special(it) && (it.title.isNotBlank() || it.content.isNotBlank()) }
+        val saved = notes(c).filter { !special(it) && (it.title.isNotBlank() || it.content.isNotBlank()) }
+        val pend = pendingNotes(c).filter { it.title.isNotBlank() || it.content.isNotBlank() }
+        val all = saved.filter { it.pin } + pend + saved.filter { !it.pin }   // nová poznámka hneď za pripnutými, ako v appke
         return when (mode) {
             MODE_ALL -> all.take(100)
             MODE_PINNED -> all.filter { it.pin }.take(12)
