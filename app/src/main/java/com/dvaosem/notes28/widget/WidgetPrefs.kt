@@ -109,6 +109,25 @@ object WidgetPrefs {
         sp(c).edit().putString("inbox", JSONArray(l).toString()).apply()
     }
 
+    // ---- Titled quick notes: widget dialog with a title -> own note in the app (delivered by the web app on next open) ----
+    @Synchronized
+    fun titledJson(c: Context): String = sp(c).getString("inbox_titled", "[]") ?: "[]"
+
+    @Synchronized
+    fun addTitled(c: Context, title: String, text: String) {
+        val arr = try { JSONArray(titledJson(c)) } catch (e: Exception) { JSONArray() }
+        arr.put(org.json.JSONObject().put("n", title).put("t", text))
+        sp(c).edit().putString("inbox_titled", arr.toString()).apply()
+    }
+
+    @Synchronized
+    fun clearTitled(c: Context, n: Int) {
+        val arr = try { JSONArray(titledJson(c)) } catch (e: Exception) { JSONArray() }
+        val out = JSONArray()
+        for (i in n until arr.length()) out.put(arr.get(i))
+        sp(c).edit().putString("inbox_titled", out.toString()).apply()
+    }
+
     /** Quick note as the widget shows it: synced text + lines not delivered yet. */
     fun quickText(c: Context): String {
         val base = find(c, QUICK_ID)?.content.orEmpty().trim()

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v107">
+<meta name="n28-build" content="n28-v109">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -5769,6 +5769,24 @@ async function flushAndroidInbox() {
   if (document.getElementById('modal').classList.contains('open') && editingId === WIDGETNOTE_ID) return null;
   _inboxBusy = true;
   try {
+    // zápisy z widgetu s vlastným názvom -> samostatné poznámky
+    if (typeof AndroidBridge.getTitledInbox === 'function') {
+      let tl = []; try { tl = JSON.parse(AndroidBridge.getTitledInbox() || '[]'); } catch (e) {}
+      if (tl.length) {
+        const escT = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        let made = 0;
+        try {
+          for (const it of tl) {
+            const body = String(it.t || '').replace(/\r\n?/g, '\n');
+            const html = body.trim() ? body.split('\n').map(l => '<div>' + (escT(l) || '<br>') + '</div>').join('') : '';
+            await addDoc(notesRef(), { title: String(it.n || '').trim().slice(0, 200), content: html, tab: userTabs[0] || '', color: null, images: [], tasks: [], pinned: false, sortOrder: 0,
+              _trash: false, _trashedAt: null, authorEmail: currentUser.email, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+            made++;
+          }
+        } catch (e) { showToast('Widget poznámka sa neuložila', 'warn'); }
+        if (made) { AndroidBridge.clearTitledInbox(made); showToast('Widget: pridaná poznámka s názvom', 'ok'); }
+      }
+    }
     let items = [];
     try { items = JSON.parse(AndroidBridge.getInbox() || '[]'); } catch (e) {}
     if (!items.length) return null;
@@ -6910,6 +6928,119 @@ window.n28Plus = { version: '2026-10-20' };
     var s=window.getSelection(); if(s && !s.isCollapsed && String(s).trim()) return;
     e.preventDefault(); copyImg(img);
   });
+})();
+</script>
+<script>
+/* n28-plain-copy: kopírovanie z poznámok = len čistý text (bez HTML/štýlov) */
+(function(){
+  document.addEventListener('copy', function(e){
+    try {
+      var s = window.getSelection();
+      if (!s || s.isCollapsed) return;
+      var t = s.toString();
+      if (!t || !t.trim() || !e.clipboardData) return;
+      e.clipboardData.setData('text/plain', t.replace(/ /g, ' '));
+      e.preventDefault();
+    } catch (_) {}
+  }, true);
+  document.addEventListener('cut', function(e){
+    try {
+      var s = window.getSelection();
+      if (!s || s.isCollapsed) return;
+      var ed = document.activeElement;
+      if (!ed || !ed.isContentEditable) return;
+      var t = s.toString();
+      if (!t || !t.trim() || !e.clipboardData) return;
+      e.clipboardData.setData('text/plain', t.replace(/ /g, ' '));
+      e.preventDefault();
+      document.execCommand('delete');
+    } catch (_) {}
+  }, true);
+})();
+</script>
+<script>
+/* n28-scratch: Rýchly zošit – trvalý panel vpravo na PC (text + kreslenie), zapína sa v Nastaveniach */
+(function(){
+  if (window.AndroidBridge) return;
+  var KEY = 'n28-scratch', ON = 'n28-scratch-on';
+  var st; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { st = {}; }
+  st.text = st.text || ''; st.strokes = Array.isArray(st.strokes) ? st.strokes : [];
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var isOn = function () { try { return localStorage.getItem(ON) === '1'; } catch (e) { return false; } };
+
+  var css = document.createElement('style');
+  css.textContent =
+    '#n28-scratch{display:none;position:fixed;right:.65rem;top:calc(var(--topbar-h,62px) + 1.3rem);bottom:.65rem;width:330px;flex-direction:column;gap:.5rem;padding:.7rem;box-sizing:border-box;border-radius:16px;background:color-mix(in srgb, var(--surface) 92%, transparent);border:1px solid var(--border);z-index:45;}' +
+    '#n28-scratch .sp-head{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;font-weight:700;color:var(--text2);}' +
+    '#n28-scratch .sp-head button{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;line-height:1;}' +
+    '#sp-text{flex:1 1 50%;min-height:80px;resize:none;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);padding:.55rem .65rem;font:inherit;font-size:.9rem;outline:none;white-space:pre-wrap;}' +
+    '#n28-scratch .sp-tools{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;}' +
+    '#n28-scratch .sp-dot{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;}' +
+    '#n28-scratch .sp-dot.on{border-color:var(--text);}' +
+    '#n28-scratch .sp-b{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:.75rem;padding:.2rem .5rem;cursor:pointer;}' +
+    '#sp-cv{flex:1 1 50%;min-height:120px;width:100%;border:1px solid var(--border);border-radius:10px;background:var(--surface2);touch-action:none;cursor:crosshair;display:block;}' +
+    '@media(min-width:1100px){body.n28-sp-on #n28-scratch{display:flex;}body.n28-sp-on #app-screen{padding-right:350px;box-sizing:border-box;}body.n28-sp-on #fab{right:calc(330px + 2rem);}}';
+  document.head.appendChild(css);
+
+  var host = document.getElementById('app-screen') || document.body;
+  var p = document.createElement('div'); p.id = 'n28-scratch';
+  var COLORS = ['auto', '#d97757', '#3b82f6', '#22c55e', '#eab308'];
+  p.innerHTML =
+    '<div class="sp-head"><span>Rýchly zošit</span><button id="sp-x" type="button" title="Skryť" aria-label="Skryť">×</button></div>' +
+    '<textarea id="sp-text" placeholder="Píš sem…" spellcheck="false"></textarea>' +
+    '<div class="sp-tools">' +
+      COLORS.map(function (c, i) { return '<button type="button" class="sp-dot' + (i === 0 ? ' on' : '') + '" data-c="' + c + '" style="background:' + (c === 'auto' ? 'var(--text)' : c) + '" aria-label="Farba"></button>'; }).join('') +
+      '<input id="sp-size" type="range" min="1" max="12" value="3" style="width:70px" aria-label="Hrúbka">' +
+      '<button id="sp-undo" type="button" class="sp-b">Späť</button><button id="sp-clr" type="button" class="sp-b">Zmazať</button>' +
+    '</div>' +
+    '<canvas id="sp-cv"></canvas>';
+  host.appendChild(p);
+
+  var ta = p.querySelector('#sp-text'); ta.value = st.text;
+  var t1; ta.addEventListener('input', function () { clearTimeout(t1); t1 = setTimeout(function () { st.text = ta.value; save(); }, 400); });
+
+  var cv = p.querySelector('#sp-cv'), cx = cv.getContext('2d'), W = 0, H = 0, color = 'auto', cur = null;
+  function resolve(c) { return c === 'auto' ? (getComputedStyle(document.body).getPropertyValue('--text').trim() || '#eeeeee') : c; }
+  function line(s) {
+    if (!s.p.length) return;
+    cx.strokeStyle = resolve(s.c); cx.fillStyle = cx.strokeStyle; cx.lineWidth = s.w; cx.lineCap = 'round'; cx.lineJoin = 'round';
+    if (s.p.length === 1) { cx.beginPath(); cx.arc(s.p[0][0] * W, s.p[0][1] * H, s.w / 2, 0, 6.2832); cx.fill(); return; }
+    cx.beginPath(); cx.moveTo(s.p[0][0] * W, s.p[0][1] * H);
+    for (var i = 1; i < s.p.length; i++) cx.lineTo(s.p[i][0] * W, s.p[i][1] * H);
+    cx.stroke();
+  }
+  function redraw() { cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height); var d = window.devicePixelRatio || 1; cx.setTransform(d, 0, 0, d, 0, 0); st.strokes.forEach(line); if (cur) line(cur); }
+  function fit() {
+    var r = cv.getBoundingClientRect(); if (!r.width || !r.height) return;
+    var d = window.devicePixelRatio || 1; W = r.width; H = r.height;
+    cv.width = Math.round(W * d); cv.height = Math.round(H * d); redraw();
+  }
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(cv); window.addEventListener('resize', fit);
+  function pt(e) { var r = cv.getBoundingClientRect(); return [Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), Math.min(1, Math.max(0, (e.clientY - r.top) / r.height))]; }
+  cv.addEventListener('pointerdown', function (e) { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} cur = { c: color, w: +p.querySelector('#sp-size').value, p: [pt(e)] }; redraw(); });
+  cv.addEventListener('pointermove', function (e) { if (!cur) return; cur.p.push(pt(e)); redraw(); });
+  function end() { if (!cur) return; st.strokes.push(cur); cur = null; save(); redraw(); }
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  p.querySelectorAll('.sp-dot').forEach(function (b) { b.addEventListener('click', function () { color = b.dataset.c; p.querySelectorAll('.sp-dot').forEach(function (o) { o.classList.toggle('on', o === b); }); }); });
+  p.querySelector('#sp-undo').addEventListener('click', function () { st.strokes.pop(); save(); redraw(); });
+  p.querySelector('#sp-clr').addEventListener('click', function () { if (st.strokes.length && confirm('Zmazať kreslenie?')) { st.strokes = []; save(); redraw(); } });
+
+  var cb;
+  function apply() { document.body.classList.toggle('n28-sp-on', isOn()); if (cb) cb.checked = isOn(); setTimeout(fit, 50); }
+  p.querySelector('#sp-x').addEventListener('click', function () { try { localStorage.setItem(ON, '0'); } catch (e) {} apply(); });
+
+  // prepínač v Nastaveniach
+  var ex = document.getElementById('settings-export'), box = ex && ex.parentNode;
+  if (box && box.parentNode) {
+    var row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;';
+    row.innerHTML = '<span>Rýchly zošit (PC, vpravo)</span>';
+    cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = isOn();
+    cb.addEventListener('change', function () { try { localStorage.setItem(ON, cb.checked ? '1' : '0'); } catch (e) {} apply(); });
+    row.appendChild(cb);
+    box.parentNode.insertBefore(row, box);
+  }
+  apply();
 })();
 </script>
 </body>

@@ -318,6 +318,15 @@ class MainActivity : AppCompatActivity() {
             NoteWidget.refreshAll(this@MainActivity)
         }
 
+        /** Widget notes typed with a title: JSON array of {n: title, t: text}; each becomes its own note. */
+        @JavascriptInterface
+        fun getTitledInbox(): String = WidgetPrefs.titledJson(this@MainActivity)
+
+        @JavascriptInterface
+        fun clearTitledInbox(n: Int) {
+            WidgetPrefs.clearTitled(this@MainActivity, n)
+        }
+
         @JavascriptInterface
         fun hasWidget(): Boolean = NoteWidget.hasWidgets(this@MainActivity)
 
