@@ -16,8 +16,8 @@
     <string name="cfg_pick">Najprv vyber poznámku</string>
     <string name="w_hint">Ťukni na ikonu zoznamu a vyber poznámku</string>
     <string name="w_untitled">Poznámka</string>
-    <string name="q_title_hint">Názov (prázdny = pripíše sa do Widget poznámky)</string>
-    <string name="q_hint">Poznámka do widgetu…</string>
+    <string name="q_title_hint">Názov (nepovinný)</string>
+    <string name="q_hint">Poznámka…</string>
     <string name="q_save">Uložiť</string>
     <string name="q_cancel">Zrušiť</string>
     <string name="q_saved">Uložené do poznámky Widget</string>

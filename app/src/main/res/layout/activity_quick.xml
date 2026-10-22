@@ -17,14 +17,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/qw_title"
-            android:textColor="#b08463"
-            android:textSize="13sp"
-            android:textStyle="bold"/>
-
         <EditText
             android:id="@+id/q_title"
             android:layout_width="match_parent"
@@ -33,11 +25,17 @@
             android:hint="@string/q_title_hint"
             android:inputType="textCapSentences"
             android:maxLines="1"
-            android:paddingTop="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp"
             android:textColor="#f2f2f2"
             android:textColorHint="#8a8a8a"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3a3936"/>
 
         <EditText
             android:id="@+id/q_input"
