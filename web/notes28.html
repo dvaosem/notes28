@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v109">
+<meta name="n28-build" content="n28-v114">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -666,7 +666,6 @@ html:not(.app-ready) #fab2{opacity:0!important;pointer-events:none;}
 /* telefón: rozmazané pozadie editora (backdrop-filter) je v WebView drahé a pri otváraní trhá */
 @media(pointer:coarse){.modal-box{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--surface)!important;}}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:0s;}
-html.n28-dropping body::after{content:'Pusti súbor sem – priloží sa k poznámke';position:fixed;inset:10px;z-index:99998;border:2px dashed var(--text2);border-radius:18px;background:color-mix(in srgb,var(--bg) 78%,transparent);color:var(--text);display:flex;align-items:center;justify-content:center;font-size:1.1rem;pointer-events:none;}
 html.vt-on .modal-box{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;}
 /* rozbaľovací zoznam (priečinok, záložka…) – čitateľný v každej téme */
 select option,select optgroup{background:var(--surface);color:var(--text);}
@@ -679,6 +678,49 @@ html.vt-on .n28-modal{animation:none!important;}
   .skel,.dict-orb,.check-row.chk-pop .check-cb{animation:none!important;}
 }
 .notes-wrap{overscroll-behavior-y:contain;}
+</style>
+<style id="n28-v110-css">
+/* nastavenia */
+.set-body{gap:1rem!important;}
+.set-sec{display:flex;flex-direction:column;gap:.15rem;padding:.2rem 0 .1rem;}
+.set-h{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--text2);margin:0 0 .35rem;list-style:none;cursor:default;}
+details.set-fold{border-top:1px solid var(--border);padding-top:.6rem;}
+details.set-fold>summary{cursor:pointer;margin:0;display:flex;align-items:center;justify-content:space-between;}
+details.set-fold>summary::after{content:'▾';font-size:.8rem;transition:transform .2s;}
+details.set-fold[open]>summary::after{transform:rotate(180deg);}
+details.set-fold[open]>summary{margin-bottom:.6rem;}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.55rem .1rem;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent);cursor:pointer;}
+.set-sec>.set-row:last-child{border-bottom:none;}
+.set-t{font-size:.88rem;display:flex;flex-direction:column;gap:.15rem;min-width:0;}
+.set-d{font-size:.72rem;color:var(--text2);line-height:1.3;font-weight:400;}
+.set-actions{display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;align-items:center;}
+input.n28-sw{appearance:none;-webkit-appearance:none;flex-shrink:0;width:42px;height:25px;border-radius:13px;background:var(--surface2);border:1px solid var(--border);position:relative;cursor:pointer;transition:background .2s,border-color .2s;margin:0;}
+input.n28-sw::after{content:'';position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:var(--text2);transition:transform .2s,background .2s;}
+input.n28-sw:checked{background:var(--accent-default);border-color:var(--accent-default);}
+input.n28-sw:checked::after{transform:translateX(17px);background:var(--accent-text);}
+/* logo: zameškané termíny */
+.logo.has-missed{cursor:pointer;color:#e5484d;position:relative;}
+.logo.has-missed span{color:#e5484d;}
+.logo .logo-badge{display:none;}
+.logo.has-missed .logo-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;margin-left:5px;border-radius:8px;background:#e5484d;color:#fff;font:700 .62rem/1 var(--font-body);letter-spacing:0;vertical-align:3px;}
+#topbar-sticky.tb-scrolled .logo.has-missed{opacity:1;}
+#missed-pop{display:none;position:fixed;left:.65rem;top:calc(var(--topbar-h,62px) + .9rem);width:min(360px,calc(100vw - 1.3rem));max-height:60vh;overflow:auto;z-index:400;padding:.5rem;border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:0 12px 40px rgba(0,0,0,.45);}
+#missed-pop.open{display:block;}
+#missed-pop .mp-h{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);font-weight:700;padding:.3rem .5rem .5rem;}
+#missed-pop .mp-i{display:flex;align-items:center;gap:.6rem;padding:.55rem .5rem;border-radius:10px;cursor:pointer;}
+#missed-pop .mp-i:hover{background:var(--surface2);}
+#missed-pop .mp-b{flex:1;min-width:0;}
+#missed-pop .mp-t{font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#missed-pop .mp-w{font-size:.72rem;color:#e5484d;margin-top:.1rem;}
+#missed-pop .mp-a{display:flex;gap:.3rem;flex-shrink:0;}
+#missed-pop .mp-a button{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:.72rem;padding:.25rem .5rem;cursor:pointer;}
+/* termín + čas */
+#due-pop{z-index:2600;align-items:center;padding:1rem;}
+#due-pop .modal-box{max-height:none;border-radius:16px;}
+#due-pop .dp-chips{display:flex;gap:.4rem;flex-wrap:wrap;}
+#due-pop .dp-chips button{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:999px;font-size:.78rem;padding:.3rem .7rem;cursor:pointer;}
+#due-pop label{display:flex;flex-direction:column;gap:.3rem;font-size:.78rem;color:var(--text2);}
+#due-pop input[type=date],#due-pop input[type=time]{display:block;width:100%;box-sizing:border-box;min-height:46px;padding:.5rem .7rem;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font:inherit;font-size:16px;-webkit-appearance:auto;appearance:auto;color-scheme:dark light;}
 </style>
 <body class="logged-out">
 
@@ -934,84 +976,111 @@ html.vt-on .n28-modal{animation:none!important;}
 
 <!-- SETTINGS MODAL -->
 <div id="settings-modal" class="n28-modal">
-  <div class="modal-box" style="max-width:420px">
+  <div class="modal-box" style="max-width:460px">
     <div class="modal-header">
       <span class="modal-header-title">Nastavenia</span>
       <button class="modal-x" onclick="document.getElementById('settings-modal').classList.remove('open')">×</button>
     </div>
-    <div class="modal-body" style="gap:.8rem">
-      <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Vzhľad</p>
-        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;">
-          <span>Téma</span>
+    <div class="modal-body set-body">
+
+      <section class="set-sec">
+        <h4 class="set-h">Vzhľad</h4>
+        <div class="set-row">
+          <span class="set-t">Téma</span>
           <select id="settings-theme-select" class="meta-pill" aria-label="Téma" style="min-width:8.5rem;">
             <option value="dark">Tmavá</option>
             <option value="gray">Šedá</option>
             <option value="light">Svetlá</option>
           </select>
-        </label>
-      </div>
-      <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Správanie</p>
-        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;margin-bottom:.5rem;">
-          <span>Gestá na kartách (doprava = pripnúť, doľava = do koša)</span>
-          <input type="checkbox" id="set-swipe">
-        </label>
-        <label style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;">
-          <span>Odškrtnuté položky presúvať dole</span>
-          <input type="checkbox" id="set-chk-sort">
-        </label>
-      </div>
-      <div id="settings-android" style="display:none;flex-direction:column;gap:.8rem">
-        <hr style="border:none;border-top:1px solid var(--border)">
-        <div>
-          <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Android appka</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;">
-            <span id="android-upd-sub" style="font-size:.8rem;color:var(--text2);">Verzia –</span>
-            <button type="button" id="android-upd-btn" class="btn btn-ghost" style="font-size:.82rem">Skontrolovať</button>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;">
-            <span style="font-size:.85rem;">Widget na plochu</span>
-            <button type="button" id="android-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;">
-            <span style="font-size:.85rem;">Rýchla poznámka na plochu</span>
-            <button type="button" id="android-quick-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
-          </div>
         </div>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border)">
-      <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">AI / Anthropic API kľúč</p>
+        <label class="set-row" id="set-scratch-row">
+          <span class="set-t">Rýchly zošit<small class="set-d">Trvalý panel vpravo na veľkej obrazovke: len písanie</small></span>
+          <input type="checkbox" id="set-scratch" class="n28-sw">
+        </label>
+      </section>
+
+      <section class="set-sec">
+        <h4 class="set-h">Pripomienky</h4>
+        <label class="set-row">
+          <span class="set-t">Upozornenia na termíny<small class="set-d">Pri poznámke s dátumom a časom sa ozve presne vtedy (bez času o 8:00)</small></span>
+          <input type="checkbox" id="set-rem-due" class="n28-sw">
+        </label>
+        <label class="set-row">
+          <span class="set-t">Zameškané termíny<small class="set-d">Logo N28 zčervenie a klik ukáže, čo si zameškal</small></span>
+          <input type="checkbox" id="set-rem-missed" class="n28-sw">
+        </label>
+        <label class="set-row">
+          <span class="set-t">Pripomenúť staršie poznámky<small class="set-d">Raz denne ukáže jednu starú poznámku navrchu</small></span>
+          <input type="checkbox" id="set-rem-old" class="n28-sw">
+        </label>
+      </section>
+
+      <section class="set-sec">
+        <h4 class="set-h">Správanie</h4>
+        <label class="set-row">
+          <span class="set-t">Gestá na kartách<small class="set-d">Doprava pripnúť, doľava do koša</small></span>
+          <input type="checkbox" id="set-swipe" class="n28-sw">
+        </label>
+        <label class="set-row">
+          <span class="set-t">Odškrtnuté položky dole<small class="set-d">V zozname úloh sa hotové presunú na koniec</small></span>
+          <input type="checkbox" id="set-chk-sort" class="n28-sw">
+        </label>
+      </section>
+
+      <section class="set-sec" id="settings-android" style="display:none">
+        <h4 class="set-h">Android appka</h4>
+        <div class="set-row">
+          <span class="set-t">Aktualizácia<small class="set-d" id="android-upd-sub">Verzia –</small></span>
+          <button type="button" id="android-upd-btn" class="btn btn-ghost" style="font-size:.82rem">Skontrolovať</button>
+        </div>
+        <div class="set-row" id="android-exact-row" style="display:none">
+          <span class="set-t">Presné pripomienky<small class="set-d">Povoľ „Budíky a pripomienky“, inak príde upozornenie s oneskorením</small></span>
+          <button type="button" id="android-exact-btn" class="btn btn-ghost" style="font-size:.82rem">Povoliť</button>
+        </div>
+        <div class="set-row">
+          <span class="set-t">Widget na plochu</span>
+          <button type="button" id="android-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
+        </div>
+        <div class="set-row">
+          <span class="set-t">Rýchla poznámka na plochu</span>
+          <button type="button" id="android-quick-widget-btn" class="btn btn-ghost" style="font-size:.82rem">Pridať</button>
+        </div>
+      </section>
+
+      <section class="set-sec">
+        <h4 class="set-h">Zdieľané záložky</h4>
+        <div id="settings-shared-list"></div>
+        <div class="set-actions">
+          <button class="btn btn-ghost" id="settings-create-shared" style="font-size:.82rem">+ Vytvoriť</button>
+          <button class="btn btn-ghost" id="settings-join-shared" style="font-size:.82rem">Pripojiť sa</button>
+        </div>
+      </section>
+
+      <details class="set-sec set-fold">
+        <summary class="set-h">AI / Anthropic API kľúč</summary>
         <div style="display:flex;gap:.4rem;">
           <input type="password" id="settings-api-key" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false" style="flex:1;min-width:0;padding:.45rem .6rem;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:.82rem;">
           <button type="button" id="settings-api-key-show" class="btn btn-ghost" style="font-size:.78rem;padding:.4rem .6rem;" aria-label="Zobraziť kľúč"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
-        <div style="display:flex;gap:.5rem;margin-top:.5rem;align-items:center;flex-wrap:wrap;">
+        <div class="set-actions">
           <button type="button" id="settings-api-key-test" class="btn btn-ghost" style="font-size:.82rem">✓ Overiť a uložiť</button>
           <span id="settings-api-key-status" style="font-size:.78rem;color:var(--text2);"></span>
         </div>
-        <p style="font-size:.72rem;color:var(--text2);margin-top:.4rem;">Kľúč sa ukladá len v tomto prehliadači (localStorage), nie v kóde.</p>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border)">
-      <div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.6rem;font-weight:600">Zdieľané záložky</p>
-        <div id="settings-shared-list"></div>
-        <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap;">
-          <button class="btn btn-ghost" id="settings-create-shared" style="font-size:.82rem">+ Vytvoriť</button>
-          <button class="btn btn-ghost" id="settings-join-shared" style="font-size:.82rem">Pripojiť sa</button>
+        <small class="set-d">Kľúč sa ukladá len v tomto prehliadači, nie v kóde.</small>
+      </details>
+
+      <details class="set-sec set-fold">
+        <summary class="set-h">Export a záloha</summary>
+        <div class="set-actions" style="flex-direction:column;align-items:stretch">
+          <button id="settings-export" class="btn btn-ghost" style="justify-content:flex-start">Všetko (JSON)</button>
+          <button id="settings-export-zip" class="btn btn-ghost" style="justify-content:flex-start">Všetko (ZIP)</button>
+          <button id="settings-pdf" class="btn btn-ghost" style="justify-content:flex-start">Aktuálna záložka (PDF)</button>
+          <button id="settings-word" class="btn btn-ghost" style="justify-content:flex-start">Aktuálna záložka (Word)</button>
         </div>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border)">
-      <div style="display:flex;flex-direction:column;gap:.5rem">
-        <button id="settings-export" class="btn btn-ghost" style="justify-content:flex-start">Export všetkých (JSON)</button>
-        <button id="settings-export-zip" class="btn btn-ghost" style="justify-content:flex-start">Export všetkých (ZIP)</button>
-        <button id="settings-pdf" class="btn btn-ghost" style="justify-content:flex-start">Export záložky (PDF)</button>
-        <button id="settings-word" class="btn btn-ghost" style="justify-content:flex-start">Export záložky (Word)</button>
-      </div>
+      </details>
     </div>
     <div class="modal-footer">
-      <button id="settings-save" class="btn btn-primary">OK</button>
+      <button id="settings-save" class="btn btn-primary">Hotovo</button>
     </div>
   </div>
 </div>
@@ -1208,6 +1277,7 @@ const modalDelete  = document.getElementById('modal-delete');
 const editor       = document.getElementById('editor');
 const inputTitle   = document.getElementById('input-title');
 const inputDue     = document.getElementById('input-due');
+let _dueTime = '', _dueDone = false;   // čas pripomienky a „hotovo“ k termínu poznámky
 const inputColor   = document.getElementById('input-color');
 const addTabBtn    = document.getElementById('add-tab-btn');
 const searchInput  = document.getElementById('search-input');
@@ -1802,8 +1872,8 @@ function makeCard(note) {
   card.ondragend = () => card.style.opacity='';
 
   const due = note.dueDate ? new Date(note.dueDate) : null;
-  const isOverdue = due && due < new Date();
-  const dueStr = due ? due.toLocaleDateString('sk-SK',{day:'2-digit',month:'short'}) : '';
+  const isOverdue = due && !note.dueDone && (n28DueTs(note) || Infinity) < Date.now();
+  const dueStr = due ? due.toLocaleDateString('sk-SK',{day:'2-digit',month:'short'}) + (note.dueTime ? ' ' + note.dueTime : '') : '';
   const created = note.createdAt?.toDate?.();
   const createdStr = created ? created.toLocaleDateString('sk-SK',{day:'2-digit',month:'short',year:'2-digit'}) : '';
   const updated = note.updatedAt?.toDate?.();
@@ -2077,6 +2147,8 @@ document.getElementById('modal-duplicate').onclick = async () => {
     title: (note.title||'') + ' (kópia)',
     content: note.content||'',
     dueDate: note.dueDate||null,
+    dueTime: note.dueTime||null,
+    dueDone: false,
     color: note.color||null,
     images: note.images||[],
     tab: note.tab||currentTab,
@@ -2262,6 +2334,7 @@ function openModal(note=null) {
   updateWordCounter();
   renderBacklinks(note?.id||null);
   inputDue.value = note?.dueDate||'';
+  _dueTime = note?.dueTime||''; _dueDone = !!note?.dueDone;
   updateDueBtn();
   setSelectedColor(note?.color||null);
   pendingImages = note?.images?[...note.images]:[];
@@ -2323,6 +2396,8 @@ function takeSnapshot() {
     title: inputTitle.value,
     content: editor.innerHTML,
     dueDate: inputDue.value,
+    dueTime: _dueTime,
+    dueDone: _dueDone,
     color: getSelectedColor(),
     images: [...pendingImages],
   };
@@ -2422,6 +2497,8 @@ async function doAutosave() {
     title: inputTitle.value.trim(),
     content: linkifyForSave(editor.innerHTML),
     dueDate: inputDue.value||null,
+    dueTime: (inputDue.value && _dueTime) ? _dueTime : null,
+    dueDone: (inputDue.value && _dueDone) ? true : false,
     color: getSelectedColor(),
     images: pendingImages,
     updatedAt: serverTimestamp(),
@@ -2706,13 +2783,13 @@ function updateDueBtn() {
   const btn = document.getElementById('due-btn');
   if (!btn) return;
   const span = btn.querySelector('.pill-val');
-  if (span) span.textContent = inputDue.value || '';
+  if (span) span.textContent = inputDue.value ? n28FmtDue(inputDue.value, _dueTime) : '';
   btn.classList.toggle('active', !!inputDue.value);
   btn.classList.toggle('has-val', !!inputDue.value);
 }
 
 document.getElementById('due-btn').onclick = () => {
-  inputDue.showPicker ? inputDue.showPicker() : inputDue.click();
+  if (window.n28OpenDue) window.n28OpenDue(); else (inputDue.showPicker ? inputDue.showPicker() : inputDue.click());
 };
 
 // ─── CANCEL (revert to original) ─────────────────────────────────────────────
@@ -2722,6 +2799,8 @@ document.getElementById('modal-cancel').onclick = async () => {
       title: _origSnapshot.title,
       content: _origSnapshot.content,
       dueDate: _origSnapshot.dueDate||null,
+      dueTime: _origSnapshot.dueTime||null,
+      dueDone: !!_origSnapshot.dueDone,
       color: _origSnapshot.color,
       images: _origSnapshot.images,
       updatedAt: serverTimestamp(),
@@ -2812,8 +2891,17 @@ function checkDueNotifications() {
   };
   const today = new Date().toISOString().slice(0,10);
   const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
-  notes.filter(n=>!n._trash&&n.dueDate).forEach(note => {
+  if (!n28RemOn('n28-rem-due')) return;
+  notes.filter(n=>!n._trash&&n.dueDate&&!n.dueDone).forEach(note => {
     const key = 'n28-notif-'+note.id+'-'+note.dueDate;
+    if (note.dueTime) {
+      const k2 = key+'-'+note.dueTime, ts = n28DueTs(note);
+      if (!localStorage.getItem(k2) && Date.now() >= ts && Date.now() - ts < 6*3600e3) {
+        fire('⏰ '+(note.title||'N28'), { body: note.dueTime+(note.content ? ' · '+note.content.replace(/<[^>]+>/g,'').slice(0,80) : ''), icon: 'https://dvaosem.com/n28-icon-v2.png', tag: k2 });
+        localStorage.setItem(k2, '1');
+      }
+      return;
+    }
     if (localStorage.getItem(key)) return;
     if (note.dueDate === today) {
       fire('Due dnes — '+(note.title||'N28'), {
@@ -3613,7 +3701,7 @@ modalSave.onclick = async () => {
     editor.querySelectorAll('.check-cb').forEach(cb => {
       if (cb.checked) cb.setAttribute('checked',''); else cb.removeAttribute('checked');
     });
-    const data = { title:inputTitle.value.trim(), content:linkifyForSave(editor.innerHTML), dueDate:inputDue.value||null, color:getSelectedColor(), images:pendingImages, authorEmail:currentUser.email };
+    const data = { title:inputTitle.value.trim(), content:linkifyForSave(editor.innerHTML), dueDate:inputDue.value||null, dueTime:(inputDue.value&&_dueTime)?_dueTime:null, dueDone:(inputDue.value&&_dueDone)?true:false, color:getSelectedColor(), images:pendingImages, authorEmail:currentUser.email };
     if (activeShareId) {
       if (editingId) n28SyncWrite(n28NoteRef(editingId),{...data,updatedAt:serverTimestamp()});
       else addDoc(sharedNotesRef(activeShareId),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()}).catch(err=>showToast('❌ '+err.message,'warn',4000));
@@ -4656,8 +4744,8 @@ function renderImagePreviews() {
   });
 }
 
-document.getElementById('img-file-input').onchange = e => { const f=[...e.target.files]; e.target.value=''; n28UploadFiles(f); };
-async function n28UploadFiles(files) {
+document.getElementById('img-file-input').onchange = async e => {
+  const files=[...e.target.files]; e.target.value='';
   const MAX = 25*1024*1024; // 25 MB strop (Cloudinary free)
   for (const file of files) {
     if (file.size > MAX) { showToast('❌ '+file.name+' je príliš veľký (max 25 MB)','warn',4000); continue; }
@@ -4673,7 +4761,7 @@ async function n28UploadFiles(files) {
         const data=await res.json();
         if (data.secure_url) {
           pendingImages.push({url:data.secure_url,publicId:data.public_id,name:file.name,type:isImage?'image':isPdf?'pdf':'file'});
-          placeholder.remove(); renderImagePreviews(); try { scheduleAutosave(); } catch (e) {}
+          placeholder.remove(); renderImagePreviews();
           success = true; break;
         } else throw new Error(data.error?.message||'Upload zlyhal');
       } catch(err) {
@@ -4682,26 +4770,7 @@ async function n28UploadFiles(files) {
       }
     }
   }
-}
-window.n28UploadFiles = n28UploadFiles;
-
-// Drag & drop súborov (Windows/PC): pustenie na otvorenú poznámku ich priloží, pustenie na zoznam založí novú poznámku s prílohou
-(function () {
-  const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes('Files');
-  let depth = 0;
-  const mark = on => document.documentElement.classList.toggle('n28-dropping', on);
-  addEventListener('dragenter', e => { if (!hasFiles(e)) return; depth++; mark(true); });
-  addEventListener('dragleave', e => { if (!hasFiles(e)) return; depth = Math.max(0, depth - 1); if (!depth) mark(false); });
-  addEventListener('dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
-  addEventListener('drop', e => {
-    if (!hasFiles(e)) return;
-    e.preventDefault(); depth = 0; mark(false);
-    if (!currentUser) return;
-    const files = [...e.dataTransfer.files]; if (!files.length) return;
-    if (!modal.classList.contains('open')) openModal();
-    n28UploadFiles(files);
-  });
-})();
+};
 
 // ─── ZMENA VEĽKOSTI OBRÁZKA V POZNÁMKE ───────────────────────────────────────
 (function() {
@@ -5789,19 +5858,48 @@ async function flushAndroidInbox() {
   if (document.getElementById('modal').classList.contains('open') && editingId === WIDGETNOTE_ID) return null;
   _inboxBusy = true;
   try {
+    // zápisy z widgetu s vlastným názvom -> samostatné poznámky
+    if (typeof AndroidBridge.getTitledInbox === 'function') {
+      let tl = []; try { tl = JSON.parse(AndroidBridge.getTitledInbox() || '[]'); } catch (e) {}
+      if (tl.length) {
+        const escT = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        let made = 0;
+        // záložka „Widget“: vytvorí sa raz (pridá sa na koniec zoznamu záložiek), nové zápisy z widgetu idú do nej
+        let wTab = userTabs[0] || '';
+        try {
+          const ts = await getDoc(tabsDocRef());
+          if (ts.exists()) {
+            const rawList = ts.data().list || [];
+            if (!rawList.some(t => (typeof t === 'string' ? t : (t && (t.name || t.id))) === 'Widget')) await setDoc(tabsDocRef(), { list: [...rawList, 'Widget'] }, { merge: true });
+            wTab = 'Widget';
+          }
+        } catch (e) {}
+        try {
+          for (const it of tl) {
+            const body = String(it.t || '').replace(/\r\n?/g, '\n');
+            const html = body.trim() ? body.split('\n').map(l => '<div>' + (escT(l) || '<br>') + '</div>').join('') : '';
+            await addDoc(notesRef(), { title: String(it.n || '').trim().slice(0, 200), content: html, tab: wTab, color: null, images: [], tasks: [], pinned: false, sortOrder: 0,
+              _trash: false, _trashedAt: null, authorEmail: currentUser.email, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+            made++;
+          }
+        } catch (e) { showToast('Widget poznámka sa neuložila', 'warn'); }
+        if (made) { AndroidBridge.clearTitledInbox(made); showToast('Widget: pridaná poznámka s názvom', 'ok'); }
+      }
+    }
     let items = [];
     try { items = JSON.parse(AndroidBridge.getInbox() || '[]'); } catch (e) {}
     if (!items.length) return null;
     const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-    // každý text z widgetu = samostatná bežná poznámka (nie jedna spoločná „Widget“ poznámka)
-    for (const t of items) {
-      const html = String(t).split('\n').map(l => '<div>' + (esc(l) || '<br>') + '</div>').join('');
-      await addDoc(notesRef(), { title:'', content: html, tab:'', folder:null, pinned:false, color:null, images:[], tasks:[],
-        createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email });
-    }
-    const content = null;
+    const html = items.map(t => '<div>' + esc(t) + '</div>').join('');
+    const wn = notes.find(n => n.id === WIDGETNOTE_ID);
+    const ref = doc(db,'users',currentUser.uid,'notes',WIDGETNOTE_ID);
+    let content;
+    if (wn && !wn._trash) { content = (wn.content || '') + html; await updateDoc(ref, { content, updatedAt: serverTimestamp() }); }
+    else { content = html; await setDoc(ref, { title:'Widget', content, tab: userTabs[0]||'', pinned:true, color:'#84cc16', images:[], tasks:[],
+      _trash:false, _trashedAt:null,
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(), authorEmail: currentUser.email }); }
     AndroidBridge.clearInbox(items.length);
-    showToast(items.length > 1 ? 'Pridané poznámky z widgetu' : 'Poznámka z widgetu pridaná','ok');
+    showToast('Widget poznámka doplnená','ok');
     return content;
   } catch (e) {
     showToast('Widget poznámka sa neuložila','warn');
@@ -6391,6 +6489,7 @@ function ageText(ms) {
   return y === 1 ? 'Pred rokom' : 'Pred ' + y + ' rokmi';
 }
 function addResurface() {
+  if (!n28RemOn('n28-rem-old')) return;
   if (currentTab !== LAST_TAB || searchInput.value.trim() || activeTag || activeSmart || activeShareId || anyF()) return;
   if (!notesGrid.querySelector('.note-card[data-id]')) return;
   const day = new Date().toDateString();
@@ -6873,6 +6972,140 @@ window.n28Draw = () => { window.__n28NoFocus = true; openModal(); setTimeout(() 
 window.n28NewList = () => { openModal(); setTimeout(() => { try { $id('btn-checklist').onmousedown(new Event('mousedown')); } catch (e) {} }, 120); };
 window.n28Plus = { version: '2026-10-20' };
 })();
+
+// ═══ v110: termín s časom, zameškané (červené logo), prepínače pripomienok ═══════
+function n28RemOn(k) { try { const v = localStorage.getItem(k); return v == null ? true : JSON.parse(v) !== false; } catch (e) { return true; } }
+function n28DueTs(note) {
+  if (!note || !note.dueDate) return null;
+  const p = String(note.dueDate).split('-').map(Number); if (p.length < 3 || p.some(isNaN)) return null;
+  if (note.dueTime) { const t = String(note.dueTime).split(':').map(Number); return new Date(p[0], p[1] - 1, p[2], t[0] || 0, t[1] || 0).getTime(); }
+  return new Date(p[0], p[1] - 1, p[2], 23, 59, 59).getTime();      // bez času = zameškané až po skončení dňa
+}
+function n28FmtDue(d, t) {
+  const p = String(d).split('-').map(Number); if (p.length < 3) return d;
+  return p[2] + '. ' + p[1] + '. ' + (t || '');
+}
+function n28Missed() {
+  if (!n28RemOn('n28-rem-missed')) return [];
+  const now = Date.now();
+  return notes.filter(n => !n._trash && n.dueDate && !n.dueDone && n.id !== QUICKNOTE_ID && n.id !== WIDGETNOTE_ID && (n28DueTs(n) || Infinity) < now)
+    .sort((a, b) => n28DueTs(a) - n28DueTs(b));
+}
+function n28Ago(ms) {
+  const m = Math.floor((Date.now() - ms) / 60000);
+  if (m < 60) return 'pred ' + Math.max(1, m) + ' min';
+  const h = Math.floor(m / 60); if (h < 24) return 'pred ' + h + ' h';
+  const d = Math.floor(h / 24); return d === 1 ? 'včera' : 'pred ' + d + ' dňami';
+}
+(function n28Due() {
+  const logo = document.querySelector('#topbar-sticky .logo') || document.querySelector('.logo');
+  if (logo && !logo.querySelector('.logo-badge')) { const b = document.createElement('i'); b.className = 'logo-badge'; b.style.fontStyle = 'normal'; logo.appendChild(b); }
+  const pop = document.createElement('div'); pop.id = 'missed-pop'; document.body.appendChild(pop);
+  const noteTitle = n => (n.title || '').trim() || (String(n.content || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60)) || 'Poznámka';
+  const upd = async (id, data) => { try { await updateDoc(doc(db, 'users', currentUser.uid, 'notes', id), { ...data, updatedAt: serverTimestamp() }); } catch (e) { showToast('❌ ' + e.message, 'warn', 3500); } };
+  function renderPop() {
+    const list = n28Missed();
+    if (!list.length) { pop.classList.remove('open'); return; }
+    pop.innerHTML = '<div class="mp-h">Zameškané termíny</div>' + list.map(n =>
+      '<div class="mp-i" data-id="' + escHtml(n.id) + '"><div class="mp-b"><div class="mp-t">' + escHtml(noteTitle(n)) + '</div><div class="mp-w">' +
+      escHtml(n28FmtDue(n.dueDate, n.dueTime)) + ' · ' + n28Ago(n28DueTs(n)) + '</div></div><div class="mp-a"><button data-a="done" type="button">Hotovo</button><button data-a="tom" type="button">Zajtra</button></div></div>').join('');
+  }
+  pop.addEventListener('click', e => {
+    const row = e.target.closest('.mp-i'); if (!row) return;
+    const id = row.dataset.id, n = notes.find(x => x.id === id); if (!n) return;
+    const a = e.target.closest('button');
+    if (a && a.dataset.a === 'done') { n.dueDone = true; upd(id, { dueDone: true }); renderPop(); refresh(); return; }
+    if (a && a.dataset.a === 'tom') {
+      const p = String(n.dueDate).split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2] + 1);
+      const nd = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      const now = new Date(), t = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const tomorrow = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+      const target = nd < tomorrow ? tomorrow : nd;     // vždy aspoň zajtra, nie v minulosti
+      n.dueDate = target; n.dueDone = false; upd(id, { dueDate: target, dueDone: false }); renderPop(); refresh(); return;
+    }
+    pop.classList.remove('open'); openModal(n);
+  });
+  document.addEventListener('click', e => { if (!pop.classList.contains('open')) return; const path = e.composedPath ? e.composedPath() : []; if (path.includes(pop) || (logo && path.includes(logo))) return; pop.classList.remove('open'); });
+  if (logo) logo.addEventListener('click', () => { if (!logo.classList.contains('has-missed')) return; renderPop(); pop.classList.toggle('open'); });
+
+  let lastRem = '';
+  function syncAndroid() {
+    if (!window.AndroidBridge || typeof AndroidBridge.scheduleReminders !== 'function') return;
+    let out = [];
+    if (n28RemOn('n28-rem-due')) {
+      const now = Date.now();
+      notes.forEach(n => {
+        if (n._trash || !n.dueDate || n.dueDone) return;
+        let at = n28DueTs(n); if (!at) return;
+        if (!n.dueTime) { const p = String(n.dueDate).split('-').map(Number); at = new Date(p[0], p[1] - 1, p[2], 8, 0).getTime(); }
+        if (at <= now) return;
+        out.push({ id: n.id, title: noteTitle(n), text: n.dueTime ? 'Termín ' + n.dueTime : 'Termín dnes', at });
+      });
+      out.sort((a, b) => a.at - b.at); out = out.slice(0, 150);
+    }
+    const j = JSON.stringify(out);
+    if (j !== lastRem) { lastRem = j; try { AndroidBridge.scheduleReminders(j); } catch (e) {} }
+  }
+  let lastCnt = -1;
+  function refresh() {
+    const m = n28Missed();
+    if (logo) {
+      logo.classList.toggle('has-missed', m.length > 0);
+      const b = logo.querySelector('.logo-badge'); if (b) b.textContent = m.length > 9 ? '9+' : String(m.length);
+      logo.title = m.length ? 'Zameškané termíny: ' + m.length : '';
+      if (m.length !== lastCnt && pop.classList.contains('open')) renderPop();
+      lastCnt = m.length;
+    }
+    syncAndroid();
+  }
+  window.n28DueRefresh = refresh;
+  setInterval(refresh, 5000); setTimeout(refresh, 1500);
+
+  // ── dialóg: termín + čas ──
+  const dp = document.createElement('div'); dp.id = 'due-pop'; dp.className = 'n28-modal';
+  dp.innerHTML = '<div class="modal-box" style="max-width:340px"><div class="modal-header"><span class="modal-header-title">Termín a pripomienka</span><button class="modal-x" type="button" id="dp-x">×</button></div>' +
+    '<div class="modal-body" style="gap:.8rem"><div class="dp-chips"><button type="button" data-q="0">Dnes</button><button type="button" data-q="1">Zajtra</button><button type="button" data-q="7">Za týždeň</button></div>' +
+    '<label>Dátum<input type="date" id="dp-date"></label><label>Čas pripomienky (nepovinný)<input type="time" id="dp-time"></label>' +
+    '<small style="font-size:.72rem;color:var(--text2);line-height:1.35">S časom sa ozve presne vtedy. Bez času príde upozornenie o 8:00 v ten deň.</small></div>' +
+    '<div class="modal-footer" style="justify-content:space-between"><button type="button" class="btn btn-ghost" id="dp-clear">Odstrániť</button><button type="button" class="btn btn-primary" id="dp-ok">Uložiť</button></div></div>';
+  document.body.appendChild(dp);
+  const q = id => dp.querySelector(id);
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  function close() { dp.classList.remove('open'); }
+  window.n28OpenDue = () => {
+    ['meta-more-menu', 'modal-more-menu'].forEach(id => { const m = document.getElementById(id); if (m) m.style.display = 'none'; });
+    try { document.activeElement && document.activeElement.blur(); } catch (e) {}
+    q('#dp-date').value = inputDue.value || ''; q('#dp-time').value = _dueTime || ''; dp.classList.add('open'); };
+  q('#dp-x').onclick = close;
+  dp.addEventListener('click', e => { if (e.target === dp) close(); });
+  dp.querySelectorAll('.dp-chips button').forEach(b => b.onclick = () => { const d = new Date(); d.setDate(d.getDate() + +b.dataset.q); q('#dp-date').value = iso(d); });
+  q('#dp-clear').onclick = () => { inputDue.value = ''; _dueTime = ''; _dueDone = false; inputDue.dispatchEvent(new Event('change')); updateDueBtn(); close(); };
+  q('#dp-ok').onclick = () => {
+    const d = q('#dp-date').value, t = q('#dp-time').value;
+    if (!d) { if (t) { showToast('Vyber aj dátum', 'warn'); return; } }
+    inputDue.value = d; _dueTime = d ? t : ''; _dueDone = false;
+    inputDue.dispatchEvent(new Event('change')); updateDueBtn(); close();
+    if (d && t) { try { requestNotifPermission(); } catch (e) {} }
+  };
+
+  // ── prepínače v nastaveniach ──
+  [['set-rem-due', 'n28-rem-due'], ['set-rem-missed', 'n28-rem-missed'], ['set-rem-old', 'n28-rem-old']].forEach(([id, key]) => {
+    const el = document.getElementById(id); if (!el) return;
+    el.checked = n28RemOn(key);
+    el.addEventListener('change', () => { try { localStorage.setItem(key, JSON.stringify(el.checked)); } catch (e) {} if (key === 'n28-rem-due') lastRem = ''; refresh(); try { renderNotes(); } catch (e) {} });
+  });
+  ['set-swipe', 'set-chk-sort'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('n28-sw'); });
+  if (window.AndroidBridge) { const r = document.getElementById('set-scratch-row'); if (r) r.style.display = 'none'; }
+  // Android: presné alarmy
+  (function () {
+    if (!window.AndroidBridge || typeof AndroidBridge.canExactAlarms !== 'function') return;
+    const row = document.getElementById('android-exact-row'), btn = document.getElementById('android-exact-btn');
+    const sync = () => { try { if (row) row.style.display = AndroidBridge.canExactAlarms() ? 'none' : 'flex'; } catch (e) {} };
+    if (btn) btn.onclick = () => { try { AndroidBridge.openExactAlarmSettings(); } catch (e) {} };
+    document.getElementById('settings-btn')?.addEventListener('click', sync);
+    document.addEventListener('visibilitychange', sync); sync();
+  })();
+})();
 </script>
 <script>
 /* n28 copy-image (added 2026-10-20) */
@@ -6929,6 +7162,103 @@ window.n28Plus = { version: '2026-10-20' };
     var s=window.getSelection(); if(s && !s.isCollapsed && String(s).trim()) return;
     e.preventDefault(); copyImg(img);
   });
+})();
+</script>
+<script>
+/* n28-plain-copy: kopírovanie z poznámok = len čistý text (bez HTML/štýlov) */
+(function(){
+  document.addEventListener('copy', function(e){
+    try {
+      var s = window.getSelection();
+      if (!s || s.isCollapsed) return;
+      var t = s.toString();
+      if (!t || !t.trim() || !e.clipboardData) return;
+      e.clipboardData.setData('text/plain', t.replace(/ /g, ' '));
+      e.preventDefault();
+    } catch (_) {}
+  }, true);
+  document.addEventListener('cut', function(e){
+    try {
+      var s = window.getSelection();
+      if (!s || s.isCollapsed) return;
+      var ed = document.activeElement;
+      if (!ed || !ed.isContentEditable) return;
+      var t = s.toString();
+      if (!t || !t.trim() || !e.clipboardData) return;
+      e.clipboardData.setData('text/plain', t.replace(/ /g, ' '));
+      e.preventDefault();
+      document.execCommand('delete');
+    } catch (_) {}
+  }, true);
+})();
+</script>
+<script>
+/* n28-scratch: Rýchly zošit – trvalý panel vpravo na PC (len text), zapína sa v Nastaveniach */
+(function(){
+  if (window.AndroidBridge) return;
+  var KEY = 'n28-scratch', ON = 'n28-scratch-on';
+  var st; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { st = {}; }
+  st.text = st.text || '';
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var isOn = function () { try { return localStorage.getItem(ON) === '1'; } catch (e) { return false; } };
+
+  var css = document.createElement('style');
+  css.textContent =
+    '#n28-scratch{display:none;position:fixed;right:.65rem;top:calc(var(--topbar-h,62px) + 1.3rem);bottom:.65rem;width:var(--sp-w,330px);flex-direction:column;gap:.5rem;padding:.7rem;box-sizing:border-box;border-radius:16px;background:color-mix(in srgb, var(--surface) 92%, transparent);border:1px solid var(--border);z-index:45;}' +
+    '#n28-scratch .sp-head{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;font-weight:700;color:var(--text2);}' +
+    '#n28-scratch .sp-head button{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;line-height:1;}' +
+    '#sp-text{flex:1 1 auto;min-height:80px;resize:none;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);padding:.55rem .65rem;font:inherit;font-size:.9rem;outline:none;white-space:pre-wrap;}' +
+    '@media(min-width:1100px){body.n28-sp-on #n28-scratch{display:flex;}body.n28-sp-on #app-screen{padding-right:calc(var(--sp-w,330px) + 20px);box-sizing:border-box;}body.n28-sp-on #fab{right:calc(var(--sp-w,330px) + 2rem);}}' +
+    '#n28-scratch .sp-grip{position:absolute;left:-7px;top:0;bottom:0;width:14px;cursor:col-resize;touch-action:none;z-index:2;}' +
+    '#n28-scratch .sp-grip::after{content:"";position:absolute;left:5px;top:50%;width:4px;height:44px;margin-top:-22px;border-radius:2px;background:var(--border);transition:background .15s;}' +
+    '#n28-scratch .sp-grip:hover::after,#n28-scratch .sp-grip.drag::after{background:var(--text2);}';
+  document.head.appendChild(css);
+
+  var host = document.getElementById('app-screen') || document.body;
+  var p = document.createElement('div'); p.id = 'n28-scratch';
+  p.innerHTML =
+    '<div class="sp-head"><span>Rýchly zošit</span><button id="sp-x" type="button" title="Skryť" aria-label="Skryť">×</button></div>' +
+    '<textarea id="sp-text" placeholder="Píš sem…" spellcheck="false"></textarea>';
+  var grip = document.createElement('div'); grip.className = 'sp-grip'; grip.title = 'Ťahaj pre zmenu šírky (dvojklik = pôvodná)'; p.appendChild(grip);
+  host.appendChild(p);
+
+  // šírka panela: ťahanie za ľavý okraj, pamätá sa
+  var WK = 'n28-scratch-w';
+  function setW(w, keep) {
+    w = Math.max(240, Math.min(Math.round(w), Math.min(720, Math.round(window.innerWidth * 0.6))));
+    document.documentElement.style.setProperty('--sp-w', w + 'px');
+    if (keep) { try { localStorage.setItem(WK, String(w)); } catch (e) {} }
+  }
+  try { var w0 = parseInt(localStorage.getItem(WK), 10); if (w0) setW(w0); } catch (e) {}
+  grip.addEventListener('pointerdown', function (e) {
+    e.preventDefault(); try { grip.setPointerCapture(e.pointerId); } catch (_) {} grip.classList.add('drag');
+    var mv = function (ev) { setW(window.innerWidth - ev.clientX - 10, false); };
+    var up = function (ev) { grip.classList.remove('drag'); grip.removeEventListener('pointermove', mv); grip.removeEventListener('pointerup', up); grip.removeEventListener('pointercancel', up); setW(window.innerWidth - ev.clientX - 10, true); };
+    grip.addEventListener('pointermove', mv); grip.addEventListener('pointerup', up); grip.addEventListener('pointercancel', up);
+  });
+  grip.addEventListener('dblclick', function () { document.documentElement.style.removeProperty('--sp-w'); try { localStorage.removeItem(WK); } catch (e) {} });
+
+  var ta = p.querySelector('#sp-text'); ta.value = st.text;
+  var t1; ta.addEventListener('input', function () { clearTimeout(t1); t1 = setTimeout(function () { st.text = ta.value; save(); }, 400); });
+
+
+  var cb;
+  function apply() { document.body.classList.toggle('n28-sp-on', isOn()); if (cb) cb.checked = isOn(); }
+  p.querySelector('#sp-x').addEventListener('click', function () { try { localStorage.setItem(ON, '0'); } catch (e) {} apply(); });
+
+  // prepínač v Nastaveniach
+  var box = null; cb = document.getElementById('set-scratch');
+  if (cb) { cb.checked = isOn(); cb.addEventListener('change', function () { try { localStorage.setItem(ON, cb.checked ? '1' : '0'); } catch (e) {} apply(); }); }
+  if (box && box.parentNode) {
+    var row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;';
+    row.innerHTML = '<span>Rýchly zošit (PC, vpravo)</span>';
+    cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = isOn();
+    cb.addEventListener('change', function () { try { localStorage.setItem(ON, cb.checked ? '1' : '0'); } catch (e) {} apply(); });
+    row.appendChild(cb);
+    box.parentNode.insertBefore(row, box);
+  }
+  apply();
 })();
 </script>
 </body>
