@@ -1,7 +1,7 @@
 /* N28 Service Worker — offline cache shell + notifikácie.
    Ulož tento súbor do rovnakého priečinka ako notes28.html (web root).
    Pri zmene app shellu zvýš číslo CACHE (n28-v83 → n28-v5) aby sa cache obnovila. */
-const CACHE = 'n28-v114';
+const CACHE = 'n28-v109';
 const NAV_TIMEOUT = 600;   // ms — po tomto čase sa ukáže uložená verzia appky
 
 // App shell — uprav názvy ak je súbor pomenovaný inak / v podpriečinku.
