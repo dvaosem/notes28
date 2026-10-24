@@ -63,6 +63,15 @@
 
 
         <activity
+            android:name=".widget.MicConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Notes28.Config">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".widget.ListConfigActivity"
             android:exported="true"
             android:theme="@style/Theme.Notes28.Config">

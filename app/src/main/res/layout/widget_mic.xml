@@ -2,20 +2,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mic_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="6dp">
+    android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/mic_bg"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
         android:scaleType="fitXY"
         android:src="@drawable/mic_widget_bg"
         android:contentDescription="@null"/>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
+        android:id="@+id/mic_icon"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
+        android:padding="12dp"
         android:src="@drawable/ic_mic"
         android:contentDescription="@string/add_voice"/>
 </FrameLayout>

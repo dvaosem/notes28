@@ -199,6 +199,16 @@ object WidgetPrefs {
         sp(c).edit().putString("q${id}_style", style).putInt("q${id}_opacity", opacity).apply()
     }
 
+    // mic-only widget appearance
+    fun mStyle(c: Context, id: Int): String = sp(c).getString("m${id}_style", STYLE_GRAY) ?: STYLE_GRAY
+    fun mOpacity(c: Context, id: Int): Int = sp(c).getInt("m${id}_opacity", 95)
+    fun saveMic(c: Context, id: Int, style: String, opacity: Int) {
+        sp(c).edit().putString("m${id}_style", style).putInt("m${id}_opacity", opacity).apply()
+    }
+    fun removeMic(c: Context, id: Int) {
+        sp(c).edit().remove("m${id}_style").remove("m${id}_opacity").apply()
+    }
+
     fun saveWidget(c: Context, widgetId: Int, noteId: String, style: String, opacity: Int) {
         sp(c).edit()
             .putString("w${widgetId}_note", noteId)
