@@ -45,4 +45,6 @@
     <string name="l_opacity">Priehľadnosť pozadia</string>
     <string name="pick_title">Vyber poznámku</string>
     <string name="pick_empty">Zatiaľ nič. Otvor appku N28, nech sa poznámky načítajú.</string>
+    <string name="widget_mic_name">N28 hlasová poznámka</string>
+    <string name="widget_mic_desc">Jedna ikona mikrofónu: ťuk a diktuj</string>
 </resources>

@@ -18,7 +18,9 @@ class DictateActivity : AppCompatActivity() {
 
     private val speech = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
         if (res.resultCode == Activity.RESULT_OK) {
-            val text = res.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.trim().orEmpty()
+            val heard = res.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.trim().orEmpty()
+            // spoken closing phrase "ulož poznámku" / "save note" is a command, not part of the note
+            val text = heard.replace(Regex("[\\s,.]*(ulož(iť)?\\s+poznámku|save\\s+note)[\\s.!]*$", RegexOption.IGNORE_CASE), "").trim()
             if (text.isNotEmpty()) {
                 WidgetPrefs.addTitled(this, "", text)
                 NoteWidget.refreshAll(this)

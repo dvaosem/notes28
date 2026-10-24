@@ -43,6 +43,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
             <!-- Share a link from the browser into the "Linky" note -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
@@ -76,6 +77,20 @@
             android:excludeFromRecents="true"
             android:taskAffinity=""
             android:theme="@style/Theme.Notes28.Quick"/>
+
+        <!-- Second launcher icon: starts dictation directly (also reachable by voice: "Hey Google, open Hlasová poznámka") -->
+        <activity-alias
+            android:name=".VoiceLauncher"
+            android:targetActivity=".widget.DictateActivity"
+            android:exported="true"
+            android:label="@string/add_voice"
+            android:icon="@mipmap/ic_launcher_mic"
+            android:roundIcon="@mipmap/ic_launcher_mic">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name=".widget.WidgetActionActivity"
@@ -130,6 +145,17 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_list"/>
+        </receiver>
+
+        <receiver
+            android:name=".widget.MicWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_mic"/>
         </receiver>
 
         <receiver
