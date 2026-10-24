@@ -92,7 +92,7 @@
             android:name=".VoiceLauncher"
             android:targetActivity=".widget.DictateActivity"
             android:exported="true"
-            android:label="@string/add_voice"
+            android:label="@string/voice_launcher_label"
             android:icon="@mipmap/ic_launcher_mic"
             android:roundIcon="@mipmap/ic_launcher_mic">
             <intent-filter>
