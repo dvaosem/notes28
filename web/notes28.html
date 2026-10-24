@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v116">
+<meta name="n28-build" content="n28-v117">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -6508,8 +6508,16 @@ renderGlobalSearch = function (q) {
     if (y0 == null || done) return;
     const t = e.touches[0], dy = t.clientY - y0;
     if (dy > 100 && Math.abs(t.clientX - x0) < 40 && !document.body.classList.contains('search-open')) {
-      done = true; haptic(12); const b = $id('search-toggle'); if (b) b.click();
+      done = true; haptic(12);   // hľadanie sa otvorí až pri pustení prsta (touchend) — len vtedy Android dovolí rovno vysunúť klávesnicu
     }
+  }, { passive: true });
+  wrap.addEventListener('touchend', () => {
+    if (!done) return; done = false; y0 = null;
+    document.body.classList.add('search-open');
+    const b = $id('search-toggle'); if (b) b.classList.add('on');
+    searchInput.focus();   // synchrónne v dotykovom geste → klávesnica sa otvorí hneď
+    // keď sa fokus neuchytí, riadok nezostane visieť otvorený
+    setTimeout(() => { if (document.activeElement !== searchInput && !searchInput.value.trim()) { document.body.classList.remove('search-open'); if (b) b.classList.remove('on'); } }, 600);
   }, { passive: true });
 })();
 
