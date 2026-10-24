@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v115">
+<meta name="n28-build" content="n28-v116">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -857,6 +857,7 @@ input.n28-sw:checked::after{transform:translateX(17px);background:var(--accent-t
     <div class="modal-header" style="padding:.7rem 1rem;">
       <input id="input-title" type="text" placeholder="Nadpis…" style="flex:1;background:none;border:none;outline:none;font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:var(--text);">
       <div style="display:flex;margin-left:auto;align-items:center;gap:.3rem;flex-shrink:0;">
+        <button id="modal-del-quick" class="modal-icon-btn" type="button" title="Zmazať" aria-label="Zmazať poznámku" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
         <div style="position:relative;">
           <button id="modal-more-btn" class="modal-icon-btn" title="Viac"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg></button>
           <div id="modal-more-menu" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:.4rem;box-shadow:0 8px 32px rgba(0,0,0,.45);min-width:170px;z-index:30;">
@@ -3832,6 +3833,15 @@ modalDelete.onclick = async () => {
   else { updateDoc(doc(db,'users',currentUser.uid,'notes',editingId),{_trash:true,_trashedAt:serverTimestamp(),_origTab:currentTab}).catch(err=>showToast('❌ '+err.message,'warn',4000)); }
   closeModal();
 };
+// priame tlačidlo koša v hlavičke (vedľa ⋯): zrkadlí viditeľnosť položky Zmazať z menu, nie je pri Rýchlej poznámke a poznámke Widget
+const quickDel = document.getElementById('modal-del-quick');
+function syncQuickDel() {
+  quickDel.style.display = (modalDelete.style.display !== 'none' && editingId !== QUICKNOTE_ID && editingId !== WIDGETNOTE_ID) ? '' : 'none';
+  const t = currentTab === TRASH_TAB ? 'Vymazať natrvalo' : 'Zmazať';
+  quickDel.title = t; quickDel.setAttribute('aria-label', t);
+}
+new MutationObserver(syncQuickDel).observe(modalDelete, { attributes: true, attributeFilter: ['style'] });
+quickDel.onclick = () => modalDelete.onclick();
 
 // ─── PIN ─────────────────────────────────────────────────────────────────────
 document.getElementById('modal-pin').onclick = async () => {
