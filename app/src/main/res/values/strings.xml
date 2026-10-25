@@ -31,6 +31,7 @@
     <string name="l_mode_pinned">Pripnuté</string>
     <string name="l_mode_memory">Pripomenutie dňa</string>
     <string name="l_cfg_what">Čo zobraziť?</string>
+    <string name="l_cfg_title">Zoznam poznámok</string>
     <string name="l_next">Ďalej</string>
     <string name="l_empty">Zatiaľ nič. Otvor appku N28, nech sa poznámky načítajú.</string>
     <string name="l_empty_pinned">Žiadne pripnuté poznámky. Pripni poznámku v appke.</string>

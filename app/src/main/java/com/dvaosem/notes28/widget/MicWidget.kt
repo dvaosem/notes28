@@ -37,9 +37,7 @@ class MicWidget : AppWidgetProvider() {
                 WidgetPrefs.STYLE_CLEAR -> { bg = Color.rgb(0, 0, 0); fg = Color.WHITE }
                 else -> { bg = Color.rgb(58, 57, 54); fg = Color.rgb(243, 242, 236) }
             }
-            val alpha = (WidgetPrefs.mOpacity(context, id).coerceIn(0, 100) * 255) / 100
-            views.setInt(R.id.mic_bg, "setColorFilter", bg)
-            views.setInt(R.id.mic_bg, "setImageAlpha", alpha)
+            WidgetBg.apply(context, views, R.id.mic_bg, bg, WidgetPrefs.mOpacity(context, id), 46f, 46f, 23f)
             views.setInt(R.id.mic_icon, "setColorFilter", fg)
 
             val i = Intent(context, DictateActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

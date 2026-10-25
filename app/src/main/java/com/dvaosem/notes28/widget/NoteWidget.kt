@@ -27,6 +27,10 @@ class NoteWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
     }
 
+    override fun onAppWidgetOptionsChanged(context: Context, mgr: AppWidgetManager, id: Int, newOptions: android.os.Bundle) {
+        updateWidget(context, mgr, id)
+    }
+
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         for (id in appWidgetIds) WidgetPrefs.remove(context, id)
     }
@@ -66,9 +70,8 @@ class NoteWidget : AppWidgetProvider() {
                 WidgetPrefs.STYLE_CLEAR -> { bg = Color.rgb(0, 0, 0); fg = Color.WHITE; sub = Color.rgb(235, 235, 235); muted = Color.rgb(200, 200, 200) }
                 else -> { bg = Color.rgb(15, 15, 15); fg = Color.rgb(242, 242, 242); sub = Color.rgb(216, 216, 216); muted = Color.rgb(160, 160, 160) }
             }
-            val alpha = (WidgetPrefs.opacity(context, id).coerceIn(0, 100) * 255) / 100
-            views.setInt(R.id.w_bg, "setColorFilter", bg)
-            views.setInt(R.id.w_bg, "setImageAlpha", alpha)
+            val (wDp, hDp) = WidgetBg.sizeDp(context, mgr, id)
+            WidgetBg.apply(context, views, R.id.w_bg, bg, WidgetPrefs.opacity(context, id), wDp, hDp, 22f)
 
             val title: String
             val text: String

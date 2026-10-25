@@ -20,6 +20,10 @@ class NotesListWidget : AppWidgetProvider() {
         for (id in appWidgetIds) updateWidget(context, appWidgetManager, id)
     }
 
+    override fun onAppWidgetOptionsChanged(context: Context, mgr: AppWidgetManager, id: Int, newOptions: android.os.Bundle) {
+        updateWidget(context, mgr, id)
+    }
+
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         for (id in appWidgetIds) WidgetPrefs.removeList(context, id)
     }
@@ -29,6 +33,7 @@ class NotesListWidget : AppWidgetProvider() {
 
         fun palette(style: String): Palette = when (style) {
             WidgetPrefs.STYLE_LIGHT -> Palette(Color.rgb(250, 250, 250), Color.rgb(26, 26, 26), Color.rgb(90, 90, 90), Color.rgb(120, 120, 120), Color.rgb(122, 90, 62), Color.rgb(240, 238, 232))
+            WidgetPrefs.STYLE_CLEAR -> Palette(Color.rgb(0, 0, 0), Color.WHITE, Color.rgb(225, 225, 225), Color.rgb(200, 200, 200), Color.rgb(196, 152, 119), Color.rgb(32, 32, 31))
             WidgetPrefs.STYLE_DARK -> Palette(Color.rgb(15, 15, 15), Color.rgb(242, 242, 242), Color.rgb(190, 190, 190), Color.rgb(160, 160, 160), Color.rgb(176, 132, 99), Color.rgb(32, 32, 31))
             else -> Palette(Color.rgb(38, 38, 36), Color.rgb(243, 242, 236), Color.rgb(200, 198, 190), Color.rgb(168, 166, 157), Color.rgb(176, 132, 99), Color.rgb(52, 51, 48))
         }
@@ -59,8 +64,8 @@ class NotesListWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_list)
             val mode = WidgetPrefs.lMode(context, id)
             val p = palette(WidgetPrefs.lStyle(context, id))
-            views.setInt(R.id.l_bg, "setColorFilter", p.bg)
-            views.setInt(R.id.l_bg, "setImageAlpha", (WidgetPrefs.lOpacity(context, id).coerceIn(0, 100) * 255) / 100)
+            val (wDp, hDp) = WidgetBg.sizeDp(context, mgr, id)
+            WidgetBg.apply(context, views, R.id.l_bg, p.bg, WidgetPrefs.lOpacity(context, id), wDp, hDp, 22f)
             views.setTextViewText(R.id.l_title, titleFor(context, mode))
             views.setTextColor(R.id.l_title, p.accent)
             views.setTextColor(R.id.l_cfg, p.muted)

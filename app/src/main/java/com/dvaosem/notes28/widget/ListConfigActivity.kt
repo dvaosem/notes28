@@ -4,66 +4,58 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import android.widget.Button
+import android.widget.RadioGroup
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.dvaosem.notes28.R
 
-/** Two quick questions when adding the notes-list widget: what to show, and the look. */
+/** One screen for the notes-list widget: what to show, the look and the background transparency. */
 class ListConfigActivity : AppCompatActivity() {
-
-    private var widgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setResult(RESULT_CANCELED)
-        widgetId = intent?.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+        val widgetId = intent?.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             ?: AppWidgetManager.INVALID_APPWIDGET_ID
         if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) { finish(); return }
-        if (savedInstanceState == null) askMode()
-    }
 
-    private fun askMode() {
-        val modes = arrayOf(WidgetPrefs.MODE_ALL, WidgetPrefs.MODE_RECENT, WidgetPrefs.MODE_PINNED, WidgetPrefs.MODE_MEMORY)
-        val labels = arrayOf(getString(R.string.l_mode_all), getString(R.string.l_mode_recent), getString(R.string.l_mode_pinned), getString(R.string.l_mode_memory))
-        var sel = modes.indexOf(WidgetPrefs.lMode(this, widgetId)).coerceAtLeast(0)
-        AlertDialog.Builder(this)
-            .setTitle(R.string.l_cfg_what)
-            .setSingleChoiceItems(labels, sel) { _, which -> sel = which }
-            .setPositiveButton(R.string.l_next) { _, _ -> askStyle(modes[sel]) }
-            .setNegativeButton(R.string.q_cancel) { _, _ -> finish() }
-            .setOnCancelListener { finish() }
-            .show()
-    }
+        setContentView(R.layout.activity_list_config)
+        val modeGroup = findViewById<RadioGroup>(R.id.lc_mode)
+        val styleGroup = findViewById<RadioGroup>(R.id.lc_style)
+        val opacity = findViewById<SeekBar>(R.id.lc_opacity)
 
-    private fun askStyle(mode: String) {
-        val styles = arrayOf(WidgetPrefs.STYLE_GRAY, WidgetPrefs.STYLE_DARK, WidgetPrefs.STYLE_LIGHT)
-        val labels = arrayOf(getString(R.string.cfg_style_gray), getString(R.string.cfg_style_dark), getString(R.string.cfg_style_light))
-        var sel = styles.indexOf(WidgetPrefs.lStyle(this, widgetId)).coerceAtLeast(0)
-        AlertDialog.Builder(this)
-            .setTitle(R.string.cfg_style)
-            .setSingleChoiceItems(labels, sel) { _, which -> sel = which }
-            .setPositiveButton(R.string.l_next) { _, _ -> askOpacity(mode, styles[sel]) }
-            .setNegativeButton(R.string.q_cancel) { _, _ -> finish() }
-            .setOnCancelListener { finish() }
-            .show()
-    }
+        modeGroup.check(when (WidgetPrefs.lMode(this, widgetId)) {
+            WidgetPrefs.MODE_RECENT -> R.id.lc_mode_recent
+            WidgetPrefs.MODE_PINNED -> R.id.lc_mode_pinned
+            WidgetPrefs.MODE_MEMORY -> R.id.lc_mode_memory
+            else -> R.id.lc_mode_all
+        })
+        styleGroup.check(when (WidgetPrefs.lStyle(this, widgetId)) {
+            WidgetPrefs.STYLE_DARK -> R.id.lc_style_dark
+            WidgetPrefs.STYLE_LIGHT -> R.id.lc_style_light
+            WidgetPrefs.STYLE_CLEAR -> R.id.lc_style_clear
+            else -> R.id.lc_style_gray
+        })
+        opacity.progress = WidgetPrefs.lOpacity(this, widgetId)
 
-    private fun askOpacity(mode: String, style: String) {
-        val values = intArrayOf(100, 90, 75, 50, 25, 0)
-        val labels = arrayOf("Plné (100 %)", "90 %", "75 %", "50 %", "25 %", "Priehľadné (0 %)")
-        val cur = WidgetPrefs.lOpacity(this, widgetId)
-        var sel = values.indices.minByOrNull { Math.abs(values[it] - cur) } ?: 1
-        AlertDialog.Builder(this)
-            .setTitle(R.string.l_opacity)
-            .setSingleChoiceItems(labels, sel) { _, which -> sel = which }
-            .setPositiveButton(R.string.cfg_save) { _, _ ->
-                WidgetPrefs.saveList(this, widgetId, mode, style, values[sel])
-                NotesListWidget.updateWidget(this, AppWidgetManager.getInstance(this), widgetId)
-                setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
-                finish()
+        findViewById<Button>(R.id.lc_save).setOnClickListener {
+            val mode = when (modeGroup.checkedRadioButtonId) {
+                R.id.lc_mode_recent -> WidgetPrefs.MODE_RECENT
+                R.id.lc_mode_pinned -> WidgetPrefs.MODE_PINNED
+                R.id.lc_mode_memory -> WidgetPrefs.MODE_MEMORY
+                else -> WidgetPrefs.MODE_ALL
             }
-            .setNegativeButton(R.string.q_cancel) { _, _ -> finish() }
-            .setOnCancelListener { finish() }
-            .show()
+            val style = when (styleGroup.checkedRadioButtonId) {
+                R.id.lc_style_dark -> WidgetPrefs.STYLE_DARK
+                R.id.lc_style_light -> WidgetPrefs.STYLE_LIGHT
+                R.id.lc_style_clear -> WidgetPrefs.STYLE_CLEAR
+                else -> WidgetPrefs.STYLE_GRAY
+            }
+            WidgetPrefs.saveList(this, widgetId, mode, style, opacity.progress)
+            NotesListWidget.updateWidget(this, AppWidgetManager.getInstance(this), widgetId)
+            setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
+            finish()
+        }
     }
 }
