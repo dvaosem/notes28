@@ -15,8 +15,8 @@ import android.widget.RemoteViews
 object WidgetBg {
 
     /** Rounded rectangle (or circle when radiusDp is large) filled with [rgb] at [opacityPct] %. */
-    fun apply(context: Context, views: RemoteViews, viewId: Int, rgb: Int, opacityPct: Int, widthDp: Float, heightDp: Float, radiusDp: Float) {
-        val d = context.resources.displayMetrics.density
+    fun apply(context: Context, views: RemoteViews, viewId: Int, rgb: Int, opacityPct: Int, widthDp: Float, heightDp: Float, radiusDp: Float, pxScale: Float = 1f) {
+        val d = context.resources.displayMetrics.density * pxScale
         var w = (widthDp * d).coerceAtLeast(8f)
         var h = (heightDp * d).coerceAtLeast(8f)
         var r = radiusDp * d

@@ -47,7 +47,6 @@ class NotesListService : RemoteViewsService() {
             val v = RemoteViews(ctx.packageName, R.layout.widget_list_row)
             val n = rows.getOrNull(pos) ?: return v
             val p = NotesListWidget.palette(WidgetPrefs.lStyle(ctx, widgetId))
-            v.setInt(R.id.lr_card, "setColorFilter", p.card)
 
             val plain = n.content.trim()
             val firstLine = plain.lineSequence().firstOrNull { it.isNotBlank() }?.trim().orEmpty()
@@ -107,6 +106,12 @@ class NotesListService : RemoteViewsService() {
             v.setTextViewText(R.id.lr_more, "+ $hidden ďalších")
             v.setTextColor(R.id.lr_more, p.muted)
             v.setViewVisibility(R.id.lr_more, if (hidden > 0) View.VISIBLE else View.GONE)
+
+            // card background follows the widget transparency (baked ARGB bitmap, height estimated from content)
+            val titleLines = if (title.isEmpty()) 0 else if (title.length > 28) 2 else 1
+            val snipLines = if (!showSnip) 0 else if (mem) minOf(6, body.length / 45 + 1) else minOf(3, body.length / 45 + 1)
+            val hDp = 20f + (if (kick.isEmpty()) 0f else 14f) + titleLines * 21f + snipLines * 15f + shown * 30f + (if (hidden > 0) 18f else 0f)
+            WidgetBg.apply(ctx, v, R.id.lr_card, p.card, WidgetPrefs.lOpacity(ctx, widgetId), 300f, hDp.coerceAtLeast(40f), 14f, 0.5f)
 
             v.setOnClickFillInIntent(R.id.lr_body, Intent().putExtra(MainActivity.EXTRA_NOTE_ID, n.id))
             v.setOnClickFillInIntent(R.id.lr_card, Intent().putExtra(MainActivity.EXTRA_NOTE_ID, n.id))
