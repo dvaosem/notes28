@@ -107,8 +107,10 @@ class MainActivity : AppCompatActivity() {
 
         extractShare(intent)
         val url = startUrlFor(intent)
+        val hasLaunch = hasLaunchExtra(intent)
         clearLaunchExtras(intent)
-        if (savedInstanceState != null && webView.restoreState(savedInstanceState) != null) return
+        // obnovený stav pouzijeme len ked appku neotvara widget/skratka — inak by sa ticho stratilo, co sa malo otvorit
+        if (savedInstanceState != null && !hasLaunch && webView.restoreState(savedInstanceState) != null) return
         webView.loadUrl(url)
     }
 
@@ -121,20 +123,33 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         extractShare(intent)
-        val note = intent.getStringExtra(EXTRA_NOTE_ID)
-        if (!note.isNullOrEmpty()) {
-            js("window.openNoteById&&window.openNoteById(${JSONObject.quote(note)})")
-        } else if (intent.getBooleanExtra(EXTRA_QUICK, false)) {
-            js("window.openQuickNote&&window.openQuickNote()")
-        } else if (intent.getBooleanExtra(EXTRA_SCAN, false)) {
-            js("window.n28Scan&&window.n28Scan()")
-        } else if (intent.getBooleanExtra(EXTRA_NEWLIST, false)) {
-            js("window.n28NewList&&window.n28NewList()")
-        } else if (intent.getBooleanExtra(EXTRA_DRAW, false)) {
-            js("window.n28Draw&&window.n28Draw()")
-        }
+        val fn = launchCall(intent)
+        val url = startUrlFor(intent)
         clearLaunchExtras(intent)
+        if (fn != null) {
+            // Stranka este nebezi (po dlhej necinnosti): nacitaj rovno s parametrom. Inak volaj s opakovanim,
+            // lebo WebView sa po dlhom spanku budi az v onResume a funkcia este nemusi existovat.
+            if (!pageLoaded) webView.loadUrl(url)
+            else js("(function t(n){if(window.${fn.first}){window.${fn.first}(${fn.second})}else if(n>0){setTimeout(function(){t(n-1)},300)}})(40)")
+        }
         if (pageLoaded) deliverShare()
+    }
+
+    private fun hasLaunchExtra(i: Intent?): Boolean = i != null && (
+        !i.getStringExtra(EXTRA_NOTE_ID).isNullOrEmpty() || i.getBooleanExtra(EXTRA_QUICK, false) ||
+        i.getBooleanExtra(EXTRA_SCAN, false) || i.getBooleanExtra(EXTRA_NEWLIST, false) || i.getBooleanExtra(EXTRA_DRAW, false))
+
+    /** JS function name + argument for the launch action carried by the intent, or null. */
+    private fun launchCall(i: Intent?): Pair<String, String>? {
+        val note = i?.getStringExtra(EXTRA_NOTE_ID)
+        return when {
+            !note.isNullOrEmpty() -> "openNoteById" to JSONObject.quote(note)
+            i?.getBooleanExtra(EXTRA_QUICK, false) == true -> "openQuickNote" to ""
+            i?.getBooleanExtra(EXTRA_SCAN, false) == true -> "n28Scan" to ""
+            i?.getBooleanExtra(EXTRA_NEWLIST, false) == true -> "n28NewList" to ""
+            i?.getBooleanExtra(EXTRA_DRAW, false) == true -> "n28Draw" to ""
+            else -> null
+        }
     }
 
     private fun startUrlFor(i: Intent?): String {
