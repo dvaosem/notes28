@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var webView: WebView
+    private var triedCacheFallback = false
     private var fileCallback: ValueCallback<Array<Uri>>? = null
     private var pendingShare: String? = null
     private var pageLoaded = false
@@ -111,7 +112,16 @@ class MainActivity : AppCompatActivity() {
         clearLaunchExtras(intent)
         // obnovený stav pouzijeme len ked appku neotvara widget/skratka — inak by sa ticho stratilo, co sa malo otvorit
         if (savedInstanceState != null && !hasLaunch && webView.restoreState(savedInstanceState) != null) return
+        applyCacheMode()
         webView.loadUrl(url)
+    }
+
+    private fun applyCacheMode() {
+        val cm = getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork)
+        val online = caps != null && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        triedCacheFallback = false
+        webView.settings.cacheMode = if (online) WebSettings.LOAD_DEFAULT else WebSettings.LOAD_CACHE_ELSE_NETWORK
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -477,12 +487,20 @@ class MainActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView, url: String?) {
                 if (bootFinish == 0L) bootFinish = android.os.SystemClock.uptimeMillis()
                 pageLoaded = true
+                view.settings.cacheMode = WebSettings.LOAD_DEFAULT // cache-only rezim len na nacitanie stranky, nie pre sync
                 CookieManager.getInstance().flush()
                 deliverShare()
             }
 
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                 if (request.isForMainFrame) {
+                    // offline: skus ulozenu kopiu appky (HTTP cache), az potom "Bez pripojenia"
+                    if (!triedCacheFallback && view.settings.cacheMode != WebSettings.LOAD_CACHE_ONLY) {
+                        triedCacheFallback = true
+                        view.settings.cacheMode = WebSettings.LOAD_CACHE_ONLY
+                        view.loadUrl(request.url.toString())
+                        return
+                    }
                     view.loadDataWithBaseURL(null, OFFLINE_HTML, "text/html", "utf-8", null)
                 }
             }
