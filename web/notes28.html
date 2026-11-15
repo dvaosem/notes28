@@ -728,6 +728,8 @@ input.n28-sw:checked::after{transform:translateX(17px);background:var(--accent-t
 :root{color-scheme:light dark!important}
 :root:not([data-theme="light"]) body{color-scheme:dark}
 </style>
+<style id="nhl-bounce">button{-webkit-tap-highlight-color:transparent}button:active:not(:disabled){scale:.94}</style>
+<script id="nhl-bounce-js">(function(){if(!Element.prototype.animate)return;var rm=window.matchMedia?matchMedia('(prefers-reduced-motion:reduce)'):null;var cur=null;document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('button'):null;cur=(b&&!b.disabled)?b:null},true);document.addEventListener('pointerup',function(){var b=cur;cur=null;if(!b||!b.isConnected||(rm&&rm.matches))return;try{b.animate([{scale:.94},{scale:1.06,offset:.45},{scale:.985,offset:.75},{scale:1}],{duration:380,easing:'ease-out'})}catch(_){}},true);document.addEventListener('pointercancel',function(){cur=null},true)})();</script>
 <body class="logged-out">
 
 <!-- Klasický skript (beží ešte pred načítaním Firebase modulov): továreň na slová pre login + odkrytie appky po prvých dátach -->
