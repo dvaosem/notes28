@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v117">
+<meta name="n28-build" content="n28-v118">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
@@ -593,6 +593,11 @@ html:not(.app-ready) #fab2{opacity:0!important;pointer-events:none;}
 .slash-sep{height:1px;background:var(--border);margin:.25rem .4rem;opacity:.7;}
 
 /* 12) Dátum → kalendár */
+#cal-menu{position:fixed;z-index:420;display:none;flex-direction:column;min-width:190px;padding:.3rem;border-radius:14px;background:var(--surface2,var(--surface));border:1px solid var(--border);box-shadow:var(--elev3);}
+#cal-menu.open{display:flex;}
+#cal-menu button{display:flex;align-items:center;gap:.5rem;background:none;border:none;color:var(--text);font:inherit;font-size:.85rem;padding:.6rem .75rem;border-radius:10px;cursor:pointer;text-align:left;}
+#cal-menu button:hover{background:var(--state-hover);}
+#cal-menu svg{width:16px;height:16px;flex-shrink:0;}
 #date-chip{position:fixed;z-index:410;display:none;align-items:center;gap:.4rem;padding:.4rem .75rem;border-radius:999px;font-size:.78rem;font-weight:600;cursor:pointer;background:var(--earth,var(--accent-default));color:var(--earth-text,var(--accent-text));box-shadow:var(--elev3);animation:slashIn .16s ease;}
 #date-chip.open{display:inline-flex;}
 #date-chip svg{width:14px;height:14px;}
@@ -818,6 +823,7 @@ input.n28-sw:checked::after{transform:translateX(17px);background:var(--accent-t
         <div class="header-actions">
           <button id="search-toggle" title="Hľadať" aria-label="Hľadať"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
           <button id="view-toggle" title="Prepnúť zobrazenie" aria-label="Prepnúť zobrazenie (mriežka/zoznam)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+          <button id="cal-btn" title="Kalendár" aria-label="Kalendár"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></button>
           <button id="manage-tabs-btn" title="Záložky" aria-label="Spravovať záložky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
           <button id="settings-btn" title="Nastavenia" aria-label="Nastavenia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
           <span id="theme-icon" style="display:none;"></span>
@@ -6558,6 +6564,19 @@ function addResurface() {
 }
 
 // ═══ I) dátum v texte → "Pridať do kalendára" ═══════════════════════════════════
+// ═══ Kalendár: rýchly prístup (otvoriť / nová udalosť) ═══════════════════════
+(function(){
+  const b=document.getElementById('cal-btn'); if(!b) return;
+  const m=document.createElement('div'); m.id='cal-menu';
+  m.innerHTML='<button type="button" data-a="open">'+ic.cal+'Otvoriť kalendár</button><button type="button" data-a="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nová udalosť</button>';
+  document.body.appendChild(m);
+  const hide=()=>m.classList.remove('open');
+  b.addEventListener('click',e=>{ e.stopPropagation(); if(m.classList.contains('open')) return hide(); const r=b.getBoundingClientRect(); m.style.top=(r.bottom+6)+'px'; m.style.left=Math.max(8,Math.min(r.left-120,innerWidth-m.offsetWidth-8))+'px'; m.classList.add('open'); });
+  m.addEventListener('click',e=>{ const a=e.target.closest('button')?.dataset.a; if(!a) return; hide();
+    window.open(a==='new'?'https://calendar.google.com/calendar/render?action=TEMPLATE':'https://calendar.google.com/calendar/u/0/r','_blank','noopener'); });
+  document.addEventListener('click',e=>{ if(!m.contains(e.target)) hide(); });
+})();
+
 const dchip = document.createElement('div');
 dchip.id = 'date-chip'; dchip.innerHTML = ic.cal + '<span>Pridať do kalendára</span>';
 document.body.appendChild(dchip);
