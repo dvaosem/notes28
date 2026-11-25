@@ -5,14 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v119">
+<meta name="n28-build" content="n28-v156">
 <title>N28</title>
-<link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v2-192.png">
-<link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v2.png">
+<link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
+<link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
 <link rel="manifest" href="./manifest-notes.json">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
 <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script type="module">/* N28: Sortable._nulling obnovuje stary 'checked' stav checkboxov bez change -> ignorovat (instancie si metody bindnu pri vytvoreni, preto patch skor) */(function(){var S=window.Sortable;if(S&&S.prototype&&S.prototype._nulling){var o=S.prototype._nulling;S.prototype._nulling=function(){window.__n28Nulling=1;try{return o.apply(this,arguments)}finally{window.__n28Nulling=0}}}})();</script>
 
 
 
@@ -45,6 +46,28 @@
   --accent-default:#d97757; --accent-text:#1f1e1d; --dot:rgba(255,255,255,.03);
   --state-hover:rgba(255,255,255,.07); --state-press:rgba(255,255,255,.11); --ripple-color:rgba(255,255,255,.24);
 }
+/* Moderná téma — v štýle MyWorkout28 / Merania: teplé tmavé šedé, jemná zelená, Syne + DM Sans, zaoblené karty s tenkým okrajom */
+[data-theme="modern"] {
+  --bg:#1f1e1c; --surface:#2a2825; --surface2:#34312d; --border:rgba(255,255,255,.085);
+  --text:#ece8e1; --text2:#aaa397; --shadow:0 12px 30px -16px rgba(0,0,0,.75);
+  --accent-default:#5fae8d; --accent-text:#10231a; --dot:transparent;
+  --radius:20px; --radius-sm:12px; --radius-lg:28px;
+  --font-head:'Syne',system-ui,-apple-system,'Segoe UI',sans-serif; --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --state-hover:rgba(255,255,255,.07); --state-press:rgba(255,255,255,.11); --ripple-color:rgba(255,255,255,.2);
+  --elev1:0 1px 0 rgba(255,255,255,.035) inset,0 10px 26px -16px rgba(0,0,0,.75);
+  --elev2:0 1px 0 rgba(255,255,255,.04) inset,0 12px 30px -16px rgba(0,0,0,.8);
+  --elev3:0 1px 0 rgba(255,255,255,.05) inset,0 16px 38px -14px rgba(0,0,0,.85);
+  --elev4:0 1px 0 rgba(255,255,255,.05) inset,0 22px 50px -16px rgba(0,0,0,.9);
+}
+[data-theme="modern"] body{background-image:radial-gradient(60% 38% at 0% 0%,rgba(127,174,146,.15),transparent 70%),radial-gradient(55% 36% at 100% 100%,rgba(207,154,104,.09),transparent 70%);background-attachment:fixed;}
+[data-theme="modern"] .note-card{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:20px;}
+[data-theme="modern"] .modal-box{border-radius:22px;border:1px solid var(--border);}
+[data-theme="modern"] .logo,[data-theme="modern"] .card-title,[data-theme="modern"] .modal-header-title,[data-theme="modern"] #input-title{letter-spacing:-.02em;}
+[data-theme="modern"] .tab{border-radius:999px;border:1px solid var(--border);}
+[data-theme="modern"] .tab.active{background:rgba(95,174,141,.16);color:#8fd0b2;border-color:rgba(95,174,141,.38);box-shadow:none;}
+[data-theme="modern"] #fab{border-radius:20px;}
+[data-theme="modern"] .btn-primary:hover,[data-theme="modern"] #fab:hover,[data-theme="modern"] .btn-email-login:hover{background:#6fbd9c;}
+[data-theme="modern"] select{color-scheme:dark;}
 /* Šedá téma = minimum farieb: všetko neutrálne, farbu majú len hlavné tlačidlá (nová poznámka, Uložiť, Zmazať) v tlmených zemitých tónoch */
 [data-theme="gray"] {
   --accent-default:#cfcbc0; --accent-text:#262624;
@@ -598,6 +621,10 @@ html:not(.app-ready) #fab2{opacity:0!important;pointer-events:none;}
 #cal-menu button{display:flex;align-items:center;gap:.5rem;background:none;border:none;color:var(--text);font:inherit;font-size:.85rem;padding:.6rem .75rem;border-radius:10px;cursor:pointer;text-align:left;}
 #cal-menu button:hover{background:var(--state-hover);}
 #cal-menu svg{width:16px;height:16px;flex-shrink:0;}
+#manage-tabs-btn,#logout-btn,#user-avatar{display:none!important;}
+#set-account{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+#set-account img{width:34px;height:34px;border-radius:50%;object-fit:cover;}
+#set-account .set-who{flex:1;min-width:0;font-size:.82rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 #date-chip{position:fixed;z-index:410;display:none;align-items:center;gap:.4rem;padding:.4rem .75rem;border-radius:999px;font-size:.78rem;font-weight:600;cursor:pointer;background:var(--earth,var(--accent-default));color:var(--earth-text,var(--accent-text));box-shadow:var(--elev3);animation:slashIn .16s ease;}
 #date-chip.open{display:inline-flex;}
 #date-chip svg{width:14px;height:14px;}
@@ -685,6 +712,12 @@ html.vt-on .n28-modal{animation:none!important;}
   .skel,.dict-orb,.check-row.chk-pop .check-cb{animation:none!important;}
 }
 .notes-wrap{overscroll-behavior-y:contain;}
+</style>
+<style id="n28-chk-drag-css">
+#editor .check-row{position:relative;padding-left:20px;}
+#editor .check-row::before{content:"\22EE\22EE";position:absolute;left:0;top:0;bottom:0;width:20px;display:flex;align-items:center;justify-content:center;font-size:.8rem;letter-spacing:-.15em;color:var(--text2);opacity:.45;cursor:grab;touch-action:none;}
+#editor .check-row.chk-ghost{opacity:.35;}
+#editor .check-row.sortable-fallback{opacity:.9;background:var(--surface,#2a2724);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.35);}
 </style>
 <style id="n28-v110-css">
 /* nastavenia */
@@ -857,7 +890,8 @@ body{background-image:none!important;}
         <div class="header-actions">
           <button id="search-toggle" title="Hľadať" aria-label="Hľadať"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
           <button id="view-toggle" title="Prepnúť zobrazenie" aria-label="Prepnúť zobrazenie (mriežka/zoznam)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
-          <button id="cal-btn" title="Kalendár" aria-label="Kalendár"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></button>
+          <button id="sort-recent" title="Zoradi&#357; pod&#318;a poslednej &uacute;pravy" aria-label="Zoradi&#357; pod&#318;a poslednej &uacute;pravy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></button>
+<button id="cal-btn" title="Kalendár" aria-label="Kalendár"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></button>
           <button id="manage-tabs-btn" title="Záložky" aria-label="Spravovať záložky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
           <button id="settings-btn" title="Nastavenia" aria-label="Nastavenia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
           <span id="theme-icon" style="display:none;"></span>
@@ -1033,17 +1067,38 @@ body{background-image:none!important;}
     <div class="modal-body set-body">
 
       <section class="set-sec">
+        <h4 class="set-h">Účet a záložky</h4>
+        <div id="set-account">
+          <img id="set-avatar" src="" alt="" style="display:none">
+          <span class="set-who" id="set-who"></span>
+          <button type="button" class="btn btn-ghost" id="set-tabs-btn" style="font-size:.82rem">Záložky</button>
+          <button type="button" class="btn btn-ghost" id="set-logout-btn" style="font-size:.82rem">Odhlásiť</button>
+        </div>
+      </section>
+
+      <section class="set-sec">
         <h4 class="set-h">Vzhľad</h4>
         <div class="set-row">
           <span class="set-t">Téma</span>
           <select id="settings-theme-select" class="meta-pill" aria-label="Téma" style="min-width:8.5rem;">
             <option value="dark">Tmavá</option>
             <option value="gray">Šedá</option>
+            <option value="modern">Moderná</option>
             <option value="light">Svetlá</option>
           </select>
         </div>
+        <div class="set-row">
+          <span class="set-t">Písmo<small class="set-d">Len systémové bezpätkové písma – bez sťahovania, načíta sa hneď</small></span>
+          <select id="settings-font-select" class="meta-pill" aria-label="Písmo" style="min-width:8.5rem;">
+            <option value="default">Predvolené</option>
+            <option value="system" style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif">Systémové</option>
+            <option value="humanist" style="font-family:'Segoe UI',Roboto,'Helvetica Neue','Noto Sans',Arial,sans-serif">Humanistické</option>
+            <option value="neutral" style="font-family:'Helvetica Neue',Helvetica,Arial,'Liberation Sans',sans-serif">Neutrálne</option>
+            <option value="readable" style="font-family:Verdana,Tahoma,'DejaVu Sans',sans-serif">Čitateľné</option>
+          </select>
+        </div>
         <label class="set-row" id="set-scratch-row">
-          <span class="set-t">Rýchly zošit<small class="set-d">Trvalý panel vpravo na veľkej obrazovke: len písanie</small></span>
+          <span class="set-t">Rýchla poznámka (panel vpravo)<small class="set-d">Trvalý panel vpravo na veľkej obrazovke – tá istá poznámka ako ⚡ Rýchla, synchronizovaná s mobilom</small></span>
           <input type="checkbox" id="set-scratch" class="n28-sw">
         </label>
       </section>
@@ -1354,12 +1409,13 @@ function showToast(msg, type='info', duration=3500) {
 }
 
 // ─── THEME ───────────────────────────────────────────────────────────────────
-let themeMode = (() => { try { const v = localStorage.getItem('n28-theme'); return ['dark','gray','light'].includes(v) ? v : 'dark'; } catch (e) { return 'dark'; } })();
+let themeMode = (() => { try { const v = localStorage.getItem('n28-theme'); return ['dark','gray','modern','light'].includes(v) ? v : 'dark'; } catch (e) { return 'dark'; } })();
 let dark = themeMode !== 'light';
-const THEME_COLOR = { dark:'#0f0f0f', gray:'#262624', light:'#f8f8f5' };
+const THEME_COLOR = { dark:'#0f0f0f', gray:'#262624', modern:'#1f1e1c', light:'#f8f8f5' };
 function applyTheme() {
   dark = themeMode !== 'light';
   document.documentElement.setAttribute('data-theme', themeMode);
+  if (themeMode === 'modern' && !document.getElementById('n28-modern-fonts')) { const l = document.createElement('link'); l.id = 'n28-modern-fonts'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap'; document.head.appendChild(l); }
   const icon = document.getElementById('theme-icon');
   if (icon) icon.innerHTML = dark
     ? '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>'
@@ -1372,6 +1428,25 @@ function applyTheme() {
 }
 applyTheme();
 document.getElementById('settings-theme-select')?.addEventListener('change', e => { themeMode = e.target.value; applyTheme(); });
+
+// ─── FONT (výber písma v Nastaveniach) ───────────────────────────────────────
+// "default" = pôvodný vzhľad (telo systémové, nadpisy so pätkami). Ostatné = jedno bezpätkové písmo všade.
+const N28_FONTS = {
+  default:  '',
+  system:   "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif",
+  humanist: "'Segoe UI',Roboto,'Helvetica Neue','Noto Sans',Arial,sans-serif",
+  neutral:  "'Helvetica Neue',Helvetica,Arial,'Liberation Sans',sans-serif",
+  readable: "Verdana,Tahoma,'DejaVu Sans',sans-serif"
+};
+let fontMode = (() => { try { const v = localStorage.getItem('n28-font'); return Object.prototype.hasOwnProperty.call(N28_FONTS, v) ? v : 'default'; } catch (e) { return 'default'; } })();
+function applyFont() {
+  const st = document.documentElement.style, stack = N28_FONTS[fontMode];
+  ['--font-head', '--font-body', '--font-serif'].forEach(p => { if (stack) st.setProperty(p, stack); else st.removeProperty(p); });
+  try { localStorage.setItem('n28-font', fontMode); } catch (e) {}
+  const sel = document.getElementById('settings-font-select'); if (sel) sel.value = fontMode;
+}
+applyFont();
+document.getElementById('settings-font-select')?.addEventListener('change', e => { fontMode = e.target.value; applyFont(); });
 
 // ─── VIEW (mriežka / zoznam) ─────────────────────────────────────────────────
 let listView = localStorage.getItem('n28-view') === 'list';
@@ -1836,7 +1911,8 @@ function renderNotes() {
     // poznámky bez neho (nové) navrch podľa vytvorenia
     filtered = all.sort((a,b)=>{
       if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
-      const ao = typeof a.allOrder === 'number', bo = typeof b.allOrder === 'number';
+      if (sortMode === 'updated_desc') { /* n28-sort-all */ const ta = (a.updatedAt||a.createdAt)?.toMillis?.()??0, tb = (b.updatedAt||b.createdAt)?.toMillis?.()??0; if (ta !== tb) return tb - ta; }
+const ao = typeof a.allOrder === 'number', bo = typeof b.allOrder === 'number';
       if (ao !== bo) return ao ? 1 : -1;
       if (ao && a.allOrder !== b.allOrder) return a.allOrder - b.allOrder;
       return (b.createdAt?.toMillis?.()??0) - (a.createdAt?.toMillis?.()??0);
@@ -1875,6 +1951,7 @@ function renderGlobalSearch(q) {
 }
 
 function renderGrid(filtered) {
+  try { if (window.__n28Ui && window.__n28Ui.spVisible() && currentTab !== TRASH_TAB) filtered = filtered.filter(n => n.id !== QUICKNOTE_ID); } catch (_) {}
   if (sortableInstance) { sortableInstance.destroy(); sortableInstance=null; }
   notesGrid.style.gridTemplateColumns=''; // reset po Úlohy/AI view (tie forsujú 1 stĺpec)
   notesGrid.innerHTML = '';
@@ -2010,8 +2087,8 @@ function makeCard(note) {
       // obnovíme ako nezaradenú namiesto natvrdo do 'Práca'.
       const origTab = (note._origTab && userTabs.includes(note._origTab)) ? note._origTab : '';
       const where = origTab || 'Všetko (bez záložky)';
-      if (confirm('Obnoviť do "'+where+'"?'))
-        updateDoc(doc(db,'users',currentUser.uid,'notes',note.id),{_trash:false,_trashedAt:null,tab:origTab});
+      updateDoc(doc(db,'users',currentUser.uid,'notes',note.id),{_trash:false,_trashedAt:null,tab:origTab})
+        .then(() => showUndoToast('Obnovené do "'+where+'"', () => updateDoc(doc(db,'users',currentUser.uid,'notes',note.id),{_trash:true,_trashedAt:serverTimestamp()})));
     } else { openModal(note); }
   };
 
@@ -2132,7 +2209,7 @@ function renderFolderBar() {
     <option value="updated_desc">Naposledy upravené</option>
     <option value="title_asc">A–Z Názov</option>`;
   sortSel.value = sortMode;
-  sortSel.onchange = () => { sortMode = sortSel.value; localStorage.setItem('n28-sort', sortMode); renderNotes(); };
+  sortSel.onchange = () => { sortMode = sortSel.value; localStorage.setItem('n28-sort', sortMode); renderNotes(); if (window.__n28SortPaint) window.__n28SortPaint(); };
   bar.appendChild(sortSel);
 }
 
@@ -2171,11 +2248,13 @@ document.getElementById('bulk-cancel-btn').onclick = exitBulkMode;
 
 document.getElementById('bulk-trash-btn').onclick = async () => {
   if (!bulkSelected.size) return;
-  if (!confirm(`Zmazať ${bulkSelected.size} poznámok?`)) return;
-  await Promise.all([...bulkSelected].map(id =>
+  const _ids = [...bulkSelected];
+  await Promise.all(_ids.map(id =>
     updateDoc(doc(db,'users',currentUser.uid,'notes',id),{_trash:true,_trashedAt:serverTimestamp(),_origTab:currentTab})
   ));
-  showToast(`🗑 ${bulkSelected.size} poznámok presunutých do koša`,'info');
+  showUndoToast(`🗑 ${_ids.length} poznámok presunutých do koša`, () => Promise.all(_ids.map(id =>
+    updateDoc(doc(db,'users',currentUser.uid,'notes',id),{_trash:false,_trashedAt:null})
+  )));
   exitBulkMode();
 };
 
@@ -2257,7 +2336,7 @@ function subscribeNotes() {
       const ao=a.sortOrder??999999,bo=b.sortOrder??999999; if (ao!==bo) return ao-bo;
       return (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0);
     });
-    notes = raw; renderTagBar(); renderNotes(); n28OnRemote(raw);
+    notes = raw; renderTagBar(); renderNotes(); n28OnRemote(raw); try { if (window.__n28QuickSync) window.__n28QuickSync.onNotes(raw, snap.metadata.fromCache); } catch (e) {}
     // deep-link (widget/skratka): appku odkry až keď je editor otvorený — žiadne bliknutie zoznamu
     if (_noteParamHandled || !/[?&](note|quick|newlist|draw)=/.test(window.location.search)) bootReady(); else window.__n28Cold = true;
     if (!_notesReady) {
@@ -2372,6 +2451,94 @@ async function openQuickNote() {
 }
 document.getElementById('quicknote-btn').onclick = openQuickNote;
 
+// ─── Rýchly zošit (panel vpravo na PC) = tá istá poznámka ako ⚡ Rýchla (QUICKNOTE_ID), cez Firestore ───
+window.__n28Quick = (function () {
+  const OK = new Set(['BR','DIV','P','UL','OL','LI','SPAN','A']);
+  const NBSP = String.fromCharCode(160);
+  const parse = h => new DOMParser().parseFromString('<body>' + (h || '') + '</body>', 'text/html').body;
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function isPlain(html) {
+    const els = parse(html).querySelectorAll('*');
+    for (const e of els) { if (!OK.has(e.tagName) || e.classList.contains('check-row')) return false; }
+    return true;
+  }
+  function toTextL(html) {
+    let out = ''; const links = [];
+    const ZW = String.fromCharCode(8203);
+    const nl = () => { if (out && !out.endsWith('\n')) out += '\n'; };
+    const walk = n => {
+      n.childNodes.forEach(c => {
+        if (c.nodeType === 3) { out += c.nodeValue.split(NBSP).join(' '); return; }
+        if (c.nodeType !== 1) return;
+        const t = c.tagName;
+        if (t === 'BR') { out += '\n'; return; }
+        if (t === 'UL' || t === 'OL') {
+          nl(); let i = 0;
+          c.childNodes.forEach(li => { if (li.tagName !== 'LI') return; i++; out += (t === 'OL' ? i + '. ' : '\u2022 '); walk(li); nl(); });
+          return;
+        }
+        if (t === 'DIV' || t === 'P') { nl(); walk(c); nl(); return; }
+        if (t === 'A') {
+          const href = c.getAttribute('href') || '', label = c.textContent.split(ZW).join('');
+          // odkaz s vlastným názvom si panel pamätá (názov → adresa); holá adresa sa nechá ako text
+          if (label.trim() && label.trim() !== href && /^(https?:|mailto:|tel:)/i.test(href)) links.push({ label: label, href: href });
+          walk(c); return;
+        }
+        walk(c);
+      });
+    };
+    walk(parse(html));
+    return { text: out.replace(/\n+$/, ''), links: links };
+  }
+  function toText(html) { return toTextL(html).text; }
+  function fromTextL(text, reg) {
+    const SA = String.fromCharCode(57344), SB = String.fromCharCode(57345);   // pomocné značky (private-use)
+    const escA = s => esc(s).replace(/"/g, '&quot;');
+    const used = [];
+    let src = String(text || '').replace(/\r\n?/g, '\n');
+    // 1) [názov](https://adresa) → odkaz (rovnaký zápis ako v editore)
+    src = src.replace(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g, (m, label, href) => { used.push({ label: label, href: href }); return SA + (used.length - 1) + SB; });
+    // 2) pôvodné odkazy: názov sa hľadá v texte v rovnakom poradí ako predtým
+    let cursor = 0;
+    (reg || []).forEach(l => {
+      if (!l || !l.label) return;
+      const i = src.indexOf(l.label, cursor); if (i < 0) return;
+      used.push({ label: l.label, href: l.href });
+      const tok = SA + (used.length - 1) + SB;
+      src = src.slice(0, i) + tok + src.slice(i + l.label.length);
+      cursor = i + tok.length;
+    });
+    const ordered = [];
+    src.split(SA).forEach((part, k) => { if (k === 0) return; const j = part.indexOf(SB); ordered.push(used[+part.slice(0, j)]); });
+    const lines = src.split('\n');
+    const out = []; let run = [], list = null;
+    const flushRun = () => { if (run.length) { out.push(run.map(l => '<div>' + (l ? esc(l) : '<br>') + '</div>').join('')); run = []; } };
+    const flushList = () => { if (list) { out.push('<' + list.t + '>' + list.items.map(i => '<li>' + esc(i) + '</li>').join('') + '</' + list.t + '>'); list = null; } };
+    lines.forEach(l => {
+      let m;
+      if ((m = /^[-*•]\s+(.*)$/.exec(l))) { flushRun(); if (!list || list.t !== 'ul') { flushList(); list = { t:'ul', items:[] }; } list.items.push(m[1]); }
+      else if ((m = /^\d+[.)]\s+(.*)$/.exec(l))) { flushRun(); if (!list || list.t !== 'ol') { flushList(); list = { t:'ol', items:[] }; } list.items.push(m[1]); }
+      else { flushList(); run.push(l); }
+    });
+    flushList(); flushRun();
+    const html = out.join('').split(SA).map((part, k) => {
+      if (k === 0) return part;
+      const j = part.indexOf(SB), l = used[+part.slice(0, j)];
+      return '<a href="' + escA(l.href) + '" data-n28-lbl="1" target="_blank" rel="noopener" style="color:var(--accent-default);text-decoration:underline;word-break:break-all;">' + esc(l.label) + '</a>' + part.slice(j + 1);
+    }).join('');
+    return { html: html, used: ordered };
+  }
+  function fromText(text) { return fromTextL(text, []).html; }
+  async function save(html) {
+    const exists = notes.some(n => n.id === QUICKNOTE_ID && !n._trash);
+    const data = { content: html, updatedAt: serverTimestamp(), authorEmail: currentUser.email };
+    if (!exists) Object.assign(data, { title:'', pinned:true, sortOrder:-1, createdAt: serverTimestamp() });
+    await setDoc(doc(db,'users',currentUser.uid,'notes',QUICKNOTE_ID), data, { merge:true });
+  }
+  return { isPlain, toText, toTextL, fromText, fromTextL, save };
+})();
+
+
 function openModal(note=null) {
   editingId = note?.id||null;
   inputTitle.value = note?.title||'';
@@ -2474,7 +2641,7 @@ function n28Key(el) {
   return 'h:' + el.outerHTML;
 }
 function n28Chk(el) { const cb = el.querySelector && el.querySelector('.check-cb'); return !!(cb && (cb.checked || cb.hasAttribute('checked'))); }
-function n28SetChk(el, v) { const cb = el.querySelector('.check-cb'); if (!cb) return; if (v) cb.setAttribute('checked', ''); else cb.removeAttribute('checked'); }
+function n28SetChk(el, v) { const cb = el.querySelector('.check-cb'); if (!cb) return; cb.checked = !!v; if (v) cb.setAttribute('checked', ''); else cb.removeAttribute('checked'); const lb = el.querySelector('.check-label'); if (lb) { lb.style.textDecoration = v ? 'line-through' : ''; lb.style.opacity = v ? '.5' : ''; } }
 function n28Merge3(base, local, remote) {
   if (local === base || remote === local) return remote;
   if (remote === base) return local;
@@ -2502,20 +2669,32 @@ function n28ApplyRemote(content, title) {
   if (typeof title === 'string' && document.activeElement !== inputTitle) inputTitle.value = title;
   if (hadFocus) { try { editor.focus(); const r = document.createRange(); r.selectNodeContents(editor); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {} }
 }
-async function n28SyncWrite(ref, data) {
-  const base = window.__n28SyncBase, local = data.content, forId = editingId;
+// zapisy do DB bežia jeden po druhom — inak druhý zápis (pri pomalej sieti) použije zastaranú základňu a zlúčenie vráti starý stav a poradie
+let _n28WQ = Promise.resolve();
+const n28Mine = [];
+function n28SyncWrite(ref, data) {
+  const id0 = editingId;
+  const p = _n28WQ.then(() => n28SyncWrite0(ref, data, id0), () => n28SyncWrite0(ref, data, id0));
+  _n28WQ = p.catch(() => {});
+  return p;
+}
+async function n28SyncWrite0(ref, data, forId) {
+  const base = window.__n28SyncBase, local = data.content;
   const plain = () => updateDoc(ref, data).catch(err => showToast('❌ ' + err.message, 'warn', 4000));
-  if (!base || !navigator.onLine) { window.__n28SyncBase = { content: local, title: data.title }; return plain(); }
+  if (!base || !navigator.onLine) { window.__n28SyncBase = { content: local, title: data.title }; n28Mine.push(local); if (n28Mine.length > 8) n28Mine.shift(); return plain(); }
   window.__n28Writing = true;
   try {
     let merged = local;
     await runTransaction(db, async tx => {
       const s = await tx.get(ref);
       if (!s.exists()) throw new Error('missing');
-      merged = n28Merge3(base.content, local, s.data().content || '');
+      const rem = s.data().content || '';
+      // ak je v DB presne to, čo som naposledy zapísal ja, nikto iný nič nezmenil — vyhrá moja lokálna verzia (zastaraná základňa by inak vrátila starý stav)
+      const baseC = n28Mine.includes(rem) ? rem : base.content;
+      merged = n28Merge3(baseC, local, rem);
       tx.update(ref, { ...data, content: merged });
     });
-    window.__n28SyncBase = { content: merged, title: data.title };
+    window.__n28SyncBase = { content: merged, title: data.title }; n28Mine.push(merged); if (n28Mine.length > 8) n28Mine.shift();
     if (merged !== local && editingId === forId && modal.classList.contains('open') && !autosaveStatus.classList.contains('pending')) n28ApplyRemote(merged, data.title);
   } catch (e) {
     window.__n28SyncBase = { content: local, title: data.title }; plain();
@@ -2667,7 +2846,7 @@ function liveLinkFix() {
   const setCaret = (n, o) => { const nr = document.createRange(); nr.setStart(n, o); nr.collapse(true); sel.removeAllRanges(); sel.addRange(nr); };
   const a = node.parentElement && node.parentElement.closest('a');
 
-  if (a && editor.contains(a) && a.childNodes.length === 1 && a.firstChild === node) {
+  if (a && editor.contains(a) && !a.hasAttribute('data-n28-lbl') && a.childNodes.length === 1 && a.firstChild === node) {
     const text = node.data;
     const m = new RegExp('^(?:' + _LINK_SRC + ')', 'i').exec(text);
     if (!m) {                               // už to nie je odkaz → obyčajný text
@@ -2845,7 +3024,7 @@ document.getElementById('due-btn').onclick = () => {
 // ─── CANCEL (revert to original) ─────────────────────────────────────────────
 document.getElementById('modal-cancel').onclick = async () => {
   if (_origSnapshot && editingId) {
-    await updateDoc(doc(db,'users',currentUser.uid,'notes',editingId), {
+    await n28UpdateNote(editingId, {
       title: _origSnapshot.title,
       content: _origSnapshot.content,
       dueDate: _origSnapshot.dueDate||null,
@@ -2947,7 +3126,7 @@ function checkDueNotifications() {
     if (note.dueTime) {
       const k2 = key+'-'+note.dueTime, ts = n28DueTs(note);
       if (!localStorage.getItem(k2) && Date.now() >= ts && Date.now() - ts < 6*3600e3) {
-        fire('⏰ '+(note.title||'N28'), { body: note.dueTime+(note.content ? ' · '+note.content.replace(/<[^>]+>/g,'').slice(0,80) : ''), icon: 'https://dvaosem.com/n28-icon-v2.png', tag: k2 });
+        fire('⏰ '+(note.title||'N28'), { body: note.dueTime+(note.content ? ' · '+note.content.replace(/<[^>]+>/g,'').slice(0,80) : ''), icon: 'https://dvaosem.com/n28-icon-v3.png', tag: k2 });
         localStorage.setItem(k2, '1');
       }
       return;
@@ -2956,7 +3135,7 @@ function checkDueNotifications() {
     if (note.dueDate === today) {
       fire('Due dnes — '+(note.title||'N28'), {
         body: note.content ? note.content.replace(/<[^>]+>/g,'').slice(0,80) : 'N28 Notes',
-        icon: 'https://dvaosem.com/n28-icon-v2.png',
+        icon: 'https://dvaosem.com/n28-icon-v3.png',
         tag: key,
       });
       localStorage.setItem(key, '1');
@@ -2965,7 +3144,7 @@ function checkDueNotifications() {
       if (!stored) {
         fire('⏰ Due zajtra — '+(note.title||'N28'), {
           body: 'Termín je zajtra',
-          icon: 'https://dvaosem.com/n28-icon-v2.png',
+          icon: 'https://dvaosem.com/n28-icon-v3.png',
           tag: key+'-tomorrow',
         });
         localStorage.setItem(key+'-tomorrow', '1');
@@ -2975,7 +3154,39 @@ function checkDueNotifications() {
 }
 
 // ─── MARKDOWN AUTO-CONVERT ───────────────────────────────────────────────────
-function liveMarkdown() {
+// "- " / "* " / "1. " na začiatku riadku → odrážka. Priamo cez DOM a LEN aktuálny riadok
+// (natívne execCommand('delete'/'insertUnorderedList') vedelo na mobile zmazať riadky nad kurzorom).
+function _startListFromLine(node, offset, ordered) {
+  const BLOCK = /^(BR|DIV|P|UL|OL|H[1-6]|TABLE|BLOCKQUOTE|PRE)$/;
+  // začiatok riadku = najvyšší obal (<b>, <span>…), ktorý začína týmto textom
+  let start = node;
+  while (start.parentNode !== editor && !/^(DIV|P|LI|BLOCKQUOTE|H[1-6]|TD)$/.test(start.parentNode.nodeName) && !start.previousSibling) start = start.parentNode;
+  if (start.previousSibling && !BLOCK.test(start.previousSibling.nodeName)) return false;
+  const parent = start.parentNode;
+  node.nodeValue = node.nodeValue.slice(offset);               // zmaž len napísané "- "
+  const line = []; let n = start;
+  while (n && !BLOCK.test(n.nodeName)) { line.push(n); n = n.nextSibling; }
+  const tail = (n && n.nodeName === 'BR') ? n : null;          // koniec riadku
+  const tag = ordered ? 'OL' : 'UL';
+  let list = document.createElement(tag);
+  const li = document.createElement('li');
+  list.appendChild(li);
+  parent.insertBefore(list, start);
+  line.forEach(x => li.appendChild(x));
+  if (tail) tail.remove();
+  if (!li.textContent.replace(/​/g, '') && !li.querySelector('input,img,br,[contenteditable="false"]')) {
+    li.textContent = ''; li.appendChild(document.createElement('br'));
+  }
+  const prev = list.previousSibling;
+  if (prev && prev.nodeName === tag) { while (list.firstChild) prev.appendChild(list.firstChild); list.remove(); list = prev; }
+  const next = list.nextSibling;
+  if (next && next.nodeName === tag) { while (next.firstChild) list.appendChild(next.firstChild); next.remove(); }
+  const sel = window.getSelection(), r = document.createRange();
+  let first = li; while (first.firstChild && first.nodeName !== 'BR') first = first.firstChild;
+  if (first.nodeType === 3) r.setStart(first, 0); else r.setStart(li, 0);
+  r.collapse(true); sel.removeAllRanges(); sel.addRange(r);
+  return true;
+}function liveMarkdown() {
   if (_isComposing) return;
   const sel = window.getSelection();
   if (!sel||!sel.rangeCount) return;
@@ -2987,15 +3198,10 @@ function liveMarkdown() {
   const offset = range.startOffset;
 
   // ── "- " / "* " / ". " → odrážka, "1. " → číslovaný zoznam (len na začiatku riadku) ──
-  const lm = text.slice(0, offset).match(/^(?:([-*.])|(1\.))[ \u00a0]$/);
+  const lm = text.slice(0, offset).match(/^(?:([-*.])|(1[.)]?))[ \u00a0]$/);
   const lineStart = !node.previousSibling || /^(BR|DIV|P|UL|OL|H[1-6])$/.test(node.previousSibling.nodeName);
   if (lm && lineStart && !node.parentElement.closest('li')) {
-    const r = document.createRange();
-    r.setStart(node, 0); r.setEnd(node, offset);
-    sel.removeAllRanges(); sel.addRange(r);
-    document.execCommand('delete');
-    document.execCommand(lm[2] ? 'insertOrderedList' : 'insertUnorderedList');
-    scheduleAutosave(); return;
+    if (_startListFromLine(node, offset, !!lm[2])) { scheduleAutosave(); return; }
   }
 
   // ── # Heading (trigger on Enter handled in keydown, here on space after #) ──
@@ -3142,30 +3348,10 @@ editor.addEventListener('keydown', e => {
   const text = node.textContent;
   const offset = sel.getRangeAt(0).startOffset;
   const lineText = text.slice(0, offset);
-  if (lineText === '-') {
-    e.preventDefault();
-    let block = node;
-    while (block.parentElement && block.parentElement !== editor) block = block.parentElement;
-    const ul = document.createElement('ul');
-    const li = document.createElement('li'); li.textContent = '';
-    ul.appendChild(li);
-    if (block && block !== editor) block.replaceWith(ul);
-    else editor.appendChild(ul);
-    const r = document.createRange();
-    r.setStart(li, 0); r.collapse(true);
-    sel.removeAllRanges(); sel.addRange(r);
-  } else if (/^\d+\.$/.test(lineText)) {
-    e.preventDefault();
-    let block = node;
-    while (block.parentElement && block.parentElement !== editor) block = block.parentElement;
-    const ol = document.createElement('ol');
-    const li = document.createElement('li'); li.textContent = '';
-    ol.appendChild(li);
-    if (block && block !== editor) block.replaceWith(ol);
-    else editor.appendChild(ol);
-    const r = document.createRange();
-    r.setStart(li, 0); r.collapse(true);
-    sel.removeAllRanges(); sel.addRange(r);
+  // "-" / "1." + medzera na začiatku riadku → odrážka. Mení LEN aktuálny riadok (predtým sa nahradil celý
+  // vrchný blok = zmazali sa riadky/zoznam nad kurzorom). V zozname sa nič nepreberá, píše sa normálne.
+  if ((lineText === '-' || /^\d+\.$/.test(lineText)) && !(node.parentElement && node.parentElement.closest('li'))) {
+    if (_startListFromLine(node, offset, lineText !== '-')) e.preventDefault();
   }
 });
 function updateWordCounter() {
@@ -3340,17 +3526,40 @@ editor.addEventListener('click', e => {
   if (e.target.classList.contains('check-cb')) return;           // samotné políčko prepne prehliadač
   const cb = row.querySelector('.check-cb'); if (!cb) return;
   const rr = row.getBoundingClientRect(), cr = cb.getBoundingClientRect();
-  if (e.clientX < rr.left - 6 || e.clientX > cr.right + 12) return;
+  if (e.clientX < cr.left - 4 || e.clientX > cr.right + 12) return;
   e.preventDefault();
   cb.checked = !cb.checked;
   cb.dispatchEvent(new Event('change'));
 });
 
+// konzistencia: preškrtnutie vždy podľa skutočného stavu políčka, odškrtnuté riadky na koniec bloku
+function n28NormChecklists() {
+  try {
+    const sink = lsGet('n28-chk-sort', true);
+    editor.querySelectorAll('.check-row').forEach(r => {
+      const cb = r.querySelector('.check-cb'), lb = r.querySelector('.check-label'); if (!cb || !lb) return;
+      lb.style.textDecoration = cb.checked ? 'line-through' : ''; lb.style.opacity = cb.checked ? '.5' : '';
+    });
+    if (!sink) return;
+    const isRow = n => n && n.classList && n.classList.contains('check-row');
+    const seen = new Set();
+    editor.querySelectorAll('.check-row').forEach(r => {
+      if (seen.has(r) || isRow(r.previousElementSibling)) return;
+      const blk = []; for (let n = r; isRow(n); n = n.nextElementSibling) { blk.push(n); seen.add(n); }
+      const done = blk.filter(x => x.querySelector('.check-cb').checked);
+      if (!done.length || done.length === blk.length) return;
+      const un = blk.filter(x => !x.querySelector('.check-cb').checked);
+      const after = blk[blk.length - 1].nextSibling, par = blk[0].parentNode;
+      un.concat(done).forEach(x => par.insertBefore(x, after));
+    });
+  } catch (e) {}
+}
 function restoreChecklists() {
   editor.querySelectorAll('.check-row').forEach(row => {
     const cb = row.querySelector('.check-cb');
     const span = row.querySelector('.check-label');
     if (!cb || !span) return;
+    row.setAttribute('contenteditable', 'false');
     if (cb.checked) { span.style.textDecoration='line-through'; span.style.opacity='.5'; }
     cb.onchange = () => {
       span.style.textDecoration = cb.checked ? 'line-through' : '';
@@ -3399,6 +3608,7 @@ function restoreChecklists() {
     span.oninput = () => scheduleAutosave();
   });
 }
+{ const _rc0 = restoreChecklists; restoreChecklists = function () { _rc0.apply(this, arguments); n28NormChecklists(); }; }
 
 editor.addEventListener('keydown', e => {
   if ((e.ctrlKey||e.metaKey) && e.key==='z' && !e.shiftKey) { e.preventDefault(); document.execCommand('undo'); }
@@ -3877,9 +4087,10 @@ function renderBacklinks(id) {
 modalDelete.onclick = async () => {
   if (activeShareId) { if (!confirm('Zmazať zo zdieľanej záložky?')) return; deleteDoc(doc(db,'sharedTabs',activeShareId,'notes',editingId)).catch(err=>showToast('❌ '+err.message,'warn',4000)); }
   else if (currentTab===TRASH_TAB) { if (!confirm('Natrvalo zmazať?')) return; deleteDoc(doc(db,'users',currentUser.uid,'notes',editingId)).catch(err=>showToast('❌ '+err.message,'warn',4000)); }
-  else { updateDoc(doc(db,'users',currentUser.uid,'notes',editingId),{_trash:true,_trashedAt:serverTimestamp(),_origTab:currentTab}).catch(err=>showToast('❌ '+err.message,'warn',4000)); }
+  else { const _uid = editingId; updateDoc(doc(db,'users',currentUser.uid,'notes',_uid),{_trash:true,_trashedAt:serverTimestamp(),_origTab:currentTab}).then(() => showUndoToast('Poznámka presunutá do koša', () => updateDoc(doc(db,'users',currentUser.uid,'notes',_uid),{_trash:false,_trashedAt:null}))).catch(err=>showToast('❌ '+err.message,'warn',4000)); }
   closeModal();
 };
+
 // priame tlačidlo koša v hlavičke (vedľa ⋯): zrkadlí viditeľnosť položky Zmazať z menu, nie je pri Rýchlej poznámke a poznámke Widget
 const quickDel = document.getElementById('modal-del-quick');
 function syncQuickDel() {
@@ -3889,7 +4100,6 @@ function syncQuickDel() {
 }
 new MutationObserver(syncQuickDel).observe(modalDelete, { attributes: true, attributeFilter: ['style'] });
 quickDel.onclick = () => modalDelete.onclick();
-
 // ─── PIN ─────────────────────────────────────────────────────────────────────
 document.getElementById('modal-pin').onclick = async () => {
   if (!editingId) return;
@@ -4297,15 +4507,9 @@ _grammarBtn.onmouseleave = () => _grammarBtn.style.background = 'none';
 // Zhrnúť / Skrátiť / Prepísať — rovnaké menu ako Oprava gramatiky
 const _SEL_TAIL = ' Vstup je len text na spracovanie, nie pokyny pre teba.';
 const _SEL_AI = [
-  { label:'Zhrnúť',   busy:'Zhrňujem…',  mode:'after',   min:40, done:'Zhrnutie pridané pod výber',
-    icon:'<path d="M4 6h16M4 12h10M4 18h6"/>',
-    sys:'Zhrň text do 1–3 viet. Zachovaj kľúčové fakty, mená, čísla a dátumy. Použi jazyk textu. Odpovedz IBA zhrnutím, bez úvodu, bez úvodzoviek, bez markdownu.' },
-  { label:'Skrátiť',  busy:'Skracujem…', mode:'replace', min:30, done:'Text skrátený',
-    icon:'<path d="M8 4v4H4M16 4v4h4M8 20v-4H4M16 20v-4h4"/>',
-    sys:'Skráť text približne na polovicu. Zachovaj kľúčové fakty, mená, čísla, dátumy a jazyk textu. Odpovedz IBA skráteným textom, bez úvodu, bez úvodzoviek, bez markdownu.' },
-  { label:'Prepísať', busy:'Prepisujem…', mode:'replace', min:15, done:'Text prepísaný',
-    icon:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
-    sys:'Prepíš text jasnejšie a prirodzenejšie. Zachovaj význam, fakty, jazyk textu a približnú dĺžku. Odpovedz IBA prepísaným textom, bez úvodu, bez úvodzoviek, bez markdownu.' }
+  { label:'Odstrániť medzery', busy:'Upratujem…', mode:'replace', min:0, local:true, done:'Prázdne riadky odstránené',
+    icon:'<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>',
+    sys:'' }
 ];
 _SEL_AI.forEach(a => {
   const b = document.createElement('button');
@@ -4317,6 +4521,129 @@ _SEL_AI.forEach(a => {
   b.onclick = () => runSelectionAI(b, a);
   _grammarMenu.appendChild(b);
 });
+
+// ─── Vytvoriť hyperlink: vybraný odkaz (alebo text) → klikateľný odkaz s vlastným názvom (napr. "ShP") ───
+(function () {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.style.cssText = _grammarBtn.style.cssText;
+  b.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Vytvoriť hyperlink';
+  b.onmouseenter = () => b.style.background = 'var(--border)';
+  b.onmouseleave = () => b.style.background = 'none';
+  const ZW = String.fromCharCode(8203);
+  const escH = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const safeHref = h => {
+    h = String(h || '').trim(); if (!h) return '';
+    if (/^[a-z][a-z0-9+.\-]*:/i.test(h)) return /^(https?:|mailto:|tel:)/i.test(h) ? h : '';
+    if (h.includes('@') && !h.includes('/')) return 'mailto:' + h;
+    return 'https://' + h;
+  };
+  b.onclick = () => {
+    const rng = _grammarRange;
+    hideGrammarMenu();
+    if (!rng) return;
+    if (editor.contentEditable === 'false') { showToast('Poznámka je zamknutá', 'info'); return; }
+    let anc = rng.commonAncestorContainer; if (anc.nodeType !== 1) anc = anc.parentElement;
+    const existing = anc && anc.closest ? anc.closest('a') : null;
+    const raw = rng.toString();
+    const txt = raw.split(ZW).join('').trim();
+    let href = '', label = '';
+    if (existing && editor.contains(existing)) {
+      // úprava existujúceho odkazu (aj automaticky vytvoreného z adresy): zmena názvu
+      href = existing.getAttribute('href') || '';
+      const nm = prompt('Názov odkazu:', existing.textContent);
+      if (nm === null || !nm.trim()) return;
+      label = nm.trim(); rng.selectNode(existing);
+    } else if (/^(https?:\/\/|www\.)\S+$/i.test(txt)) {
+      href = _hrefFor(txt);
+      const nm = prompt('Názov odkazu (napr. ShP):', '');
+      if (nm === null || !nm.trim()) return;
+      label = nm.trim();
+    } else {
+      if (!txt || /\n/.test(raw)) { showToast('Vyber odkaz alebo kúsok textu v jednom riadku', 'warn'); return; }
+      const u = prompt('Adresa odkazu (https://…):', '');
+      href = safeHref(u);
+      if (!href) { if (u !== null && u.trim()) showToast('Neplatná adresa', 'warn'); return; }
+      label = txt;
+    }
+    editor.focus();
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rng);
+    document.execCommand('insertHTML', false, '<a href="' + escH(href) + '" data-n28-lbl="1" target="_blank" rel="noopener" style="color:var(--accent-default);text-decoration:underline;word-break:break-all;">' + escH(label) + '</a>');
+    showToast('Odkaz vytvorený', 'ok');
+  };
+  _grammarMenu.insertBefore(b, _grammarMenu.firstChild);
+})();
+
+// n28-sel-fmt: Preciarknut + Zvyraznit (cervene) v menu vyberu
+(function () {
+const SK = { a: String.fromCharCode(225), y: String.fromCharCode(253), c: String.fromCharCode(269) };
+const mk = (label, svg) => {
+const b = document.createElement('button');
+b.type = 'button';
+b.style.cssText = _grammarBtn.style.cssText;
+b.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + svg + '</svg>' + label;
+b.onmouseenter = () => b.style.background = 'var(--border)';
+b.onmouseleave = () => b.style.background = 'none';
+_grammarMenu.insertBefore(b, _grammarMenu.lastChild);
+return b;
+};
+const apply = (fn, msg) => {
+const rng = _grammarRange;
+hideGrammarMenu();
+if (!rng) return;
+if (editor.contentEditable === 'false') { showToast('Pozn' + SK.a + 'mka je zamknut' + SK.a, 'info'); return; }
+if (!editor.contains(rng.commonAncestorContainer)) return;
+const before = editor.innerHTML;
+editor.focus();
+const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rng);
+fn();
+editor.dispatchEvent(new Event('input'));
+armAiUndo(before, msg);
+};
+mk('Pre&#269;iarkn&uacute;&#357;', '<path d="M16 4H9a3 3 0 0 0-2.83 4"/><path d="M14 12a4 4 0 0 1 0 8H6"/><line x1="4" y1="12" x2="20" y2="12"/>').onclick = () => apply(() => { document.execCommand('styleWithCSS', false, false); document.execCommand('strikeThrough'); }, 'Text pre' + SK.c + 'iarknut' + SK.y);
+const RED = 'rgba(229, 72, 77, 0.4)';
+mk('Zv&yacute;razni&#357;', '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>').onclick = () => apply(() => {
+document.execCommand('styleWithCSS', false, true);
+const cur = String(document.queryCommandValue('hiliteColor') || '').replace(/\s+/g, '');
+const isRed = cur.indexOf('229,72,77') !== -1;
+document.execCommand('hiliteColor', false, isRed ? 'transparent' : RED);
+document.execCommand('styleWithCSS', false, false);
+}, 'Text zv' + SK.y + 'razn' + 'en' + SK.y);
+})();
+
+// n28-sort-recent: tlacidlo v hlavicke - zoradit podla poslednej upravy (prepina s predchadzajucim zoradenim)
+(function () {
+const btn = document.getElementById('sort-recent');
+if (!btn) return;
+const SK = { e: String.fromCharCode(233), l: String.fromCharCode(318), u: String.fromCharCode(250), o: String.fromCharCode(244) };
+const paint = () => {
+const on = sortMode === 'updated_desc';
+btn.style.color = on ? 'var(--text)' : '';
+btn.style.background = on ? 'var(--state-press)' : '';
+};
+window.__n28SortPaint = paint;
+btn.onclick = () => {
+let next;
+if (sortMode === 'updated_desc') {
+let prev = 'manual';
+try { prev = localStorage.getItem('n28-sort-prev') || 'manual'; } catch (e) {}
+next = prev === 'updated_desc' ? 'manual' : prev;
+} else {
+try { localStorage.setItem('n28-sort-prev', sortMode); } catch (e) {}
+next = 'updated_desc';
+}
+sortMode = next;
+try { localStorage.setItem('n28-sort', sortMode); } catch (e) {}
+try { renderFolderBar(); } catch (e) {}
+renderNotes();
+paint();
+showToast(next === 'updated_desc' ? 'Zoraden' + SK.e + ' pod' + SK.l + 'a poslednej ' + SK.u + 'pravy' : 'P' + SK.o + 'vodn' + SK.e + ' zoradenie', 'info');
+};
+paint();
+})();
+
+
+
 
 // Späť = snapshot celého editora pred zmenou (highlightTags/liveLink po 'input' prepisujú DOM, takže uzly sa nedajú spoľahlivo nájsť).
 // Ak používateľ medzitým písal (trusted input), snapshot by zmazal jeho text → radšej nevrátime.
@@ -4415,6 +4742,91 @@ function armAiUndo(before, msg) {
   }, 10000);
 }
 
+// ── Formátuj zápis: štruktúra (odsadenie zoznamov) ide do AI, výsledok nahradí celé bloky naraz (natívne Ctrl+Z) ──
+function _expandTop(rng) {
+  if (!editor.contains(rng.commonAncestorContainer)) return rng;
+  const r = rng.cloneRange();
+  let s = rng.startContainer, e = rng.endContainer;
+  if (s !== editor) { while (s.parentNode !== editor) s = s.parentNode; r.setStartBefore(s); }
+  if (e !== editor) { while (e.parentNode !== editor) e = e.parentNode; r.setEndAfter(e); }
+  return r;
+}
+function _outlineText(root) {
+  const lines = [];
+  const txt = el => { const c = el.cloneNode(true); c.querySelectorAll('ul,ol').forEach(x => x.remove()); c.querySelectorAll('br').forEach(b => b.replaceWith('\n')); return c.textContent.replace(/​/g, '').replace(/[ \t ]+/g, ' ').trim(); };
+  (function walk(n, d) {
+    [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3) { const t = c.nodeValue.replace(/​/g, '').replace(/\s+/g, ' ').trim(); if (t) lines.push({ d, t, li: false }); return; }
+      if (c.nodeType !== 1) return;
+      const tg = c.tagName;
+      if (tg === 'UL' || tg === 'OL') { walk(c, d + 1); return; }
+      if (tg === 'LI') {
+        const t = txt(c); if (t) lines.push({ d, t, li: true });
+        [...c.children].filter(x => x.tagName === 'UL' || x.tagName === 'OL').forEach(x => walk(x, d + 1));
+        return;
+      }
+      if (c.querySelector('ul,ol,li,div,p')) { walk(c, d); return; }
+      const t = txt(c); if (t) t.split('\n').forEach(x => { if (x.trim()) lines.push({ d, t: x.trim(), li: false }); });
+    });
+  })(root, 0);
+  const min = Math.min(...lines.filter(l => l.li).map(l => l.d), 99);
+  return lines.map(l => l.li ? '  '.repeat(Math.max(0, l.d - min)) + '- ' + l.t : l.t).join('\n');
+}
+function _applyFormatted(rng, out) {
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  let html = '', inList = false;
+  out.split('\n').forEach(raw => {
+    const l = raw.replace(/\s+$/, '');
+    const m = l.match(/^\s*[-*•]\s+(.*)$/);
+    if (m) { if (!inList) { html += '<ul>'; inList = true; } html += '<li>' + esc(m[1]) + '</li>'; return; }
+    if (inList) { html += '</ul>'; inList = false; }
+    if (!l.trim()) { html += '<div><br></div>'; return; }
+    const h = l.match(/^#{1,6}\s+(.*)$/);
+    html += h ? '<div><b>' + esc(h[1]) + '</b></div>' : '<div>' + esc(l) + '</div>';
+  });
+  if (inList) html += '</ul>';
+  const sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(rng);
+  editor.focus();
+  if (!document.execCommand('insertHTML', false, html)) {
+    rng.deleteContents();
+    const t = document.createElement('template'); t.innerHTML = html;
+    rng.insertNode(t.content);
+  }
+}
+// Odstrániť medzery = len prázdne riadky vo výbere (formátovanie, odrážky, odsadenie ostávajú nedotknuté)
+function _removeEmptyLines(r) {
+  let n = 0;
+  const heavy = 'img,input,[contenteditable="false"],ul,ol,div,p,li,table,iframe,video,canvas';
+  const blank = el => !el.querySelector(heavy) && !el.textContent.replace(/[​ \s]/g, '');
+  [...editor.querySelectorAll('div,p,li')].forEach(el => { if (r.intersectsNode(el) && blank(el)) { el.remove(); n++; } });
+  [...editor.querySelectorAll('ul,ol')].forEach(el => { if (r.intersectsNode(el) && !el.querySelector('li') && !el.textContent.trim()) { el.remove(); n++; } });
+  [...editor.querySelectorAll('br')].forEach(br => {
+    if (!br.isConnected || !r.intersectsNode(br)) return;
+    let p = br.previousSibling; while (p && p.nodeType === 3 && !p.nodeValue.replace(/[​ \s]/g, '')) p = p.previousSibling;
+    const blockPrev = p && /^(DIV|P|UL|OL|H[1-6]|TABLE|BLOCKQUOTE)$/.test(p.nodeName);
+    if ((p && p.nodeName === 'BR') || blockPrev || (!p && br.parentNode === editor)) { br.remove(); n++; }
+  });
+  if (n && !editor.innerHTML.trim()) editor.innerHTML = '<div><br></div>';
+  return n;
+}
+// Odstrániť medzery: opakuj čistenie blokov, potom prázdne riadky v texte (editor je pre-wrap, prázdny riadok = \n\n)
+function _removeEmptyLines2(r) {
+  let total = 0;
+  for (let i = 0; i < 5; i++) { const k = _removeEmptyLines(r); total += k; if (!k) break; }
+  const tw = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT), nodes = [];
+  while (tw.nextNode()) nodes.push(tw.currentNode);
+  nodes.forEach(t => {
+    if (!r.intersectsNode(t) || (t.parentElement && t.parentElement.closest('li'))) return;
+    const v = t.nodeValue, w = v.replace(/\n(?:[ \t ]*\n)+/g, '\n');
+    if (w !== v) { t.nodeValue = w; total++; }
+  });
+  return total;
+}
+// (staré) Odstrániť medzery vo výbere: dvojité medzery → jedna (odsadenie ostáva), medzery na konci riadku preč, prázdne riadky preč
+function _trimSel(t) {
+  return t.replace(/(\S)[ \t\u00a0]{2,}/g, '$1 ').replace(/[ \t\u00a0]+$/gm, '').split('\n').filter(l => l.trim()).join('\n');
+}
 async function runSelectionAI(btn, a) {
   if (!_grammarRange) return;
   if (editor.contentEditable === 'false') { showToast('Poznámka je zamknutá', 'info'); hideGrammarMenu(); return; }
@@ -4422,11 +4834,20 @@ async function runSelectionAI(btn, a) {
   const before = editor.innerHTML;
   const cap = aiCaptureSelection(rng);
   if (cap.text.trim().length < a.min) { showToast('Výber je príliš krátky', 'info'); hideGrammarMenu(); return; }
-  if (!getApiKey()) { hideGrammarMenu(); requireApiKey(); return; }
+  if (!a.local && !getApiKey()) { hideGrammarMenu(); requireApiKey(); return; }
   btn.disabled = true;
   btn.lastChild.textContent = a.busy;
   try {
-    const out = await n28Claude(a.sys + _SEL_TAIL, cap.text, { max: 1500 });
+    if (a.local) {
+      const _n = _removeEmptyLines2(_expandTop(rng));
+      if (!_n) { showToast('Žiadne prázdne riadky na odstránenie', 'info'); return; }
+      editor.dispatchEvent(new Event('input'));
+      armAiUndo(before, a.done);
+      return;
+    }
+    const _src = a.fmt ? _outlineText(_expandTop(rng).cloneContents()) : cap.text;
+    const out = a.local ? _trimSel(cap.text) : await n28Claude(a.sys + _SEL_TAIL, _src, { max: a.max || 1500 });
+    if (a.local && out === cap.text) { showToast('Žiadne medzery na odstránenie', 'info'); return; }
     if (!out) throw new Error('Prázdna odpoveď');
     if (!editor.contains(rng.commonAncestorContainer)) throw new Error('výber sa medzitým zmenil');
     if (a.mode === 'after') {
@@ -4441,6 +4862,8 @@ async function runSelectionAI(btn, a) {
       box.append(lbl, textToFragment(out));
       if (blk && blk.tagName === 'LI') blk = blk.closest('ul,ol') || blk;
       if (blk) blk.after(box); else editor.appendChild(box);
+    } else if (a.fmt) {
+      _applyFormatted(_expandTop(rng), out);
     } else {
       aiApplyReplace(cap, rng, out);
     }
@@ -4469,7 +4892,7 @@ if (!_isTouch) {
     e.preventDefault();
     _grammarRange = sel.getRangeAt(0).cloneRange();
     const x = Math.min(e.clientX, window.innerWidth - 200);
-    const y = Math.min(e.clientY, window.innerHeight - 190);
+    const y = Math.min(e.clientY, window.innerHeight - 330);
     _grammarMenu.style.left = x + 'px';
     _grammarMenu.style.top = y + 'px';
     _grammarMenu.style.display = 'block';
@@ -4491,7 +4914,7 @@ if (!_isTouch) {
       if (!rect || (!rect.width && !rect.height)) { hideGrammarMenu(); return; }
       const x = Math.min(Math.max(8, rect.left), window.innerWidth - 200);
       // pod výberom, aby neprekrývalo natívnu Android lištu, ktorá je zvyčajne nad výberom
-      const y = Math.min(rect.bottom + 8, window.innerHeight - 190);
+      const y = Math.min(rect.bottom + 8, window.innerHeight - 330);
       _grammarMenu.style.left = x + 'px';
       _grammarMenu.style.top = y + 'px';
       _grammarMenu.style.display = 'block';
@@ -4499,25 +4922,129 @@ if (!_isTouch) {
   });
 }
 
+// ─── Oprava gramatiky: len bublina s návrhmi — nič sa neprepisuje, formátovanie ostáva (n28-gfx) ───
+const _gfx = document.createElement('div');
+_gfx.id = 'grammar-bubble';
+_gfx.style.cssText = 'position:fixed;z-index:10001;display:none;width:min(340px,94vw);max-height:55vh;overflow:auto;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:.5rem;font-size:.84rem;';
+document.body.appendChild(_gfx);
+function hideGrammarBubble() { _gfx.style.display = 'none'; _gfx.textContent = ''; }
+const _gfxOutside = e => { if (_gfx.style.display !== 'none' && !_gfx.contains(e.target)) hideGrammarBubble(); };
+document.addEventListener('mousedown', _gfxOutside, true);
+document.addEventListener('touchstart', _gfxOutside, true);
+document.addEventListener('scroll', _gfxOutside, true);
+
+// text výberu + mapa znak → (textový uzol, offset), aby sa dal každý návrh presne umiestniť do DOM
+function gfxCollect(rng) {
+  const map = []; let text = '', lastBlk = null;
+  const BLK = /^(DIV|P|LI|H[1-6]|BLOCKQUOTE|PRE|TD|TH)$/;
+  const tw = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+  while (tw.nextNode()) {
+    const n = tw.currentNode;
+    if (!rng.intersectsNode(n)) continue;
+    if (n.nodeType === 1) { if (n.tagName === 'BR') { text += '\n'; map.push(null); } continue; }
+    const p = n.parentElement; if (!p) continue;
+    const ce = p.closest('[contenteditable]');
+    if (ce && ce !== editor && ce.getAttribute('contenteditable') === 'false') continue;
+    let blk = p; while (blk && blk !== editor && !BLK.test(blk.tagName)) blk = blk.parentElement;
+    if (lastBlk && blk !== lastBlk && text.charAt(text.length - 1) !== '\n') { text += '\n'; map.push(null); }
+    lastBlk = blk;
+    const s = n === rng.startContainer ? rng.startOffset : 0;
+    const e = n === rng.endContainer ? rng.endOffset : n.nodeValue.length;
+    for (let i = s; i < e; i++) { const ch = n.nodeValue.charAt(i); if (ch === '​') continue; text += ch; map.push([n, i]); }
+  }
+  return { text, map };
+}
+function gfxApply(it) {
+  const r = it.r;
+  if (!r.startContainer.isConnected || r.toString().replace(/​/g, '') !== it.from) return false;
+  editor.focus();
+  const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  let ok = false; try { ok = document.execCommand('insertText', false, it.to); } catch (_) {}
+  if (!ok) { r.deleteContents(); r.insertNode(document.createTextNode(it.to)); editor.dispatchEvent(new Event('input')); }
+  return true;
+}
+function gfxShow(items, rng) {
+  _gfx.textContent = '';
+  const head = document.createElement('div');
+  head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.1rem .25rem .4rem;color:var(--text2);font-size:.74rem;font-weight:700;';
+  const ttl = document.createElement('span'); head.appendChild(ttl);
+  const x = document.createElement('button'); x.type = 'button'; x.textContent = '✕'; x.setAttribute('aria-label', 'Zavrieť');
+  x.style.cssText = 'border:none;background:none;color:var(--text2);font-size:1rem;cursor:pointer;line-height:1;padding:.1rem .3rem;';
+  x.onclick = hideGrammarBubble; head.appendChild(x); _gfx.appendChild(head);
+  let left = items.length;
+  const upd = () => { ttl.textContent = 'Návrhy opráv (' + left + ')'; if (!left) hideGrammarBubble(); };
+  const btnCss = 'border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;padding:.3rem .65rem;font-size:.8rem;cursor:pointer;white-space:nowrap;';
+  items.forEach(it => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.4rem .25rem;border-top:1px solid var(--border);';
+    const tx = document.createElement('div'); tx.style.cssText = 'min-width:0;word-break:break-word;line-height:1.35;';
+    const o = document.createElement('span'); o.textContent = it.from; o.style.cssText = 'text-decoration:line-through;color:#e5484d;';
+    const ar = document.createTextNode(' → ');
+    const nw = document.createElement('b'); nw.textContent = it.to; nw.style.color = '#3fa66b';
+    tx.append(o, ar, nw);
+    if (it.why) { const w = document.createElement('div'); w.textContent = it.why; w.style.cssText = 'color:var(--text2);font-size:.72rem;'; tx.appendChild(w); }
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = 'Použiť'; b.style.cssText = btnCss;
+    b.onmousedown = e => e.preventDefault();
+    b.onclick = () => { if (!gfxApply(it)) showToast('Text sa medzitým zmenil', 'warn'); it.done = true; row.remove(); left--; upd(); };
+    row.append(tx, b); _gfx.appendChild(row);
+  });
+  if (items.length > 1) {
+    const all = document.createElement('button'); all.type = 'button'; all.textContent = 'Použiť všetko'; all.style.cssText = btnCss + 'width:100%;margin-top:.35rem;';
+    all.onmousedown = e => e.preventDefault();
+    all.onclick = () => {
+      let n = 0;
+      items.filter(i => !i.done).sort((a, b) => b.idx - a.idx).forEach(i => { if (gfxApply(i)) n++; });
+      hideGrammarBubble(); showToast('Použité opravy: ' + n, 'ok');
+    };
+    _gfx.appendChild(all);
+  }
+  upd();
+  _gfx.style.display = 'block'; _gfx.style.visibility = 'hidden';
+  const vv = window.visualViewport, vh = vv ? vv.height : window.innerHeight;
+  const rc = rng.getBoundingClientRect();
+  const w = _gfx.offsetWidth, h = _gfx.offsetHeight;
+  let px = Math.min(Math.max(8, rc.left), window.innerWidth - w - 8);
+  let py = rc.bottom + 8;
+  if (py + h > vh - 8) py = Math.max(8, rc.top - h - 8);
+  if (!rc.width && !rc.height) { px = Math.max(8, (window.innerWidth - w) / 2); py = Math.max(8, (vh - h) / 2); }
+  _gfx.style.left = px + 'px'; _gfx.style.top = py + 'px'; _gfx.style.visibility = 'visible';
+}
+
 _grammarBtn.onclick = async () => {
   if (!_grammarRange) return;
   if (editor.contentEditable === 'false') { showToast('Poznámka je zamknutá', 'info'); hideGrammarMenu(); return; }
   const rng = _grammarRange.cloneRange();
-  const before = editor.innerHTML;
-  const cap = aiCaptureSelection(rng);
+  const cap = gfxCollect(rng);
   if (!cap.text.trim()) { hideGrammarMenu(); return; }
+  if (cap.text.length > 6000) { showToast('Výber je príliš dlhý (max 6000 znakov)', 'warn'); hideGrammarMenu(); return; }
   _grammarBtn.disabled = true;
-  _grammarBtn.lastChild.textContent = 'Opravujem...';
+  _grammarBtn.lastChild.textContent = 'Kontrolujem...';
   try {
-    const sys = 'Oprav gramatiku, pravopis a diakritiku v slovenskom texte. Zachovaj pôvodný význam, štýl a presne rovnaký počet riadkov (každý riadok oprav samostatne, prázdne riadky nechaj). Odpovedz IBA opraveným textom, bez úvodu, bez komentárov, bez úvodzoviek, bez markdownu.' + _SEL_TAIL;
-    const fixed = await n28Claude(sys, cap.text, { max: 1500 });
-    if (!fixed) throw new Error('Prázdna odpoveď.');
+    const sys = 'Si korektor slovenčiny. Nájdi v texte iba skutočné chyby: pravopis, diakritiku, gramatiku (zhoda, skloňovanie, predložky) a interpunkciu (čiarky). Nemeň štýl, slovosled ani význam a nič neprepisuj. Odpovedz IBA JSON poľom objektov {"from":"presný chybný úsek","to":"oprava","why":"najviac 6 slov"} v poradí ako v texte. "from" musí byť doslovný kúsok vstupného textu (1–5 slov, vždy v rámci jedného riadku) a obsahovať len to, čo sa mení, plus najviac jedno susedné slovo, ak je to nutné. Ak sú v texte chyby aj inde, uveď ich všetky. Ak chyby nie sú, odpovedz []. Bez markdownu a bez komentárov.' + _SEL_TAIL;
+    const raw = await n28Claude(sys, cap.text, { max: 1500 });
+    let arr = parseJsonLoose(raw);
+    if (arr && !Array.isArray(arr)) arr = [arr];
+    if (!arr) throw new Error('neplatná odpoveď');
+    const items = []; let cur = 0;
+    arr.forEach(c => {
+      if (!c || typeof c.from !== 'string' || typeof c.to !== 'string') return;
+      const from = c.from, to = c.to;
+      if (!from.trim() || from === to || from.indexOf('\n') >= 0) return;
+      let idx = cap.text.indexOf(from, cur); if (idx < 0) idx = cap.text.indexOf(from);
+      if (idx < 0) return;
+      const a = cap.map[idx], b = cap.map[idx + from.length - 1];
+      if (!a || !b) return;
+      const r = document.createRange();
+      try { r.setStart(a[0], a[1]); r.setEnd(b[0], b[1] + 1); } catch (_) { return; }
+      if (items.some(i => i.idx === idx)) return;
+      cur = idx + from.length;
+      items.push({ from, to, why: typeof c.why === 'string' ? c.why : '', idx, r });
+    });
+    if (!items.length) { showToast('Žiadne chyby nenájdené', 'ok'); return; }
     if (!editor.contains(rng.commonAncestorContainer)) throw new Error('výber sa medzitým zmenil');
-    aiApplyReplace(cap, rng, fixed);
-    editor.dispatchEvent(new Event('input'));
-    armAiUndo(before, 'Gramatika opravená');
+    gfxShow(items, rng);
   } catch (err) {
-    showToast('Oprava gramatiky zlyhala: ' + err.message,'warn');
+    showToast('Kontrola gramatiky zlyhala: ' + err.message, 'warn');
   } finally {
     _grammarBtn.disabled = false;
     _grammarBtn.lastChild.textContent = 'Oprava gramatiky';
@@ -5807,7 +6334,7 @@ document.getElementById('modal-lock').onclick = () => {
 let swRegistration = null;
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw-notes.js',{scope:'/notes28.html',updateViaCache:'none'})
+    navigator.serviceWorker.register('/sw-notes.js?v=' + encodeURIComponent((document.querySelector('meta[name="n28-build"]') || {}).content || ''),{scope:'/notes28.html',updateViaCache:'none'})
       .then(reg => { swRegistration = reg; })
       .catch(()=>{});
   });
@@ -5898,6 +6425,24 @@ function _rowsForWidget(html, tail) {
   return tail ? rows.slice(-60) : rows.slice(0, 60);
 }
 
+// odškrtnutá položka ide na koniec bloku zoznamu (rovnako ako v editore), neodškrtnutá pred prvú odškrtnutú
+function _n28SinkRow(row) {
+  const isRow = x => x && x.classList && x.classList.contains('check-row');
+  const isDone = r => { const c = r.querySelector('.check-cb'); return !!(c && (c.checked || c.hasAttribute('checked'))); };
+  let first = row; while (isRow(first.previousElementSibling)) first = first.previousElementSibling;
+  const rows = []; for (let x = first; isRow(x); x = x.nextElementSibling) rows.push(x);
+  if (rows.length < 2) return;
+  const others = rows.filter(r => r !== row);
+  if (isDone(row)) {
+    const lastUn = others.slice().reverse().find(r => !isDone(r));
+    if (lastUn) { if (lastUn.nextElementSibling !== row) lastUn.after(row); }
+    else if (others[0].previousElementSibling !== row) others[0].before(row);
+  } else {
+    const firstDone = others.find(r => isDone(r));
+    if (firstDone) { if (firstDone.previousElementSibling !== row) firstDone.before(row); }
+    else if (others[others.length - 1].nextElementSibling !== row) others[others.length - 1].after(row);
+  }
+}
 // odškrtnutia z widgetu -> zapíš do poznámky
 let _toggleBusy = false;
 async function applyAndroidToggles() {
@@ -5912,11 +6457,16 @@ async function applyAndroidToggles() {
       if (note && !note._trash) {
         if (document.getElementById('modal').classList.contains('open') && editingId === t.id) break; // otvorená v editore — až po zatvorení
         const box = document.createElement('div'); box.innerHTML = note.content || '';
-        const row = box.querySelectorAll('.check-row')[t.i];
+        const _norm = s => String(s || '').replace(/[\u00a0 ]+/g, ' ').trim().slice(0, 200);
+        const _rows = [...box.querySelectorAll('.check-row')];
+        let row = _rows[t.i];
+        if (!(row && row.querySelector('.check-label') && _norm(row.querySelector('.check-label').textContent) === _norm(t.t)))
+          row = _rows.find(r => r.querySelector('.check-label') && _norm(r.querySelector('.check-label').textContent) === _norm(t.t) && !!(r.querySelector('.check-cb') && r.querySelector('.check-cb').hasAttribute('checked')) !== !!t.c);
         const lb = row && row.querySelector('.check-label'), cb = row && row.querySelector('.check-cb');
-        if (cb && lb && (lb.textContent || '').replace(/ /g, ' ').trim().slice(0, 200) === t.t) {
+        if (cb && lb && _norm(lb.textContent) === _norm(t.t)) {
           if (t.c) cb.setAttribute('checked', ''); else cb.removeAttribute('checked');
           lb.style.textDecoration = t.c ? 'line-through' : ''; lb.style.opacity = t.c ? '.5' : '';
+          try { if (lsGet('n28-chk-sort', true)) _n28SinkRow(row); } catch (e) {}
           const content = box.innerHTML;
           await updateDoc(doc(db, 'users', currentUser.uid, 'notes', t.id), { content, updatedAt: serverTimestamp() });
           note.content = content;
@@ -5993,7 +6543,7 @@ window.n28FlushInbox = flushAndroidInbox;
 // ─── OPEN NOTE BY ID (widget tap) ────────────────────────────────────────────
 function openNoteById(id, tries=0) {
   const note = notes.find(n=>n.id===id);
-  if (!note && id !== WIDGETNOTE_ID) { if (tries < 12) setTimeout(() => openNoteById(id, tries+1), 300); return; }
+  if (!note && id !== WIDGETNOTE_ID) { if (tries < 40) setTimeout(() => openNoteById(id, tries+1), 300); return; }
   if (!note && tries < 12) {
     // poznámka z widgetu ešte nemusí existovať — vytvorí ju zápis fronty
     flushAndroidInbox().then(c => { if (c == null) setTimeout(() => openNoteById(id, tries+1), 300); else setTimeout(() => openNoteById(id, tries+1), 200); });
@@ -6005,8 +6555,8 @@ function openNoteById(id, tries=0) {
     window.__n28Cold = true; openModal(n); setTimeout(() => { window.__n28Cold = false; bootReady(); }, 120);
   };
   // text z widgetu najprv doplň do poznámky a až potom ju otvor — inak by editor mal starý obsah
-  if (id === WIDGETNOTE_ID) flushAndroidInbox().then(c => show(c == null ? (notes.find(n=>n.id===id) || note) : { ...note, content: c }));
-  else applyAndroidToggles().then(() => show(notes.find(n=>n.id===id) || note));
+  if (id === WIDGETNOTE_ID) Promise.race([flushAndroidInbox(), new Promise(r => setTimeout(() => r(null), 2500))]).then(c => show(c == null ? (notes.find(n=>n.id===id) || note) : { ...note, content: c }));
+  else Promise.race([applyAndroidToggles(), new Promise(r => setTimeout(r, 1200))]).catch(() => {}).then(() => show(notes.find(n=>n.id===id) || note));
 }
 
 // ─── MATERIAL RIPPLE (delegovaný, funguje aj na dynamicky pridané prvky) ────
@@ -6422,11 +6972,31 @@ makeCard = function (note) {
   notesGrid.addEventListener('click', e => { if (Date.now() - lastSwipe < 450) { e.stopPropagation(); e.preventDefault(); } }, true);
 })();
 
+// ═══ drag & drop odrážok zoznamu v poznámke (uchop za bodky vľavo) ═════════════
+(function n28ChkDrag() {
+  const init = () => {
+    if (!window.Sortable) { setTimeout(init, 600); return; }
+    if (editor._chkSort) return;
+    editor._chkSort = new Sortable(editor, {
+      draggable: '.check-row', animation: 150, forceFallback: true, fallbackOnBody: true,
+      delay: 100, delayOnTouchOnly: true, touchStartThreshold: 6, ghostClass: 'chk-ghost', preventOnFilter: false,
+      filter: (evt, target) => {
+        const p = (evt.touches && evt.touches[0]) || evt;
+        return !target || (p.clientX - target.getBoundingClientRect().left) > 22; // ťahá sa len za ľavý pruh
+      },
+      onEnd: ev => { try { ev.item.removeAttribute('draggable'); ev.item.classList.remove('chk-ghost'); } catch (e) {} scheduleAutosave(); }
+    });
+  };
+  init();
+})();
+
 // ═══ F) zoznam úloh: animácia, haptika, odškrtnuté sa plynulo presunú dole ═════
 editor.addEventListener('change', e => {
   const cb = e.target;
   if (!cb || !cb.classList || !cb.classList.contains('check-cb')) return;
   const row = cb.closest('.check-row'); if (!row) return;
+  // stav z jedného zdroja: atribút + preškrtnutie vždy podľa skutočného stavu políčka (inak ho re-parse HTML vráti späť zaškrtnuté bez preškrtnutia)
+  try { if (cb.checked) cb.setAttribute('checked', ''); else cb.removeAttribute('checked'); const lb = row.querySelector('.check-label'); if (lb) { lb.style.textDecoration = cb.checked ? 'line-through' : ''; lb.style.opacity = cb.checked ? '.5' : ''; } } catch (e) {}
   haptic(10);
   row.classList.remove('chk-pop'); void row.offsetWidth; row.classList.add('chk-pop');
   setTimeout(() => row.classList.remove('chk-pop'), 400);
@@ -6517,7 +7087,7 @@ renderGrid = function (list) {
   if (keep) { w.scrollTop = y; notesGrid.style.minHeight = ''; if (Math.abs(w.scrollTop - y) > 1) w.scrollTop = y; }
   // „Všetko“: presun poznámky podržaním prsta (poradie sa uloží ako allOrder)
   try {
-    if (currentTab === LAST_TAB && !sortableInstance && window.Sortable && !searchInput.value.trim() && !activeTag && !activeSmart && !activeShareId && !anyF() && notesGrid.querySelector('.note-card[data-id]')) {
+    if (currentTab === LAST_TAB && sortMode !== 'updated_desc' && !sortableInstance && window.Sortable && !searchInput.value.trim() && !activeTag && !activeSmart && !activeShareId && !anyF() && notesGrid.querySelector('.note-card[data-id]')) {
       sortableInstance = new Sortable(notesGrid, {
         animation: 150, delay: 300, delayOnTouchOnly: true, touchStartThreshold: 5,
         draggable: '.note-card[data-id]', ghostClass: 'dragging', chosenClass: 'drag-chosen',
@@ -6603,17 +7173,97 @@ function addResurface() {
 }
 
 // ═══ I) dátum v texte → "Pridať do kalendára" ═══════════════════════════════════
-// ═══ Kalendár: rýchly prístup (otvoriť / nová udalosť) ═══════════════════════
+// ═══ Kalendár v appke (Firestore users/{uid}/events) ═════════════════════════
 (function(){
-  const b=document.getElementById('cal-btn'); if(!b) return;
-  const m=document.createElement('div'); m.id='cal-menu';
-  m.innerHTML='<button type="button" data-a="open">'+ic.cal+'Otvoriť kalendár</button><button type="button" data-a="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nová udalosť</button>';
+  const btn=document.getElementById('cal-btn'); if(!btn) return;
+  const p2=n=>String(n).padStart(2,'0'), ymd=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+  const evRef=()=>collection(db,'users',currentUser.uid,'events');
+  let y,mo,sel,events=[],editId=null,unsub=null;
+  const m=document.createElement('div'); m.id='cal-modal'; m.className='n28-modal';
+  m.innerHTML='<div class="modal-box" style="max-width:460px"><div class="modal-header"><span class="modal-header-title">Kalendár</span><button class="modal-x" type="button" id="cal-x">×</button></div>'+
+   '<div class="modal-body" style="padding:.7rem .8rem;">'+
+   '<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem;"><button type="button" class="btn btn-ghost" id="cal-prev" style="padding:.3rem .7rem">‹</button><b id="cal-title" style="flex:1;text-align:center;text-transform:capitalize;font-size:.95rem"></b><button type="button" class="btn btn-ghost" id="cal-today" style="font-size:.78rem;padding:.3rem .6rem">Dnes</button><button type="button" class="btn btn-ghost" id="cal-next" style="padding:.3rem .7rem">›</button></div>'+
+   '<div id="cal-grid"></div>'+
+   '<div id="cal-day" style="margin-top:.7rem;"></div></div><div style="padding:.6rem .8rem .8rem;border-top:1px solid var(--border);flex-shrink:0;">'+
+   '<div style="display:flex;gap:.4rem;margin-top:.6rem;"><input id="cal-in-title" placeholder="Nová udalosť…" style="flex:1;min-width:0;padding:.5rem .6rem;border-radius:10px;border:1px solid var(--border);background:var(--surface2,var(--surface));color:var(--text);font:inherit;font-size:.88rem;"><input id="cal-in-time" type="time" style="width:6.2rem;padding:.5rem .4rem;border-radius:10px;border:1px solid var(--border);background:var(--surface2,var(--surface));color:var(--text);font:inherit;font-size:.88rem;"></div>'+
+   '<div style="display:flex;gap:.4rem;margin-top:.5rem;"><button type="button" class="btn btn-primary" id="cal-save" style="flex:1">Pridať</button><button type="button" class="btn btn-ghost" id="cal-cancel" style="display:none">Zrušiť úpravu</button></div>'+
+   '</div></div>';
   document.body.appendChild(m);
-  const hide=()=>m.classList.remove('open');
-  b.addEventListener('click',e=>{ e.stopPropagation(); if(m.classList.contains('open')) return hide(); const r=b.getBoundingClientRect(); m.style.top=(r.bottom+6)+'px'; m.style.left=Math.max(8,Math.min(r.left-120,innerWidth-m.offsetWidth-8))+'px'; m.classList.add('open'); });
-  m.addEventListener('click',e=>{ const a=e.target.closest('button')?.dataset.a; if(!a) return; hide();
-    window.open(a==='new'?'https://calendar.google.com/calendar/render?action=TEMPLATE':'https://calendar.google.com/calendar/u/0/r','_blank','noopener'); });
-  document.addEventListener('click',e=>{ if(!m.contains(e.target)) hide(); });
+  const $=id=>document.getElementById(id);
+  const css=document.createElement('style'); css.textContent=
+   '#cal-modal .modal-box{display:flex;flex-direction:column;max-height:88dvh!important;}#cal-modal .modal-body{overflow-y:auto;flex:1;min-height:0;}'+
+   '#cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}'+
+   '#cal-grid .cw{font-size:.66rem;color:var(--text2);font-weight:700;padding:.2rem 0;}'+
+   '#cal-grid button.cd{position:relative;background:none;border:none;color:var(--text);font:inherit;font-size:.85rem;height:2.15rem;border-radius:10px;cursor:pointer;}'+
+   '#cal-grid button.cd:hover{background:var(--state-hover);}'+
+   '#cal-grid button.cd.other{opacity:.35;}'+
+   '#cal-grid button.cd.today{font-weight:800;color:var(--accent-default);}'+
+   '#cal-grid button.cd.sel{background:var(--accent-default);color:var(--accent-text);}'+
+   '#cal-grid button.cd i{position:absolute;bottom:4px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:currentColor;opacity:.7;}'+
+   '.cal-ev{display:flex;align-items:center;gap:.5rem;padding:.45rem .55rem;border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;font-size:.86rem;}'+
+   '.cal-ev .t{color:var(--text2);font-variant-numeric:tabular-nums;min-width:2.8rem;}.cal-ev .n{flex:1;min-width:0;overflow-wrap:anywhere;cursor:pointer;}'+
+   '.cal-ev button{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;padding:.1rem .3rem;}';
+  document.head.appendChild(css);
+  function render(){
+    $('cal-title').textContent=new Date(y,mo,1).toLocaleDateString('sk-SK',{month:'long',year:'numeric'});
+    const first=new Date(y,mo,1), off=(first.getDay()+6)%7, today=ymd(new Date());
+    const has={}; events.forEach(e=>{has[e.date]=1;});
+    let h=['Po','Ut','St','Št','Pi','So','Ne'].map(d=>'<div class="cw">'+d+'</div>').join('');
+    for(let i=0;i<42;i++){
+      const d=new Date(y,mo,1-off+i), k=ymd(d);
+      h+='<button type="button" class="cd'+(d.getMonth()!==mo?' other':'')+(k===today?' today':'')+(k===sel?' sel':'')+'" data-d="'+k+'">'+d.getDate()+(has[k]?'<i></i>':'')+'</button>';
+    }
+    $('cal-grid').innerHTML=h;
+    const list=events.filter(e=>e.date===sel).sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
+    const sd=new Date(sel+'T00:00');
+    $('cal-day').innerHTML='<div class="set-h">'+escHtml(sd.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'}))+'</div>'+
+      (list.length?list.map(e=>'<div class="cal-ev"><span class="t">'+escHtml(e.time||'celý deň')+'</span><span class="n" data-e="'+e.id+'">'+escHtml(e.title)+'</span><button type="button" data-x="'+e.id+'" aria-label="Zmazať">✕</button></div>').join(''):'<div style="font-size:.82rem;color:var(--text2)">Nič naplánované.</div>');
+  }
+  function resetForm(){ editId=null; $('cal-in-title').value=''; $('cal-in-time').value=''; $('cal-save').textContent='Pridať'; $('cal-cancel').style.display='none'; }
+  function open(){
+    if(!currentUser){ showToast('Najprv sa prihlás','warn'); return; }
+    const n=new Date(); y=n.getFullYear(); mo=n.getMonth(); sel=ymd(n); resetForm(); render(); m.classList.add('open');
+    if(unsub) unsub();
+    unsub=onSnapshot(evRef(),snap=>{ events=snap.docs.map(d=>({id:d.id,...d.data()})); render(); },()=>showToast('Kalendár: chýba oprávnenie (Firestore pravidlá pre events)','warn'));
+  }
+  function close(){ m.classList.remove('open'); if(unsub){unsub();unsub=null;} }
+  btn.addEventListener('click',open);
+  $('cal-x').onclick=close; m.addEventListener('click',e=>{ if(e.target===m) close(); });
+  $('cal-prev').onclick=()=>{ mo--; if(mo<0){mo=11;y--;} render(); };
+  $('cal-next').onclick=()=>{ mo++; if(mo>11){mo=0;y++;} render(); };
+  $('cal-today').onclick=()=>{ const n=new Date(); y=n.getFullYear(); mo=n.getMonth(); sel=ymd(n); render(); };
+  $('cal-grid').addEventListener('click',e=>{ const b=e.target.closest('button.cd'); if(!b) return; sel=b.dataset.d; const d=new Date(sel+'T00:00'); y=d.getFullYear(); mo=d.getMonth(); resetForm(); render(); });
+  $('cal-day').addEventListener('click',async e=>{
+    const x=e.target.closest('[data-x]'); if(x){ try{ await deleteDoc(doc(db,'users',currentUser.uid,'events',x.dataset.x)); if(editId===x.dataset.x) resetForm(); }catch(err){ showToast('Nepodarilo sa zmazať','warn'); } return; }
+    const n=e.target.closest('[data-e]'); if(n){ const ev=events.find(v=>v.id===n.dataset.e); if(!ev) return; editId=ev.id; $('cal-in-title').value=ev.title; $('cal-in-time').value=ev.time||''; $('cal-save').textContent='Uložiť'; $('cal-cancel').style.display=''; $('cal-in-title').focus(); }
+  });
+  $('cal-cancel').onclick=resetForm;
+  $('cal-save').onclick=async()=>{
+    const title=$('cal-in-title').value.trim(); if(!title){ $('cal-in-title').focus(); return; }
+    const data={title,date:sel,time:$('cal-in-time').value||''};
+    try{
+      if(editId) await updateDoc(doc(db,'users',currentUser.uid,'events',editId),data);
+      else await addDoc(evRef(),{...data,createdAt:serverTimestamp()});
+      resetForm();
+    }catch(err){ showToast('Udalosť sa neuložila','warn'); }
+  };
+  // použité aj z „chipu“ pri dátume v poznámke
+  window.n28AddCalEvent=async(title,date,time)=>{
+    try{ await addDoc(evRef(),{title,date,time:time||'',createdAt:serverTimestamp()}); showToast('📅 Pridané do kalendára','ok'); }
+    catch(err){ showToast('Udalosť sa neuložila','warn'); }
+  };
+})();
+
+// účet / záložky / odhlásenie presunuté do Nastavení (pôvodné tlačidlá v hlavičke sú skryté, ale ich handlery ostávajú)
+(function(){
+  const sb=document.getElementById('settings-btn'); if(!sb) return;
+  sb.addEventListener('click',()=>{
+    const a=document.getElementById('user-avatar'), im=document.getElementById('set-avatar');
+    if(im){ im.src=a&&a.src||''; im.style.display=(a&&a.getAttribute('src'))?'block':'none'; }
+    const w=document.getElementById('set-who'); try{ if(w) w.textContent=(auth.currentUser&&auth.currentUser.email)||''; }catch(e){}
+  });
+  document.getElementById('set-tabs-btn').onclick=()=>{ document.getElementById('settings-modal').classList.remove('open'); document.getElementById('manage-tabs-btn').click(); };
+  document.getElementById('set-logout-btn').onclick=()=>{ document.getElementById('settings-modal').classList.remove('open'); document.getElementById('logout-btn').click(); };
 })();
 
 const dchip = document.createElement('div');
@@ -6658,7 +7308,8 @@ dchip.addEventListener('click', () => {
     const f = d => ymd(d) + 'T' + p2(d.getHours()) + p2(d.getMinutes()) + '00';
     dates = f(a) + '/' + f(b);
   } else { const nx = new Date(dt.getTime() + 864e5); dates = ymd(dt) + '/' + ymd(nx); }
-  window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + dates, '_blank', 'noopener');
+  const p3 = n => String(n).padStart(2, '0');
+  n28AddCalEvent(title, dt.getFullYear() + '-' + p3(dt.getMonth() + 1) + '-' + p3(dt.getDate()), (hh != null && hh < 24 && mm < 60) ? p3(hh) + ':' + p3(mm) : '');
   hideDchip();
 });
 
@@ -7209,6 +7860,507 @@ function n28Ago(ms) {
     document.addEventListener('visibilitychange', sync); sync();
   })();
 })();
+
+
+// ═══ N28 v126: panel <-> zoznam, paleta Ctrl+K, archiv, uprava kariet ═══
+try {
+  const SPQ = '(min-width:1100px)';
+  const spVisible = () => document.body.classList.contains('n28-sp-on') && window.matchMedia(SPQ).matches;
+  const focusPanel = () => {
+    const t = document.getElementById('sp-text'); if (!t) return false;
+    t.focus(); const e = t.value.length; try { t.setSelectionRange(e, e); } catch (_) {} t.scrollTop = t.scrollHeight; return true;
+  };
+  window.__n28Ui = { spVisible: spVisible, focusPanel: focusPanel };
+
+  const css = document.createElement('style');
+  css.textContent = [
+    '.card-quick-tag{display:flex;align-items:center;gap:.3rem;font-size:.7rem;opacity:.7;margin-bottom:.1rem;color:var(--text2);}',
+    '@media(min-width:1000px){#app-screen #notes-grid.list-view.wide2{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:1500px;}}',
+    '#n28-pal{position:fixed;inset:0;z-index:2700;display:none;align-items:flex-start;justify-content:center;padding-top:14vh;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);}',
+    '#n28-pal.open{display:flex;}',
+    '#n28-pal .pal-box{width:min(560px,calc(100vw - 24px));background:color-mix(in srgb,var(--surface2) 96%,transparent);border:1px solid var(--border);border-radius:16px;box-shadow:var(--elev4);overflow:hidden;}',
+    '#n28-pal .pal-in{width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid var(--border);padding:.9rem 1rem;font:inherit;font-size:1rem;color:var(--text);outline:none;}',
+    '#n28-pal .pal-list{max-height:min(50vh,380px);overflow:auto;padding:.3rem;}',
+    '#n28-pal .pal-it{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border-radius:10px;cursor:pointer;color:var(--text);font-size:.9rem;}',
+    '#n28-pal .pal-it.on{background:var(--state-press);}',
+    '#n28-pal .pal-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}',
+    '#n28-pal .pal-it small{margin-left:auto;color:var(--text2);font-size:.72rem;white-space:nowrap;padding-left:.5rem;}',
+    '#n28-pal .pal-empty{padding:.9rem;color:var(--text2);font-size:.85rem;text-align:center;}',
+    '#n28-pal .pal-foot{padding:.4rem .8rem;font-size:.7rem;color:var(--text2);border-top:1px solid var(--border);}'
+  ].join('\n');
+  document.head.appendChild(css);
+
+  // 1) Rychla poznamka: ak je panel vpravo zapnuty, tlacidlo ho len aktivuje (jedno miesto na pisanie)
+  const qb = document.getElementById('quicknote-btn');
+  if (qb) qb.onclick = () => { if (spVisible() && focusPanel()) return; openQuickNote(); };
+  let lastSp = spVisible();
+  const spChanged = () => { const v = spVisible(); if (v !== lastSp) { lastSp = v; try { renderNotes(); } catch (_) {} } };
+  new MutationObserver(spChanged).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.matchMedia(SPQ).addEventListener('change', spChanged);
+
+  // 2) Karty: kratsie odkazy (domena namiesto celej adresy), vzhlad Rychlej poznamky
+  const _mk2 = makeCard;
+  makeCard = function (note) {
+    const card = _mk2(note);
+    try {
+      const cc = card.querySelector('.card-content');
+      if (cc) {
+        let shortened = '';
+        cc.querySelectorAll('a').forEach(a => {
+          const t = a.textContent.trim();
+          if (/^(https?:\/\/|www\.)/i.test(t) && t.length > 34) {
+            let h = ''; try { h = new URL(/^www\./i.test(t) ? 'https://' + t : t).hostname.replace(/^www\./, ''); } catch (_) {}
+            if (h) { a.title = t; a.textContent = h + ' ↗'; shortened = shortened || h; }
+          }
+        });
+        const chip = card.querySelector('.card-chip span');
+        if (chip && shortened && chip.textContent.trim() === shortened) chip.parentElement.remove();
+      }
+      if (note.id === QUICKNOTE_ID) {
+        card.classList.add('card-quick');
+        card.style.borderLeftColor = 'var(--text2)'; card.style.setProperty('--accent', 'var(--text2)');
+        const bd = card.querySelector('.card-meta .card-tab-badge'); if (bd) bd.remove();
+        const body = card.querySelector('.card-body');
+        if (body) {
+          [...body.children].forEach(el => { if (el.textContent.trim() === 'pripnuté') el.remove(); });
+          const tag = document.createElement('div'); tag.className = 'card-quick-tag';
+          tag.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>Rýchla poznámka';
+          body.insertBefore(tag, body.firstChild);
+        }
+      }
+    } catch (_) {}
+    return card;
+  };
+
+  // 3) siroke obrazovky: zoznam na 2 stlpce, ked je dost miesta
+  const wrap = document.querySelector('.notes-wrap'), grid = document.getElementById('notes-grid');
+  if (wrap && grid && window.ResizeObserver) {
+    const upd = () => { const w = wrap.clientWidth - (window.innerWidth >= 1000 ? 200 : 0) - 24; grid.classList.toggle('wide2', w >= 900); };
+    new ResizeObserver(upd).observe(wrap); upd();
+  }
+
+  // 4) Archiv = presun do zalozky "Archív" (s tlacidlom Spat)
+  async function archiveNote(id) {
+    const n = notes.find(x => x.id === id && !x._trash);
+    if (!n || id === QUICKNOTE_ID || id === WIDGETNOTE_ID) { showToast('Túto poznámku nemožno archivovať', 'warn'); return; }
+    if (n._shareId) { showToast('Zdieľanú poznámku nemožno archivovať', 'warn'); return; }
+    const AR = 'Archív';
+    if ((n.tab || '') === AR) { showToast('Už je v archíve', 'info'); return; }
+    if (!userTabs.includes(AR)) { try { saveTabs([...userTabs, AR]); } catch (_) {} }
+    const prev = { tab: n.tab || '', folder: n.folder || null };
+    try { await updateDoc(doc(db, 'users', currentUser.uid, 'notes', id), { tab: AR, folder: null }); }
+    catch (err) { showToast('Chyba: ' + err.message, 'warn', 4000); return; }
+    showUndoToast('Presunuté do archívu', () => updateDoc(doc(db, 'users', currentUser.uid, 'notes', id), prev));
+  }
+  const delBtn = document.getElementById('modal-delete');
+  if (delBtn && delBtn.parentNode) {
+    const ab = document.createElement('button'); ab.type = 'button'; ab.id = 'modal-archive'; ab.className = 'more-menu-item';
+    ab.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:.4rem;vertical-align:-2px;"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>Archivovať';
+    ab.onclick = () => {
+      const id = editingId; const mm = document.getElementById('modal-more-menu'); if (mm) mm.style.display = 'none';
+      if (!id) return;
+      if (activeShareId || currentTab === TRASH_TAB) { showToast('Túto poznámku nemožno archivovať', 'warn'); return; }
+      flushAndClose(); archiveNote(id);
+    };
+    const hr = delBtn.previousElementSibling;
+    delBtn.parentNode.insertBefore(ab, hr && hr.tagName === 'HR' ? hr : delBtn);
+  }
+
+  // 4b) Opytat sa Claude: skopiruje vyber (alebo celu poznamku) a otvori claude.ai s predvyplnenym textom
+  function askClaude(withNote) {
+    let text = '', title = '';
+    try {
+      const sel = window.getSelection ? String(window.getSelection()).trim() : '';
+      if (sel) text = sel;
+      else if (withNote) { title = (inputTitle.value || '').trim(); text = (editor.innerText || '').trim(); }
+    } catch (_) {}
+    const full = (title ? title + '\n\n' : '') + text;
+    if (full) { try { navigator.clipboard.writeText(full); } catch (_) {} }
+    const q = full ? 'Poznámka:\n\n' + full.slice(0, 3500) + '\n\n---\n' : '';
+    window.open('https://claude.ai/new' + (q ? '?q=' + encodeURIComponent(q) : ''), '_blank', 'noopener');
+    showToast(full ? 'Text skopírovaný, otváram Claude' : 'Otváram Claude', 'info');
+  }
+  const archBtn = document.getElementById('modal-archive');
+  if (archBtn && archBtn.parentNode) {
+    const cb = document.createElement('button'); cb.type = 'button'; cb.id = 'modal-ask-claude'; cb.className = 'more-menu-item';
+    cb.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:.4rem;vertical-align:-2px;"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>Opýtať sa Claude';
+    cb.onmousedown = e => e.preventDefault();
+    cb.onclick = () => { const mm = document.getElementById('modal-more-menu'); askClaude(true); if (mm) mm.style.display = 'none'; };
+    archBtn.parentNode.insertBefore(cb, archBtn);
+  }
+
+  // 5) Paleta prikazov Ctrl+K
+  const pal = document.createElement('div'); pal.id = 'n28-pal';
+  const box = document.createElement('div'); box.className = 'pal-box';
+  const palIn = document.createElement('input'); palIn.className = 'pal-in'; palIn.type = 'text'; palIn.placeholder = 'Hľadaj poznámku alebo príkaz…'; palIn.autocomplete = 'off'; palIn.spellcheck = false;
+  const palList = document.createElement('div'); palList.className = 'pal-list';
+  const palFoot = document.createElement('div'); palFoot.className = 'pal-foot'; palFoot.textContent = '↑↓ výber · Enter otvoriť · Esc zavrieť';
+  box.append(palIn, palList, palFoot); pal.appendChild(box); document.body.appendChild(pal);
+  let items = [], sel = 0;
+  const norm = s => String(s || '').normalize('NFD').replace(/[^ -~]/g, '').toLowerCase();
+  const plainOf = h => { const d = document.createElement('div'); d.innerHTML = sanitizeHtml(h || ''); return (d.textContent || '').replace(/\s+/g, ' ').trim(); };
+  const ts = n => ((n.updatedAt || n.createdAt)?.toMillis?.() ?? 0);
+  function noteItem(n) {
+    const body = plainOf(n.content);
+    const title = (n.title || '').trim() || body.slice(0, 70) || 'Bez názvu';
+    return { t: title, s: n.id === QUICKNOTE_ID ? 'Rýchla' : (n.tab || ''), run: () => { if (n.id === QUICKNOTE_ID && spVisible() && focusPanel()) return; openModal(n); } };
+  }
+  function commands() {
+    const tabs = [...document.querySelectorAll('#tabs .tab')].filter(el => !el.classList.contains('tab-folder-row')).map(el => {
+      const name = el.textContent.replace(/^[●•\s]+/, '').replace(/\s*›\s*$/, '').trim();
+      return { t: 'Záložka: ' + name, k: 'zalozka tab', run: () => el.click() };
+    });
+    return [
+      { t: 'Nová poznámka', k: 'nova poznamka pridat', run: () => document.getElementById('fab').click() },
+      { t: 'Rýchla poznámka', k: 'rychla poznamka quick', run: () => document.getElementById('quicknote-btn').click() },
+      { t: 'Prepnúť zobrazenie (mriežka / zoznam)', k: 'zobrazenie zoznam mriezka view', run: () => document.getElementById('view-toggle').click() },
+      { t: 'Opýtať sa Claude (vybraný text)', k: 'claude ai opytat ask', run: () => askClaude(false) },
+      { t: 'Skopírovať diagnostický log', k: 'log diagnostika debug', run: () => window.n28DbgCopy && window.n28DbgCopy() },
+      { t: 'Nastavenia', k: 'nastavenia settings', run: () => document.getElementById('settings-btn').click() }
+    ].concat(tabs);
+  }
+  function build(q) {
+    const nq = norm(q), out = [], cm = commands();
+    if (!nq) {
+      cm.slice(0, 6).forEach(c => out.push({ t: c.t, s: 'príkaz', run: c.run }));
+      notes.filter(n => !n._trash).sort((a, b) => ts(b) - ts(a)).slice(0, 7).forEach(n => out.push(noteItem(n)));
+    } else {
+      cm.filter(c => norm(c.t + ' ' + c.k).includes(nq)).slice(0, 5).forEach(c => out.push({ t: c.t, s: 'príkaz', run: c.run }));
+      notes.filter(n => !n._trash && (norm(n.title).includes(nq) || norm(plainOf(n.content)).includes(nq))).sort((a, b) => ts(b) - ts(a)).slice(0, 8).forEach(n => out.push(noteItem(n)));
+    }
+    return out;
+  }
+  function paint() {
+    palList.textContent = '';
+    items.forEach((it, i) => {
+      const row = document.createElement('div'); row.className = 'pal-it' + (i === sel ? ' on' : ''); row.setAttribute('role', 'option');
+      const t = document.createElement('span'); t.className = 'pal-t'; t.textContent = it.t; row.appendChild(t);
+      if (it.s) { const s = document.createElement('small'); s.textContent = it.s; row.appendChild(s); }
+      row.onmousemove = () => { if (sel !== i) { sel = i; [...palList.children].forEach((c, j) => c.classList.toggle('on', j === i)); } };
+      row.onclick = () => runItem(i);
+      palList.appendChild(row);
+    });
+    if (!items.length) { const e = document.createElement('div'); e.className = 'pal-empty'; e.textContent = 'Nič sa nenašlo'; palList.appendChild(e); }
+    const on = palList.children[sel]; if (on && on.scrollIntoView) on.scrollIntoView({ block: 'nearest' });
+  }
+  function openPal() { if (pal.classList.contains('open')) return; palIn.value = ''; items = build(''); sel = 0; pal.classList.add('open'); paint(); setTimeout(() => palIn.focus(), 0); }
+  function closePal() { pal.classList.remove('open'); }
+  function runItem(i) { const it = items[i]; if (!it) return; closePal(); setTimeout(() => { try { it.run(); } catch (e) { console.error(e); } }, 30); }
+  palIn.addEventListener('input', () => { items = build(palIn.value); sel = 0; paint(); });
+  palIn.addEventListener('keydown', e => {
+    if (e.isComposing) return;
+    if (e.key === 'Escape') { e.preventDefault(); closePal(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); if (items.length) { sel = (sel + 1) % items.length; paint(); } }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (items.length) { sel = (sel - 1 + items.length) % items.length; paint(); } }
+    else if (e.key === 'Enter') { e.preventDefault(); runItem(sel); }
+  });
+  pal.addEventListener('mousedown', e => { if (e.target === pal) closePal(); });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && (e.key || '').toLowerCase() === 'k') {
+      if (document.body.classList.contains('logged-out')) return;
+      const m = document.getElementById('modal'); if (m && m.classList.contains('open')) return;
+      e.preventDefault(); if (pal.classList.contains('open')) closePal(); else openPal();
+    }
+  });
+  try { if (searchInput && !matchMedia('(pointer:coarse)').matches) searchInput.placeholder = 'Hľadať v poznámkach…  (Ctrl+K)'; } catch (_) {}
+} catch (err) { console.error('n28 v126', err); }
+
+
+// ═══ N28 v126: kopirovanie z poznamok so zachovanym formatovanim (Teams / Word / Outlook) ═══
+try {
+  document.addEventListener('copy', function (e) {
+    try {
+      const s = window.getSelection(); if (!s || s.isCollapsed || !s.rangeCount || !e.clipboardData) return;
+      const a = s.anchorNode && (s.anchorNode.nodeType === 1 ? s.anchorNode : s.anchorNode.parentElement);
+      if (!a || !a.closest || !a.closest('#editor, .card-content')) return;
+      const box = document.createElement('div');
+      for (let i = 0; i < s.rangeCount; i++) box.appendChild(s.getRangeAt(i).cloneContents());
+      box.querySelectorAll('input[type=checkbox]').forEach(x => x.replaceWith(document.createTextNode(x.checked ? '☑ ' : '☐ ')));
+      box.querySelectorAll('script,style,iframe,object,embed,button,input,textarea,svg,.n28-expand-handle').forEach(x => x.remove());
+      box.querySelectorAll('*').forEach(x => {
+        [...x.attributes].forEach(at => {
+          const n = at.name;
+          if (n === 'href' && x.tagName === 'A') return;
+          if (n === 'src' && x.tagName === 'IMG') return;
+          x.removeAttribute(n);
+        });
+      });
+      const html = box.innerHTML; if (!html.trim()) return;
+      e.clipboardData.setData('text/plain', s.toString().replace(/\xa0/g, ' '));
+      e.clipboardData.setData('text/html', '<meta charset="utf-8">' + html);
+      e.preventDefault();
+    } catch (_) {}
+  }, false);
+} catch (err) { console.error('n28 v126 copy', err); }
+
+// ═══ N28 v133: diagnosticky log checkboxov (len v pamati + localStorage; kopiruje sa na vyziadanie) ═══
+try {
+  const LOG = []; let dirty = false; const T0 = Date.now();
+  const tt = () => ((Date.now() - T0) / 1000).toFixed(2);
+  const lab = (c) => { try { const l = c.closest('.check-row')?.querySelector('.check-label'); return l ? l.textContent.trim().slice(0, 14) : '?'; } catch (_) { return '?'; } };
+  const sm = (html) => { try { const d = document.createElement('div'); d.innerHTML = html || ''; const r = [...d.querySelectorAll('.check-row')].map(r => { const c = r.querySelector('.check-cb'), l = r.querySelector('.check-label'); return (l ? l.textContent.trim().slice(0, 14) : '?') + '[' + ((c && (c.checked || c.hasAttribute('checked'))) ? 'x' : ' ') + ((l && l.style.textDecoration) ? '~' : '') + ']'; }); return r.join(' ') || '(bez checklistu)'; } catch (_) { return '?'; } };
+  const log = (k, msg) => { LOG.push(tt() + ' ' + k + ' ' + msg); if (LOG.length > 500) LOG.shift(); dirty = true; };
+  const stk = () => (new Error().stack || '').split('\n').slice(3, 7).map(s => s.trim().replace(/https?:\/\/[^ )]*\//, '')).join(' < ');
+  const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'checked');
+  if (desc && desc.set) Object.defineProperty(HTMLInputElement.prototype, 'checked', { configurable: true, enumerable: desc.enumerable, get: desc.get, set: function (v) { if (window.__n28Nulling && this.classList && this.classList.contains('check-cb')) { try { log('BLOCKED', lab(this) + ' obnova od Sortable ignorovana'); } catch (_) {} return; } try { if (this.classList && this.classList.contains('check-cb')) log('SET', lab(this) + ' = ' + v + ' @ ' + stk()); } catch (_) {} return desc.set.call(this, v); } });
+  editor.addEventListener('change', e => { const c = e.target; if (c && c.classList && c.classList.contains('check-cb')) log('CHANGE', lab(c) + ' -> ' + c.checked); }, true);
+  new MutationObserver(ms => ms.forEach(m => { if (m.attributeName === 'checked') log('ATTR', lab(m.target) + ' checked attr=' + m.target.hasAttribute('checked')); })).observe(editor, { subtree: true, attributes: true, attributeFilter: ['checked'] });
+  const _ar = n28ApplyRemote; n28ApplyRemote = function (c) { log('APPLYREMOTE', sm(c) + ' @ ' + stk()); return _ar.apply(this, arguments); };
+  const _m3 = n28Merge3; n28Merge3 = function (b, l, r) { const o = _m3.apply(this, arguments); log('MERGE', 'base: ' + sm(b) + ' || local: ' + sm(l) + ' || remote: ' + sm(r) + ' => ' + sm(o)); return o; };
+  const _sw = n28SyncWrite0; n28SyncWrite0 = async function (ref, data) { log('SAVE', 'local: ' + sm(data.content) + ' | base: ' + sm((window.__n28SyncBase || {}).content)); return _sw.apply(this, arguments); };
+  const _or = n28OnRemote; n28OnRemote = function (list) { try { if (editingId && modal.classList.contains('open')) { const n = (list || []).find(x => x.id === editingId); if (n) log('SNAP', 'remote: ' + sm(n.content) + ' | editor: ' + sm(editor.innerHTML) + ' | pending=' + autosaveStatus.classList.contains('pending') + ' writing=' + !!window.__n28Writing); } } catch (_) {} return _or.apply(this, arguments); };
+  const _at = applyAndroidToggles; applyAndroidToggles = async function () { try { const n = window.AndroidBridge && AndroidBridge.getToggles ? AndroidBridge.getToggles() : ''; if (n && n !== '[]') log('TOGGLES', String(n).slice(0, 200)); } catch (_) {} return _at.apply(this, arguments); };
+  // Sortable si pri kazdom dotyku ulozi stav checkboxov a neskor ho natvrdo obnovi (_nulling) — bez 'change' a bez preskrtnutia; tuto obnovu ignorujeme
+  const patchSortable = (n) => { if (window.Sortable && Sortable.prototype && Sortable.prototype._nulling) { const on = Sortable.prototype._nulling; Sortable.prototype._nulling = function () { window.__n28Nulling = 1; try { return on.apply(this, arguments); } finally { window.__n28Nulling = 0; } }; } else if (n > 0) setTimeout(() => patchSortable(n - 1), 300); };
+  patchSortable(20);
+  const dump = () => 'N28 log | ' + navigator.userAgent.slice(0, 70) + ' | ' + ((document.querySelector('meta[name="n28-build"]') || {}).content || '') + '\n' + LOG.join('\n');
+  window.n28DbgDump = dump;
+  window.n28DbgCopy = async () => { const s = dump(); try { await navigator.clipboard.writeText(s); showToast('Log skopírovaný (' + LOG.length + ' riadkov)', 'ok'); } catch (_) { prompt('Skopíruj log:', s.slice(-6000)); } };
+  setInterval(() => { if (dirty) { dirty = false; try { localStorage.setItem('n28-dbg', LOG.slice(-300).join('\n')); } catch (_) {} } }, 3000);
+  const ask = document.getElementById('modal-ask-claude');
+  if (ask && ask.parentNode) {
+    const b = document.createElement('button'); b.type = 'button'; b.id = 'modal-dbg'; b.className = 'more-menu-item'; b.textContent = 'Kopírovať diagnostický log';
+    b.onmousedown = e => e.preventDefault();
+    b.onclick = () => { const mm = document.getElementById('modal-more-menu'); window.n28DbgCopy(); if (mm) mm.style.display = 'none'; };
+    ask.parentNode.insertBefore(b, ask);
+  }
+} catch (err) { console.error('n28 v133 dbg', err); }
+
+// ═══ N28 PROTECT: poznámky chránené heslom (štýl OneNote) ════════════════════
+// Šifrovanie AES-GCM, kľúč z hesla cez PBKDF2 (200 000 iterácií). Do Firestore ide len šifrovaný obsah + obrázky; názov zostáva čitateľný.
+// Odomknutá poznámka ostáva otvorená počas relácie; zamkne sa ručne ("Zamknúť teraz") alebo po 5 min nečinnosti.
+const n28Keys = new Map();      // noteId -> { key, salt }
+const n28Plain = new Set();     // poznámky práve prepínané na nešifrované
+const N28_IDLE_MS = 5 * 60 * 1000;
+let n28Last = Date.now();
+['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(ev => addEventListener(ev, () => { n28Last = Date.now(); }, { passive: true, capture: true }));
+const n28b64 = u8 => { let s = ''; u8.forEach(b => { s += String.fromCharCode(b); }); return btoa(s); };
+const n28unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function n28Derive(pw, salt) {
+  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function n28Enc(k, obj) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, k.key, new TextEncoder().encode(JSON.stringify(obj))));
+  return { v: 1, s: n28b64(k.salt), iv: n28b64(iv), ct: n28b64(ct) };
+}
+async function n28Dec(k, enc) {
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: n28unb64(enc.iv) }, k.key, n28unb64(enc.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+// malý dialóg na heslo (bez confirm/prompt)
+function n28Dialog(o) {
+  return new Promise(res => {
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:1rem;';
+    const box = document.createElement('div');
+    box.style.cssText = 'background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:18px;padding:1.1rem;width:min(92vw,340px);box-shadow:var(--shadow);font-family:inherit;';
+    box.innerHTML = '<div style="font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;">' + ICON_LOCK + '<span class="n28d-h"></span></div>' +
+      '<div class="n28d-t" style="font-size:.82rem;color:var(--text2);margin-bottom:.7rem;line-height:1.35;word-break:break-word;"></div>' +
+      '<div class="n28d-f"></div><div class="n28d-e" style="color:#ef4444;font-size:.8rem;min-height:1.1em;margin:.2rem 0 .5rem;"></div>' +
+      '<div style="display:flex;gap:.5rem;justify-content:flex-end;"><button class="n28d-c" type="button"></button><button class="n28d-o" type="button"></button></div>';
+    box.querySelector('.n28d-h').textContent = o.title || '';
+    box.querySelector('.n28d-t').textContent = o.text || '';
+    const bs = 'padding:.5rem .95rem;border-radius:10px;border:1px solid var(--border);font:inherit;font-size:.88rem;cursor:pointer;';
+    const bc = box.querySelector('.n28d-c'), bo = box.querySelector('.n28d-o'), er = box.querySelector('.n28d-e');
+    bc.textContent = 'Zrušiť'; bc.style.cssText = bs + 'background:var(--surface2);color:var(--text);';
+    bo.textContent = o.ok || 'OK'; bo.style.cssText = bs + 'background:var(--accent-default);color:var(--accent-text);border-color:transparent;font-weight:600;';
+    const inputs = (o.fields || []).map(f => {
+      const i = document.createElement('input');
+      i.type = 'password'; i.placeholder = f.ph || ''; i.autocomplete = 'off';
+      i.style.cssText = 'width:100%;box-sizing:border-box;padding:.6rem .7rem;margin-bottom:.45rem;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font:inherit;font-size:16px;outline:none;';
+      box.querySelector('.n28d-f').appendChild(i); return i;
+    });
+    ov.appendChild(box); document.body.appendChild(ov);
+    let busy = false;
+    const done = v => { ov.remove(); res(v); };
+    const go = async () => {
+      if (busy) return; busy = true; er.textContent = ''; bo.textContent = '…'; bo.disabled = true;
+      let err;
+      try { err = o.submit ? await o.submit(inputs.map(i => i.value)) : undefined; } catch (e) { err = 'Chyba: ' + (e && e.message || e); }
+      busy = false; bo.disabled = false; bo.textContent = o.ok || 'OK';
+      if (err) { er.textContent = err; if (inputs[0]) { inputs[0].select(); inputs[0].focus(); } return; }
+      done(true);
+    };
+    bo.onclick = go; bc.onclick = () => done(false);
+    ov.addEventListener('mousedown', e => { if (e.target === ov) done(false); });
+    box.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } else if (e.key === 'Escape') { e.preventDefault(); done(false); } });
+    setTimeout(() => { (inputs[0] || bo).focus(); }, 60);
+  });
+}
+
+async function n28Unlock(note) {
+  let out = null;
+  await n28Dialog({
+    title: 'Chránená poznámka', text: note.title || '', fields: [{ ph: 'Heslo' }], ok: 'Odomknúť',
+    submit: async v => {
+      try {
+        const salt = n28unb64(note.enc.s);
+        const k = { key: await n28Derive(v[0], salt), salt };
+        out = { k, payload: await n28Dec(k, note.enc) };
+      } catch (e) { return 'Nesprávne heslo'; }
+    }
+  });
+  return out;
+}
+
+function n28NoteDocRef(id) { return doc(db, 'users', currentUser.uid, 'notes', id); }
+function n28EncWrite(ref, data, id) {
+  const k = n28Keys.get(id);
+  const { content, images, title, ...rest } = data;
+  const p = _n28WQ.then(async () => {
+    const enc = await n28Enc(k, { content: content || '', images: images || [] });
+    await updateDoc(ref, { ...rest, title: title || '', content: '', images: [], enc });
+  }).catch(err => showToast('❌ ' + err.message, 'warn', 4000));
+  _n28WQ = p;
+  return p;
+}
+function n28UpdateNote(id, data) {
+  return n28Keys.has(id) ? n28EncWrite(n28NoteDocRef(id), data, id) : updateDoc(n28NoteDocRef(id), data);
+}
+
+// všetky zápisy existujúcej poznámky idú cez n28SyncWrite → tu sa rozhodne, či sa šifruje
+const _n28sw0 = n28SyncWrite;
+n28SyncWrite = function (ref, data) {
+  const id = editingId;
+  if (id && n28Keys.has(id)) return n28EncWrite(ref, data, id);
+  const nn = id && !n28Plain.has(id) && notes.find(x => x.id === id);
+  if (nn && nn.enc) { showToast('Poznámka je zamknutá — zmeny sa neuložili', 'warn'); return Promise.resolve(); }
+  return _n28sw0(ref, data);
+};
+// chránené poznámky: žiadna história verzií, žiadne zlučovanie zo vzdialenej verzie, žiadny AI návrh tagov
+const _n28cp0 = checkpointBeforeOverwrite;
+checkpointBeforeOverwrite = function (id) { if (n28Keys.has(id)) return; return _n28cp0.apply(this, arguments); };
+const _n28sv0 = saveVersion;
+saveVersion = function (id) { if (n28Keys.has(id)) return Promise.resolve(); return _n28sv0.apply(this, arguments); };
+const _n28or0 = n28OnRemote;
+n28OnRemote = function (list) { if (editingId && n28Keys.has(editingId)) return; return _n28or0.apply(this, arguments); };
+const _n28mt0 = maybeSuggestTags;
+maybeSuggestTags = function (id) { if (n28Keys.has(id)) return; return _n28mt0.apply(this, arguments); };
+
+// karta v zozname
+const _n28mc0 = makeCard;
+makeCard = function (note) {
+  const c = _n28mc0.apply(this, arguments);
+  if (note && note.enc) {
+    c.classList.add('card-protected');
+    const cc = c.querySelector('.card-content');
+    if (cc) cc.innerHTML = '<span style="display:inline-flex;align-items:center;color:var(--text2);font-size:.82rem;">' + (n28Keys.has(note.id) ? ICON_UNLOCK + 'Odomknuté' : ICON_LOCK + 'Chránené heslom') + '</span>';
+    c.querySelectorAll('.card-images').forEach(e => e.remove());
+  }
+  return c;
+};
+
+// otvorenie poznámky
+const _n28om0 = openModal;
+openModal = function (note) {
+  if (note && note.id && note.enc) {
+    n28Plain.delete(note.id);
+    const open = (k, p) => {
+      n28Keys.set(note.id, k);
+      _n28om0.call(this, { ...note, content: p.content || '', images: p.images || [] });
+      n28RefreshMenu();
+      try { renderNotes(); } catch (e) {}
+    };
+    const k = n28Keys.get(note.id);
+    if (k) n28Dec(k, note.enc).then(p => open(k, p)).catch(() => { n28Keys.delete(note.id); openModal(note); });
+    else n28Unlock(note).then(r => { if (r) open(r.k, r.payload); });
+    return;
+  }
+  if (note && note.id) n28Plain.delete(note.id);
+  const rv = _n28om0.apply(this, arguments);
+  n28RefreshMenu();
+  return rv;
+};
+
+// ponuka ⋮ v editore
+function n28RefreshMenu() {
+  const id = editingId, prot = !!(id && n28Keys.has(id));
+  const can = !activeShareId && id !== QUICKNOTE_ID && id !== WIDGETNOTE_ID;
+  const b1 = document.getElementById('modal-protect'), b2 = document.getElementById('modal-unprotect'), b3 = document.getElementById('modal-locknow');
+  if (!b1) return;
+  b1.style.display = can ? '' : 'none';
+  b1.innerHTML = ICON_LOCK + (prot ? 'Zmeniť heslo' : 'Chrániť heslom');
+  b2.style.display = (can && prot) ? '' : 'none';
+  b3.style.display = (can && prot) ? '' : 'none';
+}
+(function () {
+  const anchor = document.getElementById('modal-lock'); if (!anchor) return;
+  const mk = (id, html, fn) => { const b = document.createElement('button'); b.id = id; b.className = 'more-menu-item'; b.innerHTML = html; b.onclick = fn; return b; };
+  anchor.after(
+    mk('modal-protect', ICON_LOCK + 'Chrániť heslom', () => n28SetPassword()),
+    mk('modal-unprotect', ICON_UNLOCK + 'Odstrániť heslo', () => n28RemovePassword()),
+    mk('modal-locknow', ICON_LOCK + 'Zamknúť teraz', () => n28LockNow().then(() => showToast('Zamknuté', 'info')))
+  );
+})();
+
+async function n28SetPassword() {
+  document.getElementById('modal-more-menu').style.display = 'none';
+  if (activeShareId) { showToast('Zdieľané poznámky sa nedajú chrániť heslom', 'warn'); return; }
+  if (!editingId) { try { await doAutosave(); } catch (e) {} }
+  const id = editingId;
+  if (!id) { showToast('Najprv napíš poznámku', 'warn'); return; }
+  if (id === QUICKNOTE_ID || id === WIDGETNOTE_ID) { showToast('Túto poznámku nemožno chrániť', 'warn'); return; }
+  const wasProt = n28Keys.has(id);
+  let nk = null;
+  const ok = await n28Dialog({
+    title: wasProt ? 'Zmeniť heslo' : 'Chrániť heslom',
+    text: 'Zabudnuté heslo sa nedá obnoviť — obsah poznámky zostane nečitateľný. Názov poznámky zostane viditeľný.',
+    fields: [{ ph: 'Nové heslo' }, { ph: 'Zopakuj heslo' }], ok: 'Uložiť',
+    submit: async v => {
+      if (v[0].length < 4) return 'Aspoň 4 znaky';
+      if (v[0] !== v[1]) return 'Heslá sa nezhodujú';
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      nk = { key: await n28Derive(v[0], salt), salt };
+    }
+  });
+  if (!ok || !nk || editingId !== id) return;
+  clearTimeout(_autosaveTimer);
+  await _n28WQ.catch(() => {});
+  editor.querySelectorAll('.check-cb').forEach(cb => { if (cb.checked) cb.setAttribute('checked', ''); else cb.removeAttribute('checked'); });
+  const content = linkifyForSave(editor.innerHTML), title = inputTitle.value.trim();
+  const enc = await n28Enc(nk, { content, images: pendingImages || [] });
+  n28Keys.set(id, nk); n28Plain.delete(id);
+  try {
+    await updateDoc(n28NoteDocRef(id), { enc, title, content: '', images: [], updatedAt: serverTimestamp() });
+  } catch (e) { if (!wasProt) n28Keys.delete(id); showToast('❌ ' + e.message, 'warn', 4000); return; }
+  if (!wasProt) {
+    try { const vs = await getDocs(collection(db, 'users', currentUser.uid, 'notes', id, 'versions')); await Promise.all(vs.docs.map(d => deleteDoc(d.ref))); } catch (e) {}
+  }
+  window.__n28SyncBase = null;
+  showToast('Poznámka je chránená heslom', 'ok');
+  n28RefreshMenu(); try { renderNotes(); } catch (e) {}
+}
+
+async function n28RemovePassword() {
+  document.getElementById('modal-more-menu').style.display = 'none';
+  const id = editingId; if (!id || !n28Keys.has(id)) return;
+  const ok = await n28Dialog({ title: 'Odstrániť heslo', text: 'Poznámka sa uloží bez šifrovania.', ok: 'Odstrániť heslo' });
+  if (!ok || editingId !== id) return;
+  clearTimeout(_autosaveTimer);
+  await _n28WQ.catch(() => {});
+  editor.querySelectorAll('.check-cb').forEach(cb => { if (cb.checked) cb.setAttribute('checked', ''); else cb.removeAttribute('checked'); });
+  const content = linkifyForSave(editor.innerHTML), title = inputTitle.value.trim();
+  n28Plain.add(id);
+  try {
+    await updateDoc(n28NoteDocRef(id), { enc: null, title, content, images: pendingImages || [], updatedAt: serverTimestamp() });
+  } catch (e) { n28Plain.delete(id); showToast('❌ ' + e.message, 'warn', 4000); return; }
+  n28Keys.delete(id);
+  window.__n28SyncBase = { content, title };
+  showToast('Heslo odstránené', 'ok');
+  n28RefreshMenu(); try { renderNotes(); } catch (e) {}
+}
+
+async function n28LockNow() {
+  if (modal.classList.contains('open') && editingId && n28Keys.has(editingId)) { try { await flushAndClose(); } catch (e) {} }
+  n28Keys.clear();
+  try { renderNotes(); } catch (e) {}
+}
+setInterval(() => { if (n28Keys.size && Date.now() - n28Last > N28_IDLE_MS) n28LockNow(); }, 15000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && n28Keys.size && Date.now() - n28Last > N28_IDLE_MS) n28LockNow(); });
+// ═══ /N28 PROTECT ════════════════════════════════════════════════════════════
 </script>
 <script>
 /* n28 copy-image (added 2026-10-20) */
@@ -7296,21 +8448,25 @@ function n28Ago(ms) {
 })();
 </script>
 <script>
-/* n28-scratch: Rýchly zošit – trvalý panel vpravo na PC (len text), zapína sa v Nastaveniach */
+/* n28-scratch: panel vpravo na PC = rovnaká poznámka ako ⚡ Rýchla (quicknote), synchronizovaná cez Firestore; zapína sa v Nastaveniach */
 (function(){
   if (window.AndroidBridge) return;
-  var KEY = 'n28-scratch', ON = 'n28-scratch-on';
-  var st; try { st = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { st = {}; }
-  st.text = st.text || '';
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var OLD = 'n28-scratch', ON = 'n28-scratch-on', MIG = 'n28-scratch-migrated', BAK = 'n28-scratch-backup';
+  var oldText = ''; try { oldText = (JSON.parse(localStorage.getItem(OLD) || '{}').text) || ''; } catch (e) {}
   var isOn = function () { try { return localStorage.getItem(ON) === '1'; } catch (e) { return false; } };
 
   var css = document.createElement('style');
   css.textContent =
-    '#n28-scratch{display:none;position:fixed;right:.65rem;top:calc(var(--topbar-h,62px) + 1.3rem);bottom:.65rem;width:var(--sp-w,330px);flex-direction:column;gap:.5rem;padding:.7rem;box-sizing:border-box;border-radius:16px;background:color-mix(in srgb, var(--surface) 92%, transparent);border:1px solid var(--border);z-index:45;}' +
+    '#n28-scratch{display:none;position:fixed;right:.65rem;top:.65rem;bottom:.65rem;width:var(--sp-w,330px);flex-direction:column;gap:.5rem;padding:.7rem;box-sizing:border-box;border-radius:16px;background:color-mix(in srgb, var(--surface) 92%, transparent);border:1px solid var(--border);z-index:45;}' +
     '#n28-scratch .sp-head{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;font-weight:700;color:var(--text2);}' +
     '#n28-scratch .sp-head button{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer;line-height:1;}' +
+    '#n28-scratch .sp-hint{display:none;font-size:.72rem;color:var(--text2);line-height:1.35;}' +
     '#sp-text{flex:1 1 auto;min-height:80px;resize:none;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);padding:.55rem .65rem;font:inherit;font-size:.9rem;outline:none;white-space:pre-wrap;}' +
+    '#sp-text[readonly]{opacity:.8;}' +
+    '#n28-scratch .sp-links{display:none;flex-wrap:wrap;gap:.35rem;}' +
+    '#n28-scratch .sp-status{font-size:.7rem;color:var(--text2);min-height:1em;}' +
+    '#n28-scratch .sp-links a{font-size:.74rem;padding:.18rem .6rem;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);text-decoration:none;}' +
+    '#n28-scratch .sp-links a:hover{background:var(--state-hover);}' +
     '@media(min-width:1100px){body.n28-sp-on #n28-scratch{display:flex;}body.n28-sp-on #app-screen{padding-right:calc(var(--sp-w,330px) + 20px);box-sizing:border-box;}body.n28-sp-on #fab{right:calc(var(--sp-w,330px) + 2rem);}}' +
     '#n28-scratch .sp-grip{position:absolute;left:-7px;top:0;bottom:0;width:14px;cursor:col-resize;touch-action:none;z-index:2;}' +
     '#n28-scratch .sp-grip::after{content:"";position:absolute;left:5px;top:50%;width:4px;height:44px;margin-top:-22px;border-radius:2px;background:var(--border);transition:background .15s;}' +
@@ -7320,8 +8476,11 @@ function n28Ago(ms) {
   var host = document.getElementById('app-screen') || document.body;
   var p = document.createElement('div'); p.id = 'n28-scratch';
   p.innerHTML =
-    '<div class="sp-head"><span>Rýchly zošit</span><button id="sp-x" type="button" title="Skryť" aria-label="Skryť">×</button></div>' +
-    '<textarea id="sp-text" placeholder="Píš sem…" spellcheck="false"></textarea>';
+    '<div class="sp-head"><span>Rýchla poznámka</span><button id="sp-x" type="button" title="Skryť" aria-label="Skryť">×</button></div>' +
+    '<textarea id="sp-text" placeholder="Píš sem…" spellcheck="false"></textarea>' +
+    '<div class="sp-links" id="sp-links"></div>' +
+    '<div class="sp-status" id="sp-status"></div>' +
+    '<div class="sp-hint" id="sp-hint">Táto poznámka má formátovanie (tučné, checklist…). Ak ju upravíš tu, zmení sa na čistý text.</div>';
   var grip = document.createElement('div'); grip.className = 'sp-grip'; grip.title = 'Ťahaj pre zmenu šírky (dvojklik = pôvodná)'; p.appendChild(grip);
   host.appendChild(p);
 
@@ -7341,27 +8500,302 @@ function n28Ago(ms) {
   });
   grip.addEventListener('dblclick', function () { document.documentElement.style.removeProperty('--sp-w'); try { localStorage.removeItem(WK); } catch (e) {} });
 
-  var ta = p.querySelector('#sp-text'); ta.value = st.text;
-  var t1; ta.addEventListener('input', function () { clearTimeout(t1); t1 = setTimeout(function () { st.text = ta.value; save(); }, 400); });
+  // ── synchronizácia s poznámkou "quicknote" ──
+  var ta = p.querySelector('#sp-text'), hint = p.querySelector('#sp-hint');
+  var lastHtml = null, dirty = false, t1 = null, links = [];
+  var chips = p.querySelector('#sp-links'), st = p.querySelector('#sp-status');
+  function setSt(t) { st.textContent = t; }
+  function hm() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function renderChips() {
+    chips.textContent = '';
+    var seen = {}, count = 0;
+    function add(href, label, title) {
+      if (!/^(https?:|mailto:|tel:)/i.test(href) || seen[href] || count >= 12) return;
+      seen[href] = 1; count++;
+      var a = document.createElement('a'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.title = title || href; a.textContent = label + ' ↗';
+      chips.appendChild(a);
+    }
+    links.forEach(function (l) { add(l.href, l.label, l.href); });
+    var re = /https?:\/\/[^\s<>"']+/gi, m;
+    while ((m = re.exec(ta.value)) && count < 12) {
+      var u = m[0].replace(/[.,;:!?)\]]+$/, ''), host = '', seg = '';
+      try { var U = new URL(u); host = U.hostname.replace(/^www\./, ''); seg = decodeURIComponent(U.pathname.split('/').filter(Boolean).pop() || ''); } catch (e) { continue; }
+      add(u, host + (seg && seg.length <= 18 && !/^[0-9a-f-]{12,}$/i.test(seg) ? ' · ' + seg : ''), u);
+    }
+    chips.style.display = chips.childNodes.length ? 'flex' : 'none';
+  }
+  function Q() { return window.__n28Quick; }
 
+  function showRemote(html) {
+    var q = Q(); if (!q) return;
+    var plain = q.isPlain(html), R = q.toTextL(html), txt = R.text; links = R.links; renderChips();
+    ta.readOnly = false; hint.style.display = plain ? 'none' : 'block';
+    if (ta.value.replace(/\n+$/, '') !== txt) {
+      var pos = ta.selectionStart; setSt('Synchronizované ' + hm());
+      ta.value = txt;
+      try { if (document.activeElement === ta) ta.setSelectionRange(Math.min(pos, txt.length), Math.min(pos, txt.length)); } catch (e) {}
+    }
+  }
+  function flush() {
+    clearTimeout(t1); t1 = null;
+    if (!dirty || ta.readOnly) return;
+    var q = Q(); if (!q) return;
+    dirty = false;
+    var out = q.fromTextL(ta.value, links), html = out.html; links = out.used; renderChips(); if (lastHtml && !q.isPlain(lastHtml)) { try { localStorage.setItem('n28-scratch-prev', lastHtml); } catch (e) {} } lastHtml = html;
+    setSt(navigator.onLine ? 'Ukladám…' : 'Offline — uloží sa po pripojení'); q.save(html).then(function () { setSt('Uložené ✓ ' + hm()); }).catch(function () { dirty = true; lastHtml = null; setSt('Ukladanie zlyhalo'); });
+  }
+  ta.addEventListener('input', function () { if (ta.readOnly) return; dirty = true; setSt('Neuložené…'); clearTimeout(t1); t1 = setTimeout(flush, 600); });
+  ta.addEventListener('blur', flush);
+  // -- odrazky ako v Claude: "- " + medzera -> bodka, Enter pokracuje dalsou odrazkou, prazdna odrazka + Enter zoznam ukonci --
+  function replaceRange(a, b, txt) {
+    ta.focus(); ta.setSelectionRange(a, b);
+    var ok = false; try { ok = document.execCommand('insertText', false, txt); } catch (e) {}
+    if (!ok) { ta.setRangeText(txt, a, b, 'end'); ta.dispatchEvent(new Event('input')); }
+  }
+  ta.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.shiftKey || e.ctrlKey || e.metaKey || e.altKey || e.isComposing || ta.readOnly) return;
+    var v = ta.value, s = ta.selectionStart, en = ta.selectionEnd;
+    var ls = v.lastIndexOf('\n', s - 1) + 1;
+    var le = v.indexOf('\n', s); if (le < 0) le = v.length;
+    var m = /^(\s*)(•|[-*]|\d+[.)])[ ](.*)$/.exec(v.slice(ls, le));
+    if (!m) return;
+    if (s < ls + m[1].length + m[2].length + 1) return;          // kurzor pred znackou -> bezny Enter
+    e.preventDefault();
+    if (!m[3].trim() && s === en && s === le) { replaceRange(ls, le, ''); return; }   // prazdna odrazka + Enter = koniec zoznamu
+    var mk = m[2], nx = /^\d/.test(mk) ? (parseInt(mk, 10) + 1) + mk.slice(-1) : mk;
+    replaceRange(s, en, '\n' + m[1] + nx + ' ');
+  });
+  ta.addEventListener('input', function (e) {
+    if (e.isComposing || e.inputType !== 'insertText' || e.data !== ' ' || ta.readOnly) return;
+    var s = ta.selectionStart, v = ta.value;
+    var ls = v.lastIndexOf('\n', s - 1) + 1;
+    var seg = v.slice(ls, s), n1 = /^(\s*)1[ ]$/.exec(seg);
+    if (n1) { replaceRange(ls + n1[1].length, s, '1. '); return; }
+    var m = /^(\s*)[-*][ ]$/.exec(seg);
+    if (m) replaceRange(ls + m[1].length, s, '• ');
+  });
+  window.addEventListener('pagehide', flush);
+
+  window.__n28QuickSync = { onNotes: function (raw, fromCache) {
+    var q = Q(); if (!q) return;
+    var n = null; for (var i = 0; i < raw.length; i++) { if (raw[i].id === 'quicknote' && !raw[i]._trash) { n = raw[i]; break; } }
+    var html = n ? (n.content || '') : '';
+    // jednorazová migrácia starého lokálneho textu zo zošita (až zo serverových dát, aby sa nič neprepísalo zo starej cache)
+    var migrated = false; try { migrated = localStorage.getItem(MIG) === '1'; } catch (e) {}
+    if (!migrated && !fromCache) {
+      try { localStorage.setItem(MIG, '1'); } catch (e) {}
+      if (oldText.trim()) {
+        try { localStorage.setItem(BAK, oldText); } catch (e) {}
+        if (q.toText(html).indexOf(oldText.trim()) === -1) {
+          html = html + (html ? '<div><br></div>' : '') + q.fromText(oldText);
+          lastHtml = html; q.save(html).catch(function () {});
+        }
+      }
+    }
+    if (dirty) return;                       // mám neodoslaný text → vzdialená zmena sa zlúči až po odoslaní
+    if (html === lastHtml) return;           // vlastný zápis / bez zmeny
+    lastHtml = html; showRemote(html);
+  } };
 
   var cb;
   function apply() { document.body.classList.toggle('n28-sp-on', isOn()); if (cb) cb.checked = isOn(); }
   p.querySelector('#sp-x').addEventListener('click', function () { try { localStorage.setItem(ON, '0'); } catch (e) {} apply(); });
 
   // prepínač v Nastaveniach
-  var box = null; cb = document.getElementById('set-scratch');
+  cb = document.getElementById('set-scratch');
   if (cb) { cb.checked = isOn(); cb.addEventListener('change', function () { try { localStorage.setItem(ON, cb.checked ? '1' : '0'); } catch (e) {} apply(); }); }
-  if (box && box.parentNode) {
-    var row = document.createElement('label');
-    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.85rem;';
-    row.innerHTML = '<span>Rýchly zošit (PC, vpravo)</span>';
-    cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = isOn();
-    cb.addEventListener('change', function () { try { localStorage.setItem(ON, cb.checked ? '1' : '0'); } catch (e) {} apply(); });
-    row.appendChild(cb);
-    box.parentNode.insertBefore(row, box);
-  }
   apply();
+})();
+</script>
+<script>
+/* n28-lt: podciarkovanie preklepov/gramatiky cez LanguageTool (sk-SK), CSS Custom Highlight API, zapina sa v Nastaveniach */
+(function () {
+  'use strict';
+  if (!window.CSS || !CSS.highlights || typeof Highlight === 'undefined') return;
+  var ed = document.getElementById('editor'), modal = document.getElementById('modal');
+  if (!ed || !modal) return;
+  var KEY = 'n28-lt', IGN = 'n28-lt-ign', API = 'https://api.languagetool.org/v2/check';
+  var MAXLEN = 15000, DEBOUNCE = 1400, MIN_GAP = 2500;
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) {} return null; }
+  function isOn() { return ls(KEY) === 'on'; }
+  var ignored = {}; try { (JSON.parse(ls(IGN) || '[]') || []).forEach(function (k) { ignored[k] = 1; }); } catch (e) {}
+
+  var st = document.createElement('style');
+  st.textContent = '::highlight(n28-lt-sp){text-decoration:underline wavy #e5484d;}::highlight(n28-lt-gr){text-decoration:underline wavy #3b82f6;}' +
+    '#n28-lt-pop{position:fixed;z-index:10000;display:none;max-width:min(300px,92vw);background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:.35rem;font-size:.82rem;}' +
+    '#n28-lt-pop .lt-m{padding:.2rem .45rem .35rem;color:var(--text2);font-size:.74rem;line-height:1.3;}' +
+    '#n28-lt-pop button{display:inline-block;margin:.12rem;padding:.28rem .6rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.82rem;cursor:pointer;}' +
+    '#n28-lt-pop button.lt-ig{background:none;color:var(--text2);border-color:transparent;font-size:.74rem;}';
+  document.head.appendChild(st);
+
+  var pop = document.createElement('div'); pop.id = 'n28-lt-pop'; document.body.appendChild(pop);
+
+  var segs = [], text = '', matches = [], lastText = null, timer = 0, ctrl = null, lastReq = 0, blockedUntil = 0;
+
+  function blockOf(n) {
+    var e = n.parentNode;
+    while (e && e !== ed) { if (/^(DIV|P|LI|H[1-6]|BLOCKQUOTE|TD|TH)$/.test(e.tagName)) return e; e = e.parentNode; }
+    return ed;
+  }
+  function build() {
+    segs = []; text = '';
+    var w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {
+      acceptNode: function (n) { return n.nodeType === 1 && /^(INPUT|IMG|STYLE|SCRIPT)$/.test(n.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; }
+    });
+    var n, last = null;
+    while ((n = w.nextNode())) {
+      if (n.nodeType === 1) { if (n.tagName === 'BR') text += '\n'; continue; }
+      var b = blockOf(n);
+      if (last && b !== last && text.charAt(text.length - 1) !== '\n') text += '\n';
+      last = b;
+      var v = n.nodeValue.replace(/​/g, ' ');
+      segs.push({ node: n, start: text.length, len: v.length });
+      text += v;
+    }
+    return text;
+  }
+  function locate(off, isEnd) {
+    for (var i = 0; i < segs.length; i++) {
+      var s = segs[i];
+      if (isEnd ? (off > s.start && off <= s.start + s.len) : (off >= s.start && off < s.start + s.len)) return [s.node, off - s.start];
+    }
+    return null;
+  }
+  function rangeOf(m) {
+    var a = locate(m.o, false), b = locate(m.o + m.l, true);
+    if (!a || !b) return null;
+    var r = document.createRange();
+    try { r.setStart(a[0], a[1]); r.setEnd(b[0], b[1]); } catch (e) { return null; }
+    return r;
+  }
+  function caretOffset() {
+    var sel = getSelection();
+    if (!sel || !sel.rangeCount || !sel.isCollapsed || !ed.contains(sel.anchorNode)) return -1;
+    for (var i = 0; i < segs.length; i++) if (segs[i].node === sel.anchorNode) return segs[i].start + sel.anchorOffset;
+    return -1;
+  }
+  function clearMarks() { CSS.highlights.delete('n28-lt-sp'); CSS.highlights.delete('n28-lt-gr'); matches = []; hidePop(); }
+
+  function paint() {
+    var sp = new Highlight(), gr = new Highlight(), caret = caretOffset(), keep = [];
+    matches.forEach(function (m) {
+      if (m.spell && caret === m.o + m.l && !/\s/.test(text.charAt(m.o + m.l))) { keep.push(m); return; } // slovo sa prave pise
+      var r = rangeOf(m); if (!r) return;
+      m.range = r; keep.push(m);
+      (m.spell ? sp : gr).add(r);
+    });
+    matches = keep;
+    CSS.highlights.set('n28-lt-sp', sp); CSS.highlights.set('n28-lt-gr', gr);
+  }
+  function parse(data, src) {
+    var out = [];
+    (data.matches || []).forEach(function (x) {
+      var w = src.substr(x.offset, x.length);
+      if (!w.trim() || /^[#@]|https?:|www\.|@|\d/.test(w)) return;
+      var id = x.rule && x.rule.id || '';
+      if (ignored[id + '|' + w]) return;
+      var spell = (x.rule && x.rule.issueType === 'misspelling') || (x.rule && x.rule.category && x.rule.category.id === 'TYPOS');
+      out.push({ o: x.offset, l: x.length, w: w, id: id, spell: !!spell, msg: x.shortMessage || x.message || '',
+        rep: (x.replacements || []).slice(0, 4).map(function (r) { return r.value; }) });
+    });
+    return out;
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    if (!isOn() || !modal.classList.contains('open')) return;
+    timer = setTimeout(run, DEBOUNCE);
+  }
+  function run() {
+    if (!isOn() || !modal.classList.contains('open')) return;
+    var now = Date.now();
+    if (now < blockedUntil) { timer = setTimeout(run, blockedUntil - now + 200); return; }
+    if (now - lastReq < MIN_GAP) { timer = setTimeout(run, MIN_GAP - (now - lastReq)); return; }
+    var t = build().slice(0, MAXLEN);
+    if (t.trim().length < 3) { clearMarks(); lastText = null; return; }
+    if (t === lastText) { paint(); return; }
+    if (ctrl) ctrl.abort();
+    ctrl = new AbortController(); lastReq = now;
+    var body = new URLSearchParams({ text: t, language: 'sk-SK', level: 'default',
+      disabledRules: 'WHITESPACE_RULE,UPPERCASE_SENTENCE_START', disabledCategories: 'TYPOGRAPHY,STYLE' });
+    fetch(API, { method: 'POST', body: body, signal: ctrl.signal, headers: { 'Accept': 'application/json' } })
+      .then(function (r) { if (r.status === 429) { blockedUntil = Date.now() + 60000; throw new Error('429'); } if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        if (build().slice(0, MAXLEN) !== t) return;      // text sa medzitym zmenil, novy beh uz caka
+        lastText = t; matches = parse(d, t); paint();
+      })
+      .catch(function (e) { if (e && e.name === 'AbortError') return; if (!blockedUntil || blockedUntil < Date.now()) blockedUntil = Date.now() + 15000; });
+  }
+
+  function hidePop() { pop.style.display = 'none'; }
+  function showPop(m) {
+    var r = m.range; if (!r) return;
+    var rc = r.getBoundingClientRect(); if (!rc || (!rc.width && !rc.height)) return;
+    pop.textContent = '';
+    if (m.msg) { var d = document.createElement('div'); d.className = 'lt-m'; d.textContent = m.msg; pop.appendChild(d); }
+    m.rep.forEach(function (v) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = v;
+      b.onmousedown = function (e) { e.preventDefault(); };
+      b.onclick = function () { apply(m, v); };
+      pop.appendChild(b);
+    });
+    var ig = document.createElement('button'); ig.type = 'button'; ig.className = 'lt-ig'; ig.textContent = 'Ignorovať';
+    ig.onmousedown = function (e) { e.preventDefault(); };
+    ig.onclick = function () {
+      ignored[m.id + '|' + m.w] = 1; ls(IGN, JSON.stringify(Object.keys(ignored).slice(-500)));
+      matches = matches.filter(function (x) { return x !== m; }); paint(); hidePop();
+    };
+    pop.appendChild(ig);
+    pop.style.display = 'block';
+    var pw = pop.offsetWidth, ph = pop.offsetHeight, vw = window.innerWidth;
+    var x = Math.max(6, Math.min(rc.left, vw - pw - 6));
+    var y = rc.top - ph - 6; if (y < 6) y = rc.bottom + 6;
+    pop.style.left = x + 'px'; pop.style.top = y + 'px';
+  }
+  function apply(m, v) {
+    var r = rangeOf(m); hidePop(); if (!r) return;
+    ed.focus();
+    var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    var ok = false; try { ok = document.execCommand('insertText', false, v); } catch (e) {}
+    if (!ok) { r.deleteContents(); r.insertNode(document.createTextNode(v)); ed.dispatchEvent(new Event('input', { bubbles: true })); }
+    lastText = null; schedule();
+  }
+  function onCaret() {
+    if (!isOn() || !matches.length) { hidePop(); return; }
+    var sel = getSelection(); if (!sel || !sel.isCollapsed) { hidePop(); return; }
+    build(); var c = caretOffset(); if (c < 0) { hidePop(); return; }
+    for (var i = 0; i < matches.length; i++) {
+      var m = matches[i]; if (m.range && c >= m.o && c <= m.o + m.l && m.range.startContainer.isConnected) { showPop(m); return; }
+    }
+    hidePop();
+  }
+
+  new MutationObserver(function () { schedule(); }).observe(ed, { childList: true, characterData: true, subtree: true });
+  ed.addEventListener('input', function () { hidePop(); schedule(); });
+  ed.addEventListener('click', function () { setTimeout(onCaret, 60); });
+  ed.addEventListener('keyup', function (e) { if (/^(Arrow|Home|End)/.test(e.key)) setTimeout(onCaret, 30); else if (e.key === 'Escape') hidePop(); });
+  document.addEventListener('mousedown', function (e) { if (!pop.contains(e.target)) hidePop(); }, true);
+  document.addEventListener('scroll', hidePop, true);
+  new MutationObserver(function () { if (!modal.classList.contains('open')) { clearTimeout(timer); clearMarks(); lastText = null; } else schedule(); })
+    .observe(modal, { attributes: true, attributeFilter: ['class'] });
+
+  function setOn(v) {
+    ls(KEY, v ? 'on' : 'off');
+    if (v) { ed.setAttribute('spellcheck', 'false'); lastText = null; schedule(); }
+    else { ed.removeAttribute('spellcheck'); clearTimeout(timer); if (ctrl) ctrl.abort(); clearMarks(); lastText = null; }
+  }
+  if (isOn()) ed.setAttribute('spellcheck', 'false');
+
+  // prepinac v Nastaveniach (sekcia Spravanie)
+  var anchor = document.getElementById('set-chk-sort');
+  var sec = anchor && anchor.closest('section');
+  if (sec) {
+    var lab = document.createElement('label'); lab.className = 'set-row';
+    lab.innerHTML = '<span class="set-t">Kontrola pravopisu a gramatiky<small class="set-d">Podčiarkne chyby v slovenčine (LanguageTool). Text poznámky sa posiela na api.languagetool.org.</small></span><input type="checkbox" id="set-lt" class="n28-sw">';
+    sec.appendChild(lab);
+    var cb = lab.querySelector('input'); cb.checked = isOn();
+    cb.addEventListener('change', function () { setOn(cb.checked); });
+  }
 })();
 </script>
 </body>
