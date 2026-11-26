@@ -298,6 +298,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        /** Share an attachment (Cloudinary URL) through the system share sheet, e.g. "Save to Drive". Only https Cloudinary hosts. */
+        @JavascriptInterface
+        fun shareUrl(name: String, url: String): Boolean {
+            val u = try { Uri.parse(url) } catch (e: Exception) { return false }
+            if (u.scheme != "https" || !(u.host ?: "").endsWith("cloudinary.com")) return false
+            val safe = name.replace(Regex("[^A-Za-z0-9._-]"), "_").take(80).ifEmpty { "n28-subor" }
+            Thread {
+                try {
+                    val conn = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+                    conn.connectTimeout = 10000; conn.readTimeout = 30000
+                    val type = (conn.contentType ?: "application/octet-stream").substringBefore(';')
+                    val dir = java.io.File(cacheDir, "shared").apply { mkdirs() }
+                    val f = java.io.File(dir, safe)
+                    conn.inputStream.use { inp -> f.outputStream().use { inp.copyTo(it) } }
+                    conn.disconnect()
+                    val uri = FileProvider.getUriForFile(this@MainActivity, "$packageName.fileprovider", f)
+                    runOnUiThread {
+                        startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                            this.type = type
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }, safe))
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread { Toast.makeText(this@MainActivity, "Súbor sa nepodarilo stiahnuť", Toast.LENGTH_SHORT).show() }
+                }
+            }.start()
+            return true
+        }
+
         /** Export files from the web app (blob/data downloads): saved to Downloads, older Androids get the share sheet. */
         @JavascriptInterface
         fun saveFile(name: String, mime: String, base64: String): Boolean {
