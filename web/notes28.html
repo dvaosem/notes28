@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v160">
+<meta name="n28-build" content="n28-v161">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -1111,6 +1111,11 @@ body{background-image:none!important;}
           <span class="set-t">Rýchla poznámka (panel vpravo)<small class="set-d">Trvalý panel vpravo na veľkej obrazovke – tá istá poznámka ako ⚡ Rýchla, synchronizovaná s mobilom</small></span>
           <input type="checkbox" id="set-scratch" class="n28-sw">
         </label>
+      </section>
+
+      <section class="set-sec" id="set-cal">
+        <h4 class="set-h">Kalendár</h4>
+        <div id="set-cal-box"><div class="set-d">Otvor raz Kalendár, potom sa tu ukážu nastavenia.</div></div>
       </section>
 
       <section class="set-sec">
@@ -7237,7 +7242,21 @@ function addResurface() {
   const HOL_URL='https://calendar.google.com/calendar/ical/sk.slovak%23holiday%40group.v.calendar.google.com/public/basic.ics';
   const CAL_COLORS=['#5b9bd5','#4caf7a','#b08463','#9b7fd1','#d9a441','#4fb3b3','#d1709b'];
   const lsJ=(k,d)=>{ try{ const v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } };
-  const lsS=(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
+  let cfgT=null;
+  const lsS=(k,v,noSync)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} if(!noSync&&(k===GCAL_LIST||k===CAL_EXTRAS)){ clearTimeout(cfgT); cfgT=setTimeout(pushCfg,600); } };
+  const cfgRef=()=>doc(db,'users',currentUser.uid,'meta','calendars');
+  function pushCfg(){ if(!currentUser) return; setDoc(cfgRef(),{list:cals(),extras:lsJ(CAL_EXTRAS,{}),updatedAt:Date.now()}).catch(()=>{}); }
+  async function pullCfg(){
+    if(!currentUser) return false;
+    try{
+      const snap=await getDoc(cfgRef());
+      if(snap.exists()){ const d=snap.data()||{}; const before=JSON.stringify([cals(),lsJ(CAL_EXTRAS,{})]);
+        if(Array.isArray(d.list)) lsS(GCAL_LIST,d.list,true); if(d.extras&&typeof d.extras==='object') lsS(CAL_EXTRAS,d.extras,true);
+        return before!==JSON.stringify([cals(),lsJ(CAL_EXTRAS,{})]); }
+      if(cals().length) pushCfg();
+    }catch(e){}
+    return false;
+  }
   // migrácia z jedného kalendára (v158)
   try{ const old=localStorage.getItem('n28-gcal-ics'); if(old&&!localStorage.getItem(GCAL_LIST)){ lsS(GCAL_LIST,[{id:'c'+Date.now(),name:'Môj kalendár',color:CAL_COLORS[0],url:old,on:true}]); } localStorage.removeItem('n28-gcal-ics'); localStorage.removeItem('n28-gcal-cache'); }catch(e){}
   const cals=()=>lsJ(GCAL_LIST,[]);
@@ -7370,7 +7389,7 @@ function addResurface() {
     fromCache();
     const stale=list.filter(c=>force||!cache[c.url]||now-cache[c.url].t>(c.hol?864e5:10*60e3));
     if(!stale.length){ gErr=''; return; }
-    gLoading=true; if(m.classList.contains('open')) render();
+    gLoading=true; refresh();
     await Promise.all(stale.map(async c=>{
       try{
         const r=await fetch('/n28-gcal.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:c.url}),cache:'no-store'});
@@ -7379,7 +7398,7 @@ function addResurface() {
       }catch(e){ errs.push(c.name+': '+(e.message||'nenačítané')); }
     }));
     const keep={}; list.forEach(c=>{ if(cache[c.url]) keep[c.url]=cache[c.url]; }); lsS(GCAL_CACHE,keep);
-    fromCache(); gErr=errs.join(' · '); gLoading=false; if(m.classList.contains('open')) render();
+    fromCache(); gErr=errs.join(' · '); gLoading=false; refresh();
   }
   const gTplUrl=e=>{ const d=e.date.replace(/-/g,''); let dates;
     if(e.time){ const [h,mi]=e.time.split(':').map(Number), a=new Date(+e.date.slice(0,4),+e.date.slice(5,7)-1,+e.date.slice(8,10),h,mi), b=new Date(a.getTime()+36e5);
@@ -7422,6 +7441,20 @@ function addResurface() {
       lsS(GCAL_TARGET,{id:c.primary?'primary':c.id,name:c.summaryOverride||c.summary}); render();
       showToast('Zápis do: '+(c.summaryOverride||c.summary),'ok');
     }catch(e){ showToast('Google: '+e.message,'warn',5000); }
+  }
+  function refresh(){ if(m.classList.contains('open')) render(); renderBox(); }
+  function renderBox(){ const sb=document.getElementById('set-cal-box'); if(sb) sb.innerHTML=gcalBox(); }
+  // kompaktný riadok v kalendári: aktívne kalendáre + odkaz na správu v Nastaveniach
+  function calFooter(){
+    const ex=extras(), act=cals().filter(c=>c.on).map(c=>({n:c.name,c:c.color}));
+    const on=lsJ(DEVCAL,{}), dc=hasDev()?devCals():null;
+    if(dc) dc.filter(c=>on[c.id]).forEach(c=>act.push({n:c.name,c:c.color}));
+    if(ex.hol) act.push({n:'Sviatky',c:'#e5484d'});
+    let h='<div class="cal-foot"><div class="cal-chips">'+(act.length?act.map(a=>'<span><i style="background:'+escHtml(a.c)+'"></i>'+escHtml(a.n)+'</span>').join(''):'<span class="none">Žiadne pripojené kalendáre</span>')+
+      (gLoading?'<span class="none">načítavam…</span>':'')+'</div><button type="button" class="btn btn-ghost" id="cal-manage">Spravovať</button></div>';
+    if(gErr) h+='<div class="cal-err">'+escHtml(gErr)+'</div>';
+    if(hasDev()&&!dc) h+='<button type="button" class="btn btn-ghost gcal-add" id="devcal-perm">Zobraziť kalendáre z telefónu (aj firemný)</button>';
+    return h;
   }
   function gcalBox(){
     const ex=extras(), list=cals();
@@ -7478,6 +7511,11 @@ function addResurface() {
    '.gcal-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}.gcal-nm.off{opacity:.5;}'+
    'button.gcal-dot{width:14px;height:14px;border:none;padding:0;cursor:pointer;}.gcal-del{background:none;border:none;color:var(--text2);cursor:pointer;padding:.1rem .3rem;}'+
    '.gcal-add{width:100%;margin:.3rem 0 .4rem;font-size:.8rem;}'+
+   '.cal-foot{display:flex;align-items:center;gap:.5rem;margin-top:.8rem;padding-top:.6rem;border-top:1px solid var(--border);}'+
+   '.cal-chips{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:.25rem .7rem;font-size:.74rem;color:var(--text2);}'+
+   '.cal-chips span{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;}.cal-chips i{width:7px;height:7px;border-radius:50%;}.cal-chips .none{opacity:.7;}'+
+   '.cal-foot .btn{padding:.3rem .7rem;font-size:.78rem;flex-shrink:0;}.cal-err{font-size:.72rem;color:#e5484d;margin-top:.3rem;}'+
+   '#set-cal-box .gcal-box{margin-top:0;padding-top:0;border-top:none;}'+
    '.devcal-l{display:flex;align-items:center;gap:.55rem;min-width:0;flex:1;}.devcal-l i{width:12px;height:12px;border-radius:50%;flex-shrink:0;}.devcal-l small{color:var(--text2);font-size:.72rem;}'+
    '.gcal-box{margin-top:.8rem;padding-top:.6rem;border-top:1px solid var(--border);}.gcal-row{display:flex;align-items:center;gap:.45rem;font-size:.84rem;}'+
    '.gcal-row b{font-weight:600;}.gcal-st{flex:1;min-width:0;color:var(--text2);font-size:.76rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}'+
@@ -7505,14 +7543,14 @@ function addResurface() {
       (list.length?list.map(e=>e.g
         ? '<div class="cal-ev g'+(e.hol?' hol':'')+'" style="--gc:'+escHtml(e.c||'#5b9bd5')+'"><span class="t">'+escHtml(e.time||'celý deň')+'</span><span class="n">'+escHtml(e.title)+(e.loc?'<span class="cal-loc" data-map="'+escHtml(e.loc)+'">'+N28_PIN_SVG+escHtml(e.loc)+'</span>':'')+'</span><span class="gtag" title="'+escHtml(e.cn||'Google')+'">'+escHtml((e.cn||'G').slice(0,12))+'</span></div>'
         : '<div class="cal-ev"><span class="t">'+escHtml(e.time||'celý deň')+'</span><span class="n" data-e="'+e.id+'">'+escHtml(e.title)+'</span><button type="button" data-gl="'+e.id+'" title="Pridať do Google Kalendára" aria-label="Pridať do Google Kalendára" class="to-g">+G</button><button type="button" data-x="'+e.id+'" aria-label="Zmazať">✕</button></div>').join(''):'<div style="font-size:.82rem;color:var(--text2)">Nič naplánované.</div>')+
-      gcalBox();
+      calFooter();
   }
   function resetForm(){ editId=null; $('cal-in-title').value=''; $('cal-in-time').value=''; $('cal-save').textContent='Pridať'; $('cal-cancel').style.display='none'; }
   function open(){
     if(!currentUser){ showToast('Najprv sa prihlás','warn'); return; }
     const n=new Date(); y=n.getFullYear(); mo=n.getMonth(); sel=ymd(n); resetForm(); render(); m.classList.add('open');
     if(unsub) unsub();
-    loadGcal(false);
+    loadGcal(false); pullCfg().then(ch=>{ if(ch) loadGcal(true); });
     unsub=onSnapshot(evRef(),snap=>{ events=snap.docs.map(d=>({id:d.id,...d.data()})); render(); },()=>showToast('Kalendár: chýba oprávnenie (Firestore pravidlá pre events)','warn'));
   }
   function close(){ m.classList.remove('open'); if(unsub){unsub();unsub=null;} }
@@ -7528,30 +7566,39 @@ function addResurface() {
       if(canGWrite()){ gl.disabled=true; writeToGoogle(ev).then(()=>{ showToast('Zapísané do Google Kalendára','ok'); setTimeout(()=>loadGcal(true),4000); }).catch(err=>{ showToast('Google: '+err.message,'warn',6000); }).finally(()=>{ gl.disabled=false; }); }
       else window.open(gTplUrl(ev),'_blank');
       return; }
-    if(e.target.closest('#gcal-connect')){
-      const v=prompt('Vlož „Tajnú adresu vo formáte iCal“ z Google Kalendára\n(calendar.google.com → Nastavenia → kalendár → Integrovať kalendár).\nPre zdieľaný/verejný kalendár môžeš dať aj „Verejnú adresu vo formáte iCal“.','');
-      if(v===null) return; const u=v.trim().replace(/^webcal:\/\//i,'https://');
-      if(!/^https:\/\/calendar\.google\.com\/calendar\/ical\/.+\/basic\.ics$/.test(u)){ showToast('To nie je iCal adresa Google Kalendára (končí na basic.ics)','warn',4500); return; }
-      const list=cals(); if(list.some(c=>c.url===u)){ showToast('Tento kalendár už je pridaný','info'); return; }
-      const nm=(prompt('Názov kalendára:','Kalendár '+(list.length+1))||'Kalendár '+(list.length+1)).trim().slice(0,30);
-      list.push({id:'c'+Date.now(),name:nm,color:CAL_COLORS[list.length%CAL_COLORS.length],url:u,on:true}); lsS(GCAL_LIST,list);
-      loadGcal(true).then(()=>{ if(!gErr) showToast('Kalendár pridaný','ok'); }); return;
-    }
-    if(e.target.closest('#gcal-reload')){ loadGcal(true); return; }
-    if(e.target.closest('#gcal-target')){ pickTarget(); return; }
-    if(e.target.closest('#devcal-perm')){ window.n28OnDevCalPerm=g=>{ if(g){ render(); showToast('Vyber, ktoré kalendáre zobraziť','info'); } else showToast('Bez povolenia sa kalendáre telefónu nedajú zobraziť','warn',4500); }; try{ AndroidBridge.devCalRequest(); }catch(err){} return; }
-    const del=e.target.closest('[data-del]'); if(del){ const list=cals(), c=list.find(x=>x.id===del.dataset.del); if(!c||!confirm('Odstrániť kalendár „'+c.name+'“ z N28?')) return; lsS(GCAL_LIST,list.filter(x=>x!==c)); loadGcal(false).then(render); render(); return; }
-    const col=e.target.closest('[data-color]'); if(col){ const list=cals(), c=list.find(x=>x.id===col.dataset.color); if(!c) return; c.color=CAL_COLORS[(CAL_COLORS.indexOf(c.color)+1)%CAL_COLORS.length]; lsS(GCAL_LIST,list); loadGcal(false); render(); return; }
-    const ren=e.target.closest('[data-ren]'); if(ren){ const list=cals(), c=list.find(x=>x.id===ren.dataset.ren); if(!c) return; const nm=prompt('Názov kalendára:',c.name); if(!nm) return; c.name=nm.trim().slice(0,30); lsS(GCAL_LIST,list); loadGcal(false); render(); return; }
+    if(boxClick(e)) return;
+    if(e.target.closest('#cal-manage')){ close(); const sb=document.getElementById('settings-btn'); if(sb) sb.click(); setTimeout(()=>{ const x=document.getElementById('set-cal'); if(x) x.scrollIntoView({block:'start'}); },120); return; }
     const x=e.target.closest('[data-x]'); if(x){ try{ await deleteDoc(doc(db,'users',currentUser.uid,'events',x.dataset.x)); if(editId===x.dataset.x) resetForm(); }catch(err){ showToast('Nepodarilo sa zmazať','warn'); } return; }
     const n=e.target.closest('[data-e]'); if(n){ const ev=events.find(v=>v.id===n.dataset.e); if(!ev) return; editId=ev.id; $('cal-in-title').value=ev.title; $('cal-in-time').value=ev.time||''; $('cal-save').textContent='Uložiť'; $('cal-cancel').style.display=''; $('cal-in-title').focus(); }
   });
-  $('cal-day').addEventListener('change',e=>{
-    const t=e.target; if(!t.matches('input.n28-sw')) return;
-    if(t.dataset.ex){ const ex=extras(); ex[t.dataset.ex]=t.checked; lsS(CAL_EXTRAS,ex); loadGcal(false).then(render); render(); return; }
-    if(t.dataset.dev){ const on=lsJ(DEVCAL,{}); on[t.dataset.dev]=t.checked; lsS(DEVCAL,on); loadGcal(false).then(render); return; }
-    if(t.dataset.on){ const list=cals(), c=list.find(x=>x.id===t.dataset.on); if(c){ c.on=t.checked; lsS(GCAL_LIST,list); loadGcal(false).then(render); render(); } }
-  });
+  function boxClick(e){
+    if(e.target.closest('#gcal-connect')){
+      const v=prompt('Vlož „Tajnú adresu vo formáte iCal“ z Google Kalendára\n(calendar.google.com → Nastavenia → kalendár → Integrovať kalendár).\nPre zdieľaný/verejný kalendár môžeš dať aj „Verejnú adresu vo formáte iCal“.','');
+      if(v===null) return true; const u=v.trim().replace(/^webcal:\/\//i,'https://');
+      if(!/^https:\/\/calendar\.google\.com\/calendar\/ical\/.+\/basic\.ics$/.test(u)){ showToast('To nie je iCal adresa Google Kalendára (končí na basic.ics)','warn',4500); return true; }
+      const list=cals(); if(list.some(c=>c.url===u)){ showToast('Tento kalendár už je pridaný','info'); return true; }
+      const nm=(prompt('Názov kalendára:','Kalendár '+(list.length+1))||'Kalendár '+(list.length+1)).trim().slice(0,30);
+      list.push({id:'c'+Date.now(),name:nm,color:CAL_COLORS[list.length%CAL_COLORS.length],url:u,on:true}); lsS(GCAL_LIST,list);
+      loadGcal(true).then(()=>{ if(!gErr) showToast('Kalendár pridaný','ok'); }); return true;
+    }
+    if(e.target.closest('#gcal-reload')){ loadGcal(true); return true; }
+    if(e.target.closest('#gcal-target')){ pickTarget(); return true; }
+    if(e.target.closest('#devcal-perm')){ window.n28OnDevCalPerm=g=>{ if(g){ const on=lsJ(DEVCAL,{}); if(!Object.keys(on).length){ (devCals()||[]).forEach(c=>{ on[c.id]=true; }); lsS(DEVCAL,on); } loadGcal(false).then(refresh); showToast('Kalendáre z telefónu zapnuté – vypnúť ich môžeš v Nastaveniach','ok',4500); } else showToast('Bez povolenia sa kalendáre telefónu nedajú zobraziť','warn',4500); }; try{ AndroidBridge.devCalRequest(); }catch(err){} return true; }
+    const del=e.target.closest('[data-del]'); if(del){ const list=cals(), c=list.find(x=>x.id===del.dataset.del); if(!c||!confirm('Odstrániť kalendár „'+c.name+'“ z N28?')) return true; lsS(GCAL_LIST,list.filter(x=>x!==c)); loadGcal(false).then(refresh); refresh(); return true; }
+    const col=e.target.closest('[data-color]'); if(col){ const list=cals(), c=list.find(x=>x.id===col.dataset.color); if(!c) return true; c.color=CAL_COLORS[(CAL_COLORS.indexOf(c.color)+1)%CAL_COLORS.length]; lsS(GCAL_LIST,list); loadGcal(false); refresh(); return true; }
+    const ren=e.target.closest('[data-ren]'); if(ren){ const list=cals(), c=list.find(x=>x.id===ren.dataset.ren); if(!c) return true; const nm=prompt('Názov kalendára:',c.name); if(!nm) return true; c.name=nm.trim().slice(0,30); lsS(GCAL_LIST,list); loadGcal(false); refresh(); return true; }
+    return false;
+  }
+  function boxChange(e){
+    const t=e.target; if(!t.matches('input.n28-sw')) return false;
+    if(t.dataset.ex){ const ex=extras(); ex[t.dataset.ex]=t.checked; lsS(CAL_EXTRAS,ex); loadGcal(false).then(refresh); refresh(); return true; }
+    if(t.dataset.dev){ const on=lsJ(DEVCAL,{}); on[t.dataset.dev]=t.checked; lsS(DEVCAL,on); loadGcal(false).then(refresh); return true; }
+    if(t.dataset.on){ const list=cals(), c=list.find(x=>x.id===t.dataset.on); if(c){ c.on=t.checked; lsS(GCAL_LIST,list); loadGcal(false).then(refresh); refresh(); } }
+    return false;
+  }
+  $('cal-day').addEventListener('change',boxChange);
+  { const sb=document.getElementById('set-cal-box'); if(sb){ sb.addEventListener('click',e=>{ boxClick(e); }); sb.addEventListener('change',boxChange); } }
+  { const st=document.getElementById('settings-btn'); if(st) st.addEventListener('click',()=>{ renderBox(); pullCfg().then(ch=>{ if(ch) loadGcal(false); renderBox(); }); }); }
   $('cal-cancel').onclick=resetForm;
   $('cal-save').onclick=async()=>{
     const title=$('cal-in-title').value.trim(); if(!title){ $('cal-in-title').focus(); return; }
