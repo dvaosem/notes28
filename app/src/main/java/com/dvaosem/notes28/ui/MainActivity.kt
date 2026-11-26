@@ -22,6 +22,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -35,6 +36,9 @@ import androidx.lifecycle.lifecycleScope
 import com.dvaosem.notes28.R
 import com.dvaosem.notes28.widget.NoteWidget
 import com.dvaosem.notes28.widget.WidgetPrefs
+import com.google.android.gms.auth.api.identity.AuthorizationRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.common.api.Scope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -73,6 +77,37 @@ class MainActivity : AppCompatActivity() {
     private val fileChooser = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
         fileCallback?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(res.resultCode, res.data))
         fileCallback = null
+    }
+
+    /** Google Calendar consent screen result → token for the web app. */
+    private val gcalAuthLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { res ->
+        try {
+            val r = Identity.getAuthorizationClient(this).getAuthorizationResultFromIntent(res.data)
+            val t = r.accessToken
+            if (t.isNullOrEmpty()) call("n28OnGcalTokenError", JSONObject.quote("no_token"))
+            else call("n28OnGcalToken", JSONObject.quote(t))
+        } catch (e: Exception) {
+            call("n28OnGcalTokenError", JSONObject.quote("zrušené"))
+        }
+    }
+
+    private fun gcalAuthorize(interactive: Boolean) {
+        val req = AuthorizationRequest.builder()
+            .setRequestedScopes(listOf(Scope("https://www.googleapis.com/auth/calendar")))
+            .build()
+        Identity.getAuthorizationClient(this).authorize(req)
+            .addOnSuccessListener { r ->
+                val pi = r.pendingIntent
+                if (r.hasResolution() && pi != null) {
+                    if (interactive) gcalAuthLauncher.launch(IntentSenderRequest.Builder(pi.intentSender).build())
+                    else call("n28OnGcalTokenError", JSONObject.quote("needs_consent"))
+                } else {
+                    val t = r.accessToken
+                    if (t.isNullOrEmpty()) call("n28OnGcalTokenError", JSONObject.quote("no_token"))
+                    else call("n28OnGcalToken", JSONObject.quote(t))
+                }
+            }
+            .addOnFailureListener { e -> call("n28OnGcalTokenError", JSONObject.quote(e.message ?: "authorize_failed")) }
     }
 
     private fun js(code: String) {
@@ -249,6 +284,12 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun googleSignIn() {
             runOnUiThread { nativeGoogleSignIn() }
+        }
+
+        /** Google Calendar access token (scope calendar); answers via window.n28OnGcalToken(token) / n28OnGcalTokenError(msg). */
+        @JavascriptInterface
+        fun gcalToken(interactive: Boolean) {
+            runOnUiThread { gcalAuthorize(interactive) }
         }
 
         @JavascriptInterface
