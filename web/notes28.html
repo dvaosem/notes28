@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v159">
+<meta name="n28-build" content="n28-v160">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -7344,11 +7344,29 @@ function addResurface() {
     return out;
   }
 
+  // Kalendáre synchronizované v telefóne (firemný Office 365/Exchange, Google…) – len v Android appke, len čítanie
+  const DEVCAL='n28-devcal';
+  const hasDev=()=>!!(window.AndroidBridge&&typeof AndroidBridge.devCalList==='function');
+  function devCals(){ if(!hasDev()) return null; try{ const s=AndroidBridge.devCalList(); return s?JSON.parse(s):null; }catch(e){ return null; } }
+  function devEvents(){
+    if(!hasDev()) return [];
+    const on=lsJ(DEVCAL,{}), ids=Object.keys(on).filter(k=>on[k]); if(!ids.length) return [];
+    const now=new Date(), from=new Date(now.getFullYear(),now.getMonth()-2,1), to=new Date(now.getFullYear()+1,now.getMonth()+1,1);
+    let arr=[]; try{ arr=JSON.parse(AndroidBridge.devCalEvents(+from,+to,ids.join(','))||'[]'); }catch(e){ return []; }
+    const cl={}; (devCals()||[]).forEach(c=>{ cl[c.id]=c; });
+    const out=[];
+    arr.forEach(e=>{ const c=cl[e.cal]||{name:'Telefón',color:'#8a8a8a'}, title=e.title||'(bez názvu)';
+      if(e.allDay){ const b=new Date(e.begin), days=Math.min(31,Math.max(1,Math.round((e.end-e.begin)/864e5)));
+        for(let k=0;k<days;k++){ const d=new Date(b.getUTCFullYear(),b.getUTCMonth(),b.getUTCDate()+k); out.push({date:ymd(d),time:'',title,loc:e.loc||'',g:1,c:c.color,cn:c.name}); } }
+      else { const d=new Date(e.begin); out.push({date:ymd(d),time:p2(d.getHours())+':'+p2(d.getMinutes()),title,loc:e.loc||'',g:1,c:c.color,cn:c.name}); }
+    });
+    return out;
+  }
   async function loadGcal(force){
-    const ex=extras(), list=cals().filter(c=>c.on&&c.url);
+    const ex=extras(), list=cals().filter(c=>c.on&&c.url), dev=devEvents();
     if(ex.hol) list.push({id:'hol',name:'Sviatky',color:'#e5484d',url:HOL_URL,hol:1});
     const cache=lsJ(GCAL_CACHE,{}), now=Date.now(), errs=[];
-    const fromCache=()=>{ gEvents=[].concat(...list.map(c=>(cache[c.url]&&cache[c.url].ev||[]).map(e=>Object.assign({},e,{c:c.color,cn:c.name,hol:c.hol?1:0})))); };
+    const fromCache=()=>{ gEvents=[].concat(...list.map(c=>(cache[c.url]&&cache[c.url].ev||[]).map(e=>Object.assign({},e,{c:c.color,cn:c.name,hol:c.hol?1:0})))).concat(dev); };
     fromCache();
     const stale=list.filter(c=>force||!cache[c.url]||now-cache[c.url].t>(c.hol?864e5:10*60e3));
     if(!stale.length){ gErr=''; return; }
@@ -7412,6 +7430,13 @@ function addResurface() {
     list.forEach(c=>{ h+='<div class="gcal-row"><button type="button" class="gcal-dot" data-color="'+c.id+'" style="background:'+escHtml(c.color)+'" aria-label="Zmeniť farbu"></button><span class="gcal-nm'+(c.on?'':' off')+'" data-ren="'+c.id+'">'+escHtml(c.name)+'</span><input type="checkbox" class="n28-sw" data-on="'+c.id+'"'+(c.on?' checked':'')+'><button type="button" class="gcal-del" data-del="'+c.id+'" aria-label="Odstrániť">✕</button></div>'; });
     h+='<button type="button" class="btn btn-ghost gcal-add" id="gcal-connect">+ Pridať Google kalendár</button>';
     h+=sw('hol','Štátne sviatky')+sw('nd','Meniny')+sw('moon','Fázy mesiaca');
+    if(hasDev()){
+      const dc=devCals();
+      h+='<div class="gcal-head" style="margin-top:.7rem"><b>Kalendáre v telefóne</b></div>';
+      if(!dc) h+='<button type="button" class="btn btn-ghost gcal-add" id="devcal-perm">Povoliť prístup ku kalendárom telefónu</button>';
+      else if(!dc.length) h+='<div class="gcal-row" style="color:var(--text2)">V telefóne nie je žiadny kalendár.</div>';
+      else { const on=lsJ(DEVCAL,{}); dc.forEach(c=>{ h+='<label class="gcal-row gcal-opt"><span class="devcal-l"><i style="background:'+escHtml(c.color)+'"></i><span class="gcal-nm">'+escHtml(c.name)+(c.account&&c.account!==c.name?' <small>'+escHtml(c.account)+'</small>':'')+'</span></span><input type="checkbox" class="n28-sw" data-dev="'+escHtml(c.id)+'"'+(on[c.id]?' checked':'')+'></label>'; }); }
+    }
     if(canGWrite()){ const t=lsJ(GCAL_TARGET,{id:'primary',name:'hlavný'}); h+='<div class="gcal-row gcal-opt"><span>Zápis cez +G do: <b>'+escHtml(t.name||'hlavný')+'</b></span><button type="button" class="btn btn-ghost" id="gcal-target">Zmeniť</button></div>'; }
     return h+'</div>';
   }
@@ -7453,6 +7478,7 @@ function addResurface() {
    '.gcal-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}.gcal-nm.off{opacity:.5;}'+
    'button.gcal-dot{width:14px;height:14px;border:none;padding:0;cursor:pointer;}.gcal-del{background:none;border:none;color:var(--text2);cursor:pointer;padding:.1rem .3rem;}'+
    '.gcal-add{width:100%;margin:.3rem 0 .4rem;font-size:.8rem;}'+
+   '.devcal-l{display:flex;align-items:center;gap:.55rem;min-width:0;flex:1;}.devcal-l i{width:12px;height:12px;border-radius:50%;flex-shrink:0;}.devcal-l small{color:var(--text2);font-size:.72rem;}'+
    '.gcal-box{margin-top:.8rem;padding-top:.6rem;border-top:1px solid var(--border);}.gcal-row{display:flex;align-items:center;gap:.45rem;font-size:.84rem;}'+
    '.gcal-row b{font-weight:600;}.gcal-st{flex:1;min-width:0;color:var(--text2);font-size:.76rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}'+
    '.gcal-row .btn{padding:.3rem .65rem;font-size:.78rem;margin-left:auto;}.gcal-row .gcal-st+.btn{margin-left:0;}'+
@@ -7513,6 +7539,7 @@ function addResurface() {
     }
     if(e.target.closest('#gcal-reload')){ loadGcal(true); return; }
     if(e.target.closest('#gcal-target')){ pickTarget(); return; }
+    if(e.target.closest('#devcal-perm')){ window.n28OnDevCalPerm=g=>{ if(g){ render(); showToast('Vyber, ktoré kalendáre zobraziť','info'); } else showToast('Bez povolenia sa kalendáre telefónu nedajú zobraziť','warn',4500); }; try{ AndroidBridge.devCalRequest(); }catch(err){} return; }
     const del=e.target.closest('[data-del]'); if(del){ const list=cals(), c=list.find(x=>x.id===del.dataset.del); if(!c||!confirm('Odstrániť kalendár „'+c.name+'“ z N28?')) return; lsS(GCAL_LIST,list.filter(x=>x!==c)); loadGcal(false).then(render); render(); return; }
     const col=e.target.closest('[data-color]'); if(col){ const list=cals(), c=list.find(x=>x.id===col.dataset.color); if(!c) return; c.color=CAL_COLORS[(CAL_COLORS.indexOf(c.color)+1)%CAL_COLORS.length]; lsS(GCAL_LIST,list); loadGcal(false); render(); return; }
     const ren=e.target.closest('[data-ren]'); if(ren){ const list=cals(), c=list.find(x=>x.id===ren.dataset.ren); if(!c) return; const nm=prompt('Názov kalendára:',c.name); if(!nm) return; c.name=nm.trim().slice(0,30); lsS(GCAL_LIST,list); loadGcal(false); render(); return; }
@@ -7522,6 +7549,7 @@ function addResurface() {
   $('cal-day').addEventListener('change',e=>{
     const t=e.target; if(!t.matches('input.n28-sw')) return;
     if(t.dataset.ex){ const ex=extras(); ex[t.dataset.ex]=t.checked; lsS(CAL_EXTRAS,ex); loadGcal(false).then(render); render(); return; }
+    if(t.dataset.dev){ const on=lsJ(DEVCAL,{}); on[t.dataset.dev]=t.checked; lsS(DEVCAL,on); loadGcal(false).then(render); return; }
     if(t.dataset.on){ const list=cals(), c=list.find(x=>x.id===t.dataset.on); if(c){ c.on=t.checked; lsS(GCAL_LIST,list); loadGcal(false).then(render); render(); } }
   });
   $('cal-cancel').onclick=resetForm;
