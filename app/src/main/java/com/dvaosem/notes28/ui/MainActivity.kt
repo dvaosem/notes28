@@ -3,7 +3,10 @@ package com.dvaosem.notes28.ui
 import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.ContentUris
 import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.provider.CalendarContract
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -43,6 +46,7 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 
 /**
@@ -78,6 +82,13 @@ class MainActivity : AppCompatActivity() {
         fileCallback?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(res.resultCode, res.data))
         fileCallback = null
     }
+
+    /** READ_CALENDAR permission result → window.n28OnDevCalPerm(granted). */
+    private val calPermLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        call("n28OnDevCalPerm", if (granted) "true" else "false")
+    }
+
+    private fun hasCalPerm() = checkSelfPermission(android.Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
 
     /** Google Calendar consent screen result → token for the web app. */
     private val gcalAuthLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { res ->
@@ -284,6 +295,68 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun googleSignIn() {
             runOnUiThread { nativeGoogleSignIn() }
+        }
+
+        /** Calendars synced on the phone (Google, Exchange/Office 365, …); "" when READ_CALENDAR is not granted. */
+        @JavascriptInterface
+        fun devCalList(): String {
+            if (!hasCalPerm()) return ""
+            val arr = JSONArray()
+            try {
+                contentResolver.query(
+                    CalendarContract.Calendars.CONTENT_URI,
+                    arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                        CalendarContract.Calendars.ACCOUNT_NAME, CalendarContract.Calendars.CALENDAR_COLOR),
+                    null, null, CalendarContract.Calendars.ACCOUNT_NAME + " ASC"
+                )?.use { c ->
+                    while (c.moveToNext()) {
+                        arr.put(JSONObject().apply {
+                            put("id", c.getLong(0).toString())
+                            put("name", c.getString(1) ?: "")
+                            put("account", c.getString(2) ?: "")
+                            put("color", String.format("#%06X", 0xFFFFFF and c.getInt(3)))
+                        })
+                    }
+                }
+            } catch (e: Exception) { return "[]" }
+            return arr.toString()
+        }
+
+        @JavascriptInterface
+        fun devCalRequest() {
+            runOnUiThread { if (hasCalPerm()) call("n28OnDevCalPerm", "true") else calPermLauncher.launch(android.Manifest.permission.READ_CALENDAR) }
+        }
+
+        /** Event instances (recurrences expanded by Android) between from..to (ms) for the given calendar ids (comma separated). */
+        @JavascriptInterface
+        fun devCalEvents(from: Double, to: Double, ids: String): String {
+            if (!hasCalPerm()) return "[]"
+            val idSet = ids.split(",").mapNotNull { it.trim().toLongOrNull() }.toSet()
+            if (idSet.isEmpty()) return "[]"
+            val uri = CalendarContract.Instances.CONTENT_URI.buildUpon().also {
+                ContentUris.appendId(it, from.toLong()); ContentUris.appendId(it, to.toLong())
+            }.build()
+            val arr = JSONArray()
+            try {
+                contentResolver.query(
+                    uri,
+                    arrayOf(CalendarContract.Instances.CALENDAR_ID, CalendarContract.Instances.TITLE, CalendarContract.Instances.BEGIN,
+                        CalendarContract.Instances.END, CalendarContract.Instances.ALL_DAY, CalendarContract.Instances.EVENT_LOCATION,
+                        CalendarContract.Instances.STATUS),
+                    null, null, CalendarContract.Instances.BEGIN + " ASC"
+                )?.use { c ->
+                    while (c.moveToNext() && arr.length() < 4000) {
+                        val cal = c.getLong(0)
+                        if (cal !in idSet || (!c.isNull(6) && c.getInt(6) == CalendarContract.Events.STATUS_CANCELED)) continue
+                        arr.put(JSONObject().apply {
+                            put("cal", cal.toString()); put("title", c.getString(1) ?: "")
+                            put("begin", c.getLong(2)); put("end", c.getLong(3))
+                            put("allDay", c.getInt(4) == 1); put("loc", c.getString(5) ?: "")
+                        })
+                    }
+                }
+            } catch (e: Exception) { return "[]" }
+            return arr.toString()
         }
 
         /** Google Calendar access token (scope calendar); answers via window.n28OnGcalToken(token) / n28OnGcalTokenError(msg). */
