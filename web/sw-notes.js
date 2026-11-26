@@ -1,7 +1,7 @@
 /* N28 Service Worker — offline cache shell + notifikácie.
    Ulož tento súbor do rovnakého priečinka ako notes28.html (web root).
    Pri zmene app shellu zvýš číslo CACHE (n28-v83 → n28-v5) aby sa cache obnovila. */
-const CACHE = 'n28-v118';
+const CACHE = 'n28-v159';
 const NAV_TIMEOUT = 600;   // ms — po tomto čase sa ukáže uložená verzia appky
 
 // App shell — uprav názvy ak je súbor pomenovaný inak / v podpriečinku.
@@ -10,8 +10,8 @@ const PRECACHE = [
   './notes28.html',
   './manifest-notes.json',
   'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js',
-  'https://dvaosem.com/n28-icon-v2.png',
-  'https://dvaosem.com/n28-maskable-512.png',
+  'https://dvaosem.com/n28-icon-v3.png',
+  'https://dvaosem.com/n28-maskable-v3-512.png',
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js',
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js',
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js',
