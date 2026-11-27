@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v163">
+<meta name="n28-build" content="n28-v164">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -7463,14 +7463,9 @@ function addResurface() {
   function renderBox(){ const sb=document.getElementById('set-cal-box'); if(sb) sb.innerHTML=gcalBox(); }
   // kompaktný riadok v kalendári: aktívne kalendáre + odkaz na správu v Nastaveniach
   function calFooter(){
-    const ex=extras(), act=cals().filter(c=>c.on).map(c=>({n:c.name,c:c.color}));
-    const on=lsJ(DEVCAL,{}), dc=hasDev()?devCals():null;
-    if(dc) dc.filter(c=>on[c.id]).forEach(c=>act.push({n:c.name,c:c.color}));
-    if(ex.hol) act.push({n:'Sviatky',c:'#e5484d'});
-    let h='<div class="cal-foot"><div class="cal-chips">'+(act.length?act.map(a=>'<span><i style="background:'+escHtml(a.c)+'"></i>'+escHtml(a.n)+'</span>').join(''):'<span class="none">Žiadne pripojené kalendáre</span>')+
-      (gLoading?'<span class="none">načítavam…</span>':'')+'</div><button type="button" class="btn btn-ghost" id="cal-manage">Spravovať</button></div>';
+    let h='';
     if(gErr) h+='<div class="cal-err">'+escHtml(gErr)+'</div>';
-    if(hasDev()&&!dc) h+='<button type="button" class="btn btn-ghost gcal-add" id="devcal-perm">Zobraziť kalendáre z telefónu (aj firemný)</button>';
+    if(hasDev()&&!devCals()) h+='<button type="button" class="btn btn-ghost gcal-add" id="devcal-perm" style="margin-top:.8rem">Zobraziť kalendáre z telefónu (aj firemný)</button>';
     return h;
   }
   function gcalBox(){
@@ -7491,7 +7486,7 @@ function addResurface() {
     return h+'</div>';
   }
   const m=document.createElement('div'); m.id='cal-modal'; m.className='n28-modal';
-  m.innerHTML='<div class="modal-box" style="max-width:460px"><div class="modal-header"><span class="modal-header-title">Kalendár</span><button class="modal-x" type="button" id="cal-big" title="Zväčšiť / zmenšiť" aria-label="Zväčšiť kalendár"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button><button class="modal-x" type="button" id="cal-x">×</button></div>'+
+  m.innerHTML='<div class="modal-box" style="max-width:460px"><div class="modal-header"><span class="modal-header-title">Kalendár</span><button class="modal-x" type="button" id="cal-manage" title="Spravovať kalendáre" aria-label="Spravovať kalendáre"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button><button class="modal-x" type="button" id="cal-big" title="Zväčšiť / zmenšiť" aria-label="Zväčšiť kalendár"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button><button class="modal-x" type="button" id="cal-x">×</button></div>'+
    '<div class="modal-body" style="padding:.7rem .8rem;">'+
    '<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem;"><button type="button" class="btn btn-ghost" id="cal-prev" style="padding:.3rem .7rem">‹</button><b id="cal-title" style="flex:1;text-align:center;text-transform:capitalize;font-size:.95rem"></b><button type="button" class="btn btn-ghost" id="cal-today" style="font-size:.78rem;padding:.3rem .6rem">Dnes</button><button type="button" class="btn btn-ghost" id="cal-next" style="padding:.3rem .7rem">›</button></div>'+
    '<div id="cal-grid"></div>'+
@@ -7590,6 +7585,7 @@ function addResurface() {
   function close(){ m.classList.remove('open'); if(unsub){unsub();unsub=null;} }
   btn.addEventListener('click',open);
   $('cal-x').onclick=close;
+  $('cal-manage').onclick=()=>{ close(); const sb=document.getElementById('settings-btn'); if(sb) sb.click(); setTimeout(()=>{ const x=document.getElementById('set-cal'); if(x) x.scrollIntoView({block:'start'}); },120); };
   try{ if(localStorage.getItem('n28-cal-big')==='1'&&innerWidth>=760) m.classList.add('cal-big'); }catch(e){}
   $('cal-big').onclick=()=>{ m.classList.toggle('cal-big'); try{ localStorage.setItem('n28-cal-big',m.classList.contains('cal-big')?'1':'0'); }catch(e){} render(); }; m.addEventListener('click',e=>{ if(e.target===m) close(); });
   $('cal-prev').onclick=()=>{ mo--; if(mo<0){mo=11;y--;} render(); };
@@ -7603,7 +7599,6 @@ function addResurface() {
       else window.open(gTplUrl(ev),'_blank');
       return; }
     if(boxClick(e)) return;
-    if(e.target.closest('#cal-manage')){ close(); const sb=document.getElementById('settings-btn'); if(sb) sb.click(); setTimeout(()=>{ const x=document.getElementById('set-cal'); if(x) x.scrollIntoView({block:'start'}); },120); return; }
     const x=e.target.closest('[data-x]'); if(x){ try{ await deleteDoc(doc(db,'users',currentUser.uid,'events',x.dataset.x)); if(editId===x.dataset.x) resetForm(); }catch(err){ showToast('Nepodarilo sa zmazať','warn'); } return; }
     const n=e.target.closest('[data-e]'); if(n){ const ev=events.find(v=>v.id===n.dataset.e); if(!ev) return; editId=ev.id; $('cal-in-title').value=ev.title; $('cal-in-time').value=ev.time||''; $('cal-save').textContent='Uložiť'; $('cal-cancel').style.display=''; $('cal-in-title').focus(); }
   });
