@@ -342,7 +342,7 @@ class MainActivity : AppCompatActivity() {
                     uri,
                     arrayOf(CalendarContract.Instances.CALENDAR_ID, CalendarContract.Instances.TITLE, CalendarContract.Instances.BEGIN,
                         CalendarContract.Instances.END, CalendarContract.Instances.ALL_DAY, CalendarContract.Instances.EVENT_LOCATION,
-                        CalendarContract.Instances.STATUS),
+                        CalendarContract.Instances.STATUS, CalendarContract.Instances.EVENT_ID),
                     null, null, CalendarContract.Instances.BEGIN + " ASC"
                 )?.use { c ->
                     while (c.moveToNext() && arr.length() < 4000) {
@@ -352,11 +352,28 @@ class MainActivity : AppCompatActivity() {
                             put("cal", cal.toString()); put("title", c.getString(1) ?: "")
                             put("begin", c.getLong(2)); put("end", c.getLong(3))
                             put("allDay", c.getInt(4) == 1); put("loc", c.getString(5) ?: "")
+                            put("id", c.getLong(7).toString())
                         })
                     }
                 }
             } catch (e: Exception) { return "[]" }
             return arr.toString()
+        }
+
+        /** Opens a phone calendar event in the system calendar app (view → edit there). */
+        @JavascriptInterface
+        fun openDevEvent(id: String, begin: Double, end: Double) {
+            val eid = id.toLongOrNull() ?: return
+            runOnUiThread {
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eid)).apply {
+                        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin.toLong())
+                        putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end.toLong())
+                    })
+                } catch (e: Exception) {
+                    Toast.makeText(this@MainActivity, "Kalendár sa nepodarilo otvoriť", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         /** Google Calendar access token (scope calendar); answers via window.n28OnGcalToken(token) / n28OnGcalTokenError(msg). */
