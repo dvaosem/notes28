@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v165">
+<meta name="n28-build" content="n28-v167">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -1113,10 +1113,10 @@ body{background-image:none!important;}
         </label>
       </section>
 
-      <section class="set-sec" id="set-cal">
-        <h4 class="set-h">Kalendár</h4>
+      <details class="set-sec set-fold" id="set-cal">
+        <summary class="set-h">Kalendáre</summary>
         <div id="set-cal-box"><div class="set-d">Otvor raz Kalendár, potom sa tu ukážu nastavenia.</div></div>
-      </section>
+      </details>
 
       <section class="set-sec">
         <h4 class="set-h">Pripomienky</h4>
@@ -7255,7 +7255,7 @@ function addResurface() {
   const evRef=()=>collection(db,'users',currentUser.uid,'events');
   let y,mo,sel,events=[],editId=null,unsub=null;
   // ── Kalendáre: viac Google kalendárov (iCal, len čítanie), sviatky, meniny, fázy mesiaca ──
-  const GCAL_LIST='n28-gcal-list', GCAL_CACHE='n28-gcal-cache2', CAL_EXTRAS='n28-cal-extras', GCAL_TARGET='n28-gcal-target';
+  const GCAL_LIST='n28-gcal-list', GCAL_CACHE='n28-gcal-cache3', CAL_EXTRAS='n28-cal-extras', GCAL_TARGET='n28-gcal-target';
   const HOL_URL='https://calendar.google.com/calendar/ical/sk.slovak%23holiday%40group.v.calendar.google.com/public/basic.ics';
   const CAL_COLORS=['#5b9bd5','#4caf7a','#b08463','#9b7fd1','#d9a441','#4fb3b3','#d1709b'];
   const lsJ=(k,d)=>{ try{ const v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } };
@@ -7340,8 +7340,8 @@ function addResurface() {
       if(out.length>4000) return;
       const title=un(e.SUMMARY)||'(bez názvu)', loc=un(e.LOCATION);
       if(all){ const days=Math.min(31,Math.max(1,Math.round(dur/864e5)));
-        for(let k=0;k<days;k++){ const d=new Date(st.getFullYear(),st.getMonth(),st.getDate()+k); if(d>=from&&d<to) out.push({date:ymd(d),time:'',title,loc,g:1,c:cal.color,cn:cal.name,hol:cal.hol?1:0}); } }
-      else if(st>=from&&st<to) out.push({date:ymd(st),time:p2(st.getHours())+':'+p2(st.getMinutes()),title,loc,g:1,c:cal.color,cn:cal.name,hol:cal.hol?1:0});
+        for(let k=0;k<days;k++){ const d=new Date(st.getFullYear(),st.getMonth(),st.getDate()+k); if(d>=from&&d<to) out.push({date:ymd(d),time:'',title,loc,g:1,c:cal.color,cn:cal.name,hol:cal.hol?1:0,uid:e.UID||''}); } }
+      else if(st>=from&&st<to) out.push({date:ymd(st),time:p2(st.getHours())+':'+p2(st.getMinutes()),title,loc,g:1,c:cal.color,cn:cal.name,hol:cal.hol?1:0,uid:e.UID||''});
     };
     const WD=['SU','MO','TU','WE','TH','FR','SA'];
     raw.forEach(e=>{
@@ -7393,16 +7393,17 @@ function addResurface() {
     const out=[];
     arr.forEach(e=>{ const c=cl[e.cal]||{name:'Telefón',color:'#8a8a8a'}, title=e.title||'(bez názvu)';
       if(e.allDay){ const b=new Date(e.begin), days=Math.min(31,Math.max(1,Math.round((e.end-e.begin)/864e5)));
-        for(let k=0;k<days;k++){ const d=new Date(b.getUTCFullYear(),b.getUTCMonth(),b.getUTCDate()+k); out.push({date:ymd(d),time:'',title,loc:e.loc||'',g:1,c:c.color,cn:c.name}); } }
-      else { const d=new Date(e.begin); out.push({date:ymd(d),time:p2(d.getHours())+':'+p2(d.getMinutes()),title,loc:e.loc||'',g:1,c:c.color,cn:c.name}); }
+        for(let k=0;k<days;k++){ const d=new Date(b.getUTCFullYear(),b.getUTCMonth(),b.getUTCDate()+k); out.push({date:ymd(d),time:'',title,loc:e.loc||'',g:1,c:c.color,cn:c.name,did:e.id||'',b:e.begin,en:e.end}); } }
+      else { const d=new Date(e.begin); out.push({date:ymd(d),time:p2(d.getHours())+':'+p2(d.getMinutes()),title,loc:e.loc||'',g:1,c:c.color,cn:c.name,did:e.id||'',b:e.begin,en:e.end}); }
     });
     return out;
   }
+  const gcalIdFromUrl=u=>{ const m=String(u||'').match(/\/ical\/([^/]+)\//); try{ return m?decodeURIComponent(m[1]):''; }catch(e){ return ''; } };
   async function loadGcal(force){
     const ex=extras(), list=cals().filter(c=>c.on&&c.url), dev=devEvents();
     if(ex.hol) list.push({id:'hol',name:'Sviatky',color:'#e5484d',url:HOL_URL,hol:1});
     const cache=lsJ(GCAL_CACHE,{}), now=Date.now(), errs=[];
-    const fromCache=()=>{ gEvents=[].concat(...list.map(c=>(cache[c.url]&&cache[c.url].ev||[]).map(e=>Object.assign({},e,{c:c.color,cn:c.name,hol:c.hol?1:0})))).concat(dev); };
+    const fromCache=()=>{ gEvents=[].concat(...list.map(c=>(cache[c.url]&&cache[c.url].ev||[]).map(e=>Object.assign({},e,{c:c.color,cn:c.name,hol:c.hol?1:0,cid:gcalIdFromUrl(c.url)})))).concat(dev); };
     fromCache();
     const stale=list.filter(c=>force||!cache[c.url]||now-cache[c.url].t>(c.hol?864e5:10*60e3));
     if(!stale.length){ gErr=''; return; }
@@ -7474,7 +7475,7 @@ function addResurface() {
   function gcalBox(){
     const ex=extras(), list=cals();
     const sw=(k,label)=>'<label class="gcal-row gcal-opt"><span>'+label+'</span><input type="checkbox" class="n28-sw" data-ex="'+k+'"'+(ex[k]?' checked':'')+'></label>';
-    let h='<div class="gcal-box"><div class="gcal-head"><b>Kalendáre</b><span class="gcal-st">'+(gLoading?'načítavam…':gErr?escHtml(gErr):'')+'</span><button type="button" class="btn btn-ghost" id="gcal-reload" aria-label="Obnoviť">↻</button></div>';
+    let h='<div class="gcal-box"><div class="gcal-head"><b>Google kalendáre</b><span class="gcal-st">'+(gLoading?'načítavam…':gErr?escHtml(gErr):'')+'</span><button type="button" class="btn btn-ghost" id="gcal-reload" aria-label="Obnoviť">↻</button></div>';
     list.forEach(c=>{ h+='<div class="gcal-row"><button type="button" class="gcal-dot" data-color="'+c.id+'" style="background:'+escHtml(c.color)+'" aria-label="Zmeniť farbu"></button><span class="gcal-nm'+(c.on?'':' off')+'" data-ren="'+c.id+'">'+escHtml(c.name)+'</span><input type="checkbox" class="n28-sw" data-on="'+c.id+'"'+(c.on?' checked':'')+'><button type="button" class="gcal-del" data-del="'+c.id+'" aria-label="Odstrániť">✕</button></div>'; });
     h+='<button type="button" class="btn btn-ghost gcal-add" id="gcal-connect">+ Pridať Google kalendár</button>';
     h+=sw('hol','Štátne sviatky')+sw('nd','Meniny')+sw('moon','Fázy mesiaca');
@@ -7522,6 +7523,7 @@ function addResurface() {
    '.cal-dh{display:flex;align-items:baseline;gap:.5rem;margin:.85rem 0 .4rem;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--text2);}'+
    '.cal-dh:first-child{margin-top:0;}.cal-dh.today{color:var(--text);}.cal-dh small{font-size:.7rem;letter-spacing:0;text-transform:none;font-weight:500;opacity:.8;}'+
    '.cal-ev .sub{display:block;font-size:.74rem;color:var(--text2);margin-top:.1rem;}'+
+   '.cal-ev .n[data-e],.cal-ev .n[data-ge]{cursor:pointer;}'+
    '.cal-empty{font-size:.82rem;color:var(--text2);margin-bottom:.35rem;}'+
    '#cal-grid{display:grid;grid-template-columns:1.6rem repeat(7,minmax(0,1fr));gap:2px;text-align:center;}'+
    '#cal-grid .wk{font-size:.58rem;color:var(--text2);opacity:.6;display:flex;align-items:center;justify-content:flex-start;font-variant-numeric:tabular-nums;letter-spacing:.02em;}'+
@@ -7602,7 +7604,7 @@ function addResurface() {
       out+='<div class="cal-dh'+(key===todayK?' today':'')+'"><span>'+escHtml(lbl)+'</span>'+(mn?'<small>'+escHtml(mn)+'</small>':'')+(k===0&&mp?'<small>'+MOON_G[mp.q]+' '+MOON_TXT[mp.q]+' '+mp.t+'</small>':'')+'</div>';
       if(!list.length){ out+='<div class="cal-empty">Nič naplánované.</div>'; continue; }
       out+=list.map(e=>e.g
-        ? '<div class="cal-ev g'+(e.hol?' hol':'')+'" style="--gc:'+escHtml(e.c||'#5b9bd5')+'"><span class="t">'+escHtml(e.time||'celý deň')+'</span><span class="n">'+escHtml(e.title)+(e.loc?'<span class="cal-loc" data-map="'+escHtml(e.loc)+'">'+N28_PIN_SVG+escHtml(e.loc)+'</span>':'')+'</span><span class="gtag" title="'+escHtml(e.cn||'Google')+'">'+escHtml((e.cn||'G').slice(0,12))+'</span></div>'
+        ? '<div class="cal-ev g'+(e.hol?' hol':'')+'" style="--gc:'+escHtml(e.c||'#5b9bd5')+'"><span class="t">'+escHtml(e.time||'celý deň')+'</span><span class="n"'+(e.hol?'':' data-ge="'+escHtml(JSON.stringify({u:e.uid||'',c:e.cid||'',d:e.did||'',b:e.b||0,e:e.en||0,dt:e.date}))+'"')+'>'+escHtml(e.title)+(e.loc?'<span class="cal-loc" data-map="'+escHtml(e.loc)+'">'+N28_PIN_SVG+escHtml(e.loc)+'</span>':'')+'</span><span class="gtag" title="'+escHtml(e.cn||'Google')+'">'+escHtml((e.cn||'G').slice(0,12))+'</span></div>'
         : '<div class="cal-ev"><span class="t">'+escHtml(rng(e))+'</span><span class="n" data-e="'+e.id+'">'+escHtml(e.title)+(e.loc?'<span class="cal-loc" data-map="'+escHtml(e.loc)+'">'+N28_PIN_SVG+escHtml(e.loc)+'</span>':'')+(e.note?'<span class="sub">'+escHtml(e.note)+'</span>':'')+'</span><button type="button" data-gl="'+e.id+'" title="Pridať do Google Kalendára" aria-label="Pridať do Google Kalendára" class="to-g">+G</button><button type="button" data-x="'+e.id+'" aria-label="Zmazať">✕</button></div>').join('');
     }
     if(!any) out+='<div class="cal-empty" style="opacity:.7">Najbližších 7 dní nič.</div>';
@@ -7620,7 +7622,7 @@ function addResurface() {
   function close(){ m.classList.remove('open'); if(unsub){unsub();unsub=null;} }
   btn.addEventListener('click',open);
   $('cal-x').onclick=close;
-  $('cal-manage').onclick=()=>{ close(); const sb=document.getElementById('settings-btn'); if(sb) sb.click(); setTimeout(()=>{ const x=document.getElementById('set-cal'); if(x) x.scrollIntoView({block:'start'}); },120); };
+  $('cal-manage').onclick=()=>{ close(); const sb=document.getElementById('settings-btn'); if(sb) sb.click(); setTimeout(()=>{ const x=document.getElementById('set-cal'); if(x){ x.open=true; x.scrollIntoView({block:'start'}); } },120); };
   try{ if(localStorage.getItem('n28-cal-big')==='1'&&innerWidth>=760) m.classList.add('cal-big'); }catch(e){}
   $('cal-big').onclick=()=>{ m.classList.toggle('cal-big'); try{ localStorage.setItem('n28-cal-big',m.classList.contains('cal-big')?'1':'0'); }catch(e){} render(); }; m.addEventListener('click',e=>{ if(e.target===m) close(); });
   $('cal-prev').onclick=()=>{ mo--; if(mo<0){mo=11;y--;} render(); };
@@ -7635,7 +7637,11 @@ function addResurface() {
       return; }
     if(boxClick(e)) return;
     const x=e.target.closest('[data-x]'); if(x){ try{ await deleteDoc(doc(db,'users',currentUser.uid,'events',x.dataset.x)); if(editId===x.dataset.x) resetForm(); }catch(err){ showToast('Nepodarilo sa zmazať','warn'); } return; }
-    const n=e.target.closest('[data-e]'); if(n){ const ev=events.find(v=>v.id===n.dataset.e); if(ev) openEv(ev); }
+    const n=e.target.closest('[data-e]'); if(n){ const ev=events.find(v=>v.id===n.dataset.e); if(ev) openEv(ev); return; }
+    const ge=e.target.closest('[data-ge]'); if(ge){ let g={}; try{ g=JSON.parse(ge.dataset.ge); }catch(err){}
+      if(g.d&&window.AndroidBridge&&typeof AndroidBridge.openDevEvent==='function'){ AndroidBridge.openDevEvent(g.d,g.b,g.e); return; }
+      if(g.u&&g.c&&/@google\.com$/.test(g.u)){ const eid=btoa(g.u.replace(/@google\.com$/,'')+' '+g.c).replace(/=+$/,''); window.open('https://calendar.google.com/calendar/r/eventedit/'+eid,'_blank'); return; }
+      const p=(g.dt||sel).split('-'); window.open('https://calendar.google.com/calendar/r/day/'+p[0]+'/'+(+p[1])+'/'+(+p[2]),'_blank'); return; }
   });
   function boxClick(e){
     if(e.target.closest('#gcal-connect')){
