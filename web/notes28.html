@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v168">
+<meta name="n28-build" content="n28-v169">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -412,6 +412,7 @@ body.logged-out #fab{display:none!important;}
 #editor img{max-width:100%;height:auto;border-radius:8px;cursor:pointer;display:block;margin:.4rem 0;}
 #editor img.n28-img-selected{outline:2px solid var(--accent-default);outline-offset:2px;}
 .n28-resize-handle{position:fixed;width:18px;height:18px;background:var(--accent-default);border:2px solid var(--surface);border-radius:50%;cursor:nwse-resize;touch-action:none;z-index:3000;box-shadow:0 1px 4px rgba(0,0,0,.35);}
+.n28-del-handle{color:#e5484d;}
 .n28-expand-handle{position:fixed;width:24px;height:24px;background:var(--surface);border:1px solid var(--border);border-radius:50%;cursor:pointer;z-index:3000;display:flex;align-items:center;justify-content:center;font-size:.8rem;box-shadow:0 1px 4px rgba(0,0,0,.35);}
 .check-row{display:flex;align-items:center;gap:.45rem;margin:.08rem 0;min-height:2.2rem;}
 .check-cb{width:22px;height:22px;margin:0 .15rem 0 .1rem;accent-color:var(--accent-default);cursor:pointer;flex-shrink:0;}
@@ -5458,12 +5459,13 @@ window.n28UploadFiles = n28UploadFiles;
 
 // ─── ZMENA VEĽKOSTI OBRÁZKA V POZNÁMKE ───────────────────────────────────────
 (function() {
-  let activeImg = null, resizeHandle = null, expandHandle = null;
+  let activeImg = null, resizeHandle = null, expandHandle = null, delHandle = null;
   const MINW = 60;
 
   function removeHandles() {
     resizeHandle?.remove(); resizeHandle = null;
     expandHandle?.remove(); expandHandle = null;
+    delHandle?.remove(); delHandle = null;
     activeImg?.classList.remove('n28-img-selected');
     activeImg = null;
   }
@@ -5473,6 +5475,7 @@ window.n28UploadFiles = n28UploadFiles;
     const r = activeImg.getBoundingClientRect();
     if (resizeHandle) { resizeHandle.style.left = (r.right - 9) + 'px'; resizeHandle.style.top = (r.bottom - 9) + 'px'; }
     if (expandHandle) { expandHandle.style.left = (r.right - 12) + 'px'; expandHandle.style.top = (r.top - 12) + 'px'; }
+    if (delHandle) { delHandle.style.left = (r.right - 72) + 'px'; delHandle.style.top = (r.top - 12) + 'px'; }
   }
 
   function selectImg(img) {
@@ -5486,6 +5489,25 @@ window.n28UploadFiles = n28UploadFiles;
     expandHandle.textContent = '⤢';
     expandHandle.onclick = ev => { ev.stopPropagation(); window.open(img.src, '_blank'); };
     document.body.appendChild(expandHandle);
+
+    // zmazať obrázok z poznámky (cez execCommand, aby fungovalo Ctrl+Z)
+    delHandle = document.createElement('div');
+    delHandle.className = 'n28-expand-handle n28-del-handle';
+    delHandle.title = 'Zmazať obrázok'; delHandle.setAttribute('aria-label', 'Zmazať obrázok');
+    delHandle.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
+    delHandle.addEventListener('mousedown', ev => { ev.preventDefault(); ev.stopPropagation(); });
+    delHandle.addEventListener('touchstart', ev => ev.stopPropagation(), {passive:true});
+    delHandle.onclick = ev => {
+      ev.preventDefault(); ev.stopPropagation();
+      const target = activeImg; if (!target) return;
+      removeHandles();
+      let ok = false;
+      try { editor.focus(); const r = document.createRange(); r.selectNode(target); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); ok = document.execCommand('delete'); } catch (e) {}
+      if (!ok || editor.contains(target)) target.remove();
+      scheduleAutosave();
+      showToast('Obrázok zmazaný – Ctrl+Z vráti späť', 'info', 3000);
+    };
+    document.body.appendChild(delHandle);
 
     resizeHandle = document.createElement('div');
     resizeHandle.className = 'n28-resize-handle';
@@ -8905,7 +8927,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && n2
     }
   }
   function sync(){
-    var ex=document.querySelector('.n28-expand-handle:not(.n28-copy-handle)');
+    var ex=document.querySelector('.n28-expand-handle:not(.n28-copy-handle):not(.n28-del-handle)');
     if(!ex){ if(btn){ btn.remove(); btn=null; } raf=0; return; }
     if(!btn){
       btn=document.createElement('div'); btn.className='n28-expand-handle n28-copy-handle';
@@ -8919,7 +8941,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && n2
     raf=setTimeout(sync,50);
   }
   new MutationObserver(function(){
-    if(!raf && document.querySelector('.n28-expand-handle:not(.n28-copy-handle)')) raf=setTimeout(sync,50);
+    if(!raf && document.querySelector('.n28-expand-handle:not(.n28-copy-handle):not(.n28-del-handle)')) raf=setTimeout(sync,50);
   }).observe(document.body,{childList:true});
   document.addEventListener('copy',function(e){
     var img=document.querySelector('img.n28-img-selected'); if(!img) return;
