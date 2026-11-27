@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v169">
+<meta name="n28-build" content="n28-v170">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -811,6 +811,73 @@ body{background-image:none!important;}
 /* FAB – mäkšie a ľahšie */
 #fab{width:58px;height:58px;border-radius:20px;box-shadow:0 8px 24px -6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);}
 </style>
+<style id="n28-theme-sage">
+/* ═══ Téma „Šalvia“ – svetlá krémová, šalviová zelená, tmavá olivová (experiment v171) ═══ */
+[data-theme="sage"]{
+  --bg:#efebe4; --surface:#faf8f3; --surface2:#ece9e1; --border:#e3ded3;
+  --text:#2b3125; --text2:#7b7e72; --accent-default:#3e4a33; --accent-text:#f4f1ea;
+  --sage:#dfe5d5; --sage2:#cfd8c3; --gold:#e7c56f;
+  --earth:#3e4a33; --earth-text:#f4f1ea; --earth-hover:#4b5a3e; --brick:#b4685a; --brick-soft:rgba(180,104,90,.14); --brick-text:#a3584a;
+  --radius:22px; --radius-sm:14px; --radius-lg:28px; --dot:transparent;
+  --font-head:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif; --font-body:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --shadow:0 18px 40px -24px rgba(62,74,51,.35);
+  --elev1:0 1px 2px rgba(62,74,51,.05),0 10px 24px -18px rgba(62,74,51,.30);
+  --elev2:0 2px 4px rgba(62,74,51,.06),0 14px 30px -18px rgba(62,74,51,.34);
+  --elev3:0 4px 10px rgba(62,74,51,.08),0 20px 40px -20px rgba(62,74,51,.38);
+  --elev4:0 8px 18px rgba(62,74,51,.10),0 28px 56px -22px rgba(62,74,51,.42);
+  --state-hover:rgba(62,74,51,.06); --state-press:rgba(62,74,51,.10); --ripple-color:rgba(62,74,51,.14);
+}
+:root[data-theme="sage"] body{color-scheme:only light;background-color:var(--bg)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='300' viewBox='0 0 420 300'%3E%3Cg fill='none' stroke='%23e7c56f' stroke-width='1.4' opacity='.55'%3E%3Cpath d='M120 -20 C 200 60, 260 120, 300 300'/%3E%3Cpath d='M210 -20 C 300 40, 360 140, 330 300'/%3E%3Ccircle cx='330' cy='40' r='62'/%3E%3C/g%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right -60px top -40px!important;background-size:420px 300px!important;background-attachment:fixed!important;}
+:root[data-theme="sage"] body::after{display:none;}
+[data-theme="sage"] select{color-scheme:light;}
+[data-theme="sage"] .logo{font-weight:700;letter-spacing:-.03em;color:var(--text);}
+/* hlavička – krémové sklo */
+[data-theme="sage"] #topbar-sticky,[data-theme="sage"] #topbar-sticky::before{background:color-mix(in srgb,var(--surface) 86%,transparent)!important;box-shadow:0 14px 34px -24px rgba(62,74,51,.45)!important;backdrop-filter:blur(22px) saturate(140%)!important;-webkit-backdrop-filter:blur(22px) saturate(140%)!important;}
+[data-theme="sage"] .header-actions{background:var(--surface2);box-shadow:none;}
+[data-theme="sage"] .header-actions button{color:var(--text);}
+/* záložky = jemné tabletky, aktívna tmavá olivová */
+[data-theme="sage"] .tab,[data-theme="sage"] #quicknote-btn{background:var(--surface2)!important;color:#5d6155!important;border:none!important;box-shadow:none!important;font-weight:500;}
+[data-theme="sage"] .tab.active,[data-theme="sage"] .tab.tab-colored.active,[data-theme="sage"] .tab-pill-active{background:var(--accent-default)!important;color:var(--accent-text)!important;}
+/* karty – biele, mäkký tieň, bez rámu */
+[data-theme="sage"] .note-card{background:#fff!important;box-shadow:0 1px 2px rgba(62,74,51,.04),0 12px 28px -20px rgba(62,74,51,.35)!important;border-radius:22px;}
+[data-theme="sage"] .note-card:hover{box-shadow:0 2px 4px rgba(62,74,51,.06),0 18px 36px -20px rgba(62,74,51,.42)!important;}
+[data-theme="sage"] .card-title{font-weight:600;color:var(--text);letter-spacing:-.01em;}
+[data-theme="sage"] .card-content{color:#6c6f64;}
+[data-theme="sage"] .card-tab-badge{background:var(--surface2);color:#5d6155;padding:.2rem .6rem;border-radius:999px;}
+[data-theme="sage"] .card-tab-badge::before{display:none;}
+[data-theme="sage"] .card-chip.card-map{background:var(--sage);color:var(--accent-default);}
+/* FAB + hlavné tlačidlá */
+[data-theme="sage"] #fab,[data-theme="sage"] .btn-primary,[data-theme="sage"] #modal-save,[data-theme="sage"] .btn-email-login{background:var(--accent-default)!important;color:var(--accent-text)!important;}
+[data-theme="sage"] #fab{border-radius:22px;box-shadow:0 14px 30px -12px rgba(62,74,51,.55);}
+[data-theme="sage"] .btn-ghost{background:var(--surface2);border-color:transparent;color:var(--text);}
+/* okná */
+[data-theme="sage"] .modal-box{background:var(--surface)!important;border:none;border-radius:28px;box-shadow:var(--elev4);}
+[data-theme="sage"] .n28-modal{background:rgba(43,49,37,.28);}
+[data-theme="sage"] input:not([type=checkbox]):not([type=radio]),[data-theme="sage"] textarea,[data-theme="sage"] select,[data-theme="sage"] .ce-in{background:#fff;border-color:var(--border);color:var(--text);}
+[data-theme="sage"] input.n28-sw{background:var(--surface2);}
+[data-theme="sage"] input.n28-sw:checked{background:var(--accent-default);border-color:var(--accent-default);}
+/* kalendár – šalviový panel, vybraný deň tmavý krúžok */
+[data-theme="sage"] #cal-grid{background:var(--sage);border-radius:22px;padding:.6rem .4rem .5rem;}
+[data-theme="sage"] #cal-grid .cw{color:#6e7564;}
+[data-theme="sage"] #cal-grid button.cd{color:#3a4231;border-radius:999px;}
+[data-theme="sage"] #cal-grid button.cd.other{opacity:.4;}
+[data-theme="sage"] #cal-grid button.cd.sel{background:var(--accent-default);color:var(--accent-text);}
+[data-theme="sage"] #cal-grid button.cd.today:not(.sel){color:var(--accent-default);box-shadow:inset 0 0 0 1.5px var(--accent-default);}
+[data-theme="sage"] #cal-grid .wk{color:#7b8571;}
+[data-theme="sage"] .cal-ev{background:#fff;border:none!important;border-radius:18px;padding:.75rem .85rem;box-shadow:0 10px 24px -20px rgba(62,74,51,.4);}
+[data-theme="sage"] .cal-ev.g{border-left:3px solid var(--gc)!important;}
+[data-theme="sage"] .cal-ev .t{background:var(--surface2);border-radius:10px;padding:.2rem .5rem;color:#5d6155;font-size:.76rem;white-space:nowrap;}
+[data-theme="sage"] .cal-dh{color:var(--text);letter-spacing:.02em;text-transform:none;font-size:.86rem;font-weight:600;}
+[data-theme="sage"] .cal-dh small{color:var(--text2);}
+[data-theme="sage"] #cal-fab{background:var(--accent-default);color:var(--accent-text);border-radius:20px;}
+[data-theme="sage"] #cal-modal.cal-big #cal-grid button.cd{border-radius:14px;border-color:rgba(62,74,51,.08);background:rgba(255,255,255,.35);}
+[data-theme="sage"] #cal-modal.cal-big #cal-grid button.cd.sel{background:var(--accent-default);}
+/* nastavenia, menu, toasty */
+[data-theme="sage"] .set-row{border-bottom-color:var(--border);}
+[data-theme="sage"] details.set-fold{border-top-color:var(--border);}
+[data-theme="sage"] #slash-menu,[data-theme="sage"] #cal-menu,[data-theme="sage"] #missed-pop,[data-theme="sage"] .more-menu{background:#fff!important;border-color:var(--border)!important;}
+[data-theme="sage"] .toast{background:var(--accent-default);color:var(--accent-text);}
+</style>
 <style id="nhl-bounce">button{-webkit-tap-highlight-color:transparent}button:active:not(:disabled){scale:.94}</style>
 <script id="nhl-bounce-js">(function(){if(!Element.prototype.animate)return;var rm=window.matchMedia?matchMedia('(prefers-reduced-motion:reduce)'):null;var cur=null;document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('button'):null;cur=(b&&!b.disabled)?b:null},true);document.addEventListener('pointerup',function(){var b=cur;cur=null;if(!b||!b.isConnected||(rm&&rm.matches))return;try{b.animate([{scale:.94},{scale:1.06,offset:.45},{scale:.985,offset:.75},{scale:1}],{duration:380,easing:'ease-out'})}catch(_){}},true);document.addEventListener('pointercancel',function(){cur=null},true)})();</script>
 <body class="logged-out">
@@ -1095,6 +1162,7 @@ body{background-image:none!important;}
             <option value="dark">Tmavá</option>
             <option value="gray">Šedá</option>
             <option value="modern">Moderná</option>
+            <option value="sage">Šalvia (svetlá)</option>
             <option value="light">Svetlá</option>
           </select>
         </div>
@@ -1425,12 +1493,13 @@ function showToast(msg, type='info', duration=3500) {
 }
 
 // ─── THEME ───────────────────────────────────────────────────────────────────
-let themeMode = (() => { try { const v = localStorage.getItem('n28-theme'); return ['dark','gray','modern','light'].includes(v) ? v : 'dark'; } catch (e) { return 'dark'; } })();
-let dark = themeMode !== 'light';
-const THEME_COLOR = { dark:'#0f0f0f', gray:'#262624', modern:'#1f1e1c', light:'#f8f8f5' };
+let themeMode = (() => { try { const v = localStorage.getItem('n28-theme'); return ['dark','gray','modern','light','sage'].includes(v) ? v : 'dark'; } catch (e) { return 'dark'; } })();
+let dark = themeMode !== 'light' && themeMode !== 'sage';
+const THEME_COLOR = { dark:'#0f0f0f', gray:'#262624', modern:'#1f1e1c', light:'#f8f8f5', sage:'#efebe4' };
 function applyTheme() {
-  dark = themeMode !== 'light';
+  dark = themeMode !== 'light' && themeMode !== 'sage';
   document.documentElement.setAttribute('data-theme', themeMode);
+  if (themeMode === 'sage' && !document.getElementById('n28-sage-fonts')) { const l = document.createElement('link'); l.id = 'n28-sage-fonts'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap'; document.head.appendChild(l); }
   if (themeMode === 'modern' && !document.getElementById('n28-modern-fonts')) { const l = document.createElement('link'); l.id = 'n28-modern-fonts'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap'; document.head.appendChild(l); }
   const icon = document.getElementById('theme-icon');
   if (icon) icon.innerHTML = dark
