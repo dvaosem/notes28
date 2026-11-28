@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v174">
+<meta name="n28-build" content="n28-v175">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -935,9 +935,9 @@ body{background-image:none!important;}
 html[data-layout="flow"] #flow-today{display:block;}
 #flow-today:empty{display:none!important;}
 #flow-today{padding:.2rem .1rem 0;}
-.ft-hello{display:flex;flex-direction:column;margin:.35rem .2rem .8rem;}
-.ft-hello small{font-size:.76rem;color:var(--text2);}
-.ft-hello b{font-size:1.35rem;letter-spacing:-.02em;color:var(--text);font-family:var(--font-head);}
+.ft-hello{display:flex;margin:.5rem .25rem .7rem;}
+.ft-hello b{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);}
+#flow-fade-top,#flow-fade-bot{display:none;}
 .ft-today{background:var(--sage,color-mix(in srgb,var(--surface2) 80%,transparent));border-radius:22px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem;}
 .ft-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;color:var(--text);padding:0 .15rem;}
 .ft-h small{font-size:.72rem;color:var(--text2);font-weight:500;}
@@ -977,6 +977,15 @@ html[data-layout="flow"] .note-card.has-color .card-tab-badge{background:color-m
   #flow-nav .fn-plus svg{width:24px;height:24px;}
   html[data-layout="flow"] #fab,html[data-layout="flow"] #fab2,html[data-layout="flow"] #search-toggle,html[data-layout="flow"] #cal-btn,html[data-layout="flow"] #settings-btn{display:none!important;}
   html[data-layout="flow"] .notes-wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important;}
+  html[data-layout="flow"] #flow-fade-top,html[data-layout="flow"] #flow-fade-bot{display:block;position:fixed;left:0;right:0;pointer-events:none;
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+  html[data-layout="flow"] #flow-fade-top{top:0;height:calc(var(--topbar-h,90px) + 34px);z-index:40;
+    background:linear-gradient(to bottom,var(--bg) 0%,color-mix(in srgb,var(--bg) 70%,transparent) 55%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent);mask-image:linear-gradient(to bottom,#000 55%,transparent);}
+  html[data-layout="flow"] #flow-fade-bot{bottom:0;height:calc(130px + env(safe-area-inset-bottom,0px));z-index:240;
+    background:linear-gradient(to top,var(--bg) 0%,color-mix(in srgb,var(--bg) 75%,transparent) 45%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to top,#000 50%,transparent);mask-image:linear-gradient(to top,#000 50%,transparent);}
+  body.logged-out #flow-fade-top,body.logged-out #flow-fade-bot,html:not(.app-ready) #flow-fade-top,html:not(.app-ready) #flow-fade-bot{display:none!important;}
 }
 body.logged-out #flow-nav,html:not(.app-ready) #flow-nav{display:none!important;}
 /* Šalvia: lišta tmavá olivová ako v návrhu */
@@ -8018,6 +8027,8 @@ function addResurface() {
     '<button type="button" data-a="search" aria-label="Hľadať">'+I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')+'</button>'+
     '<button type="button" data-a="set" aria-label="Nastavenia">'+I('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>')+'</button>';
   document.body.appendChild(nav);
+  // jemné rozmazanie obsahu, ktorý zachádza pod hornú a spodnú lištu
+  ['top','bot'].forEach(k=>{ const f=document.createElement('div'); f.id='flow-fade-'+k; f.setAttribute('aria-hidden','true'); document.body.appendChild(f); });
   nav.addEventListener('click',e=>{
     const b=e.target.closest('button'); if(!b) return; haptic(8);
     const a=b.dataset.a;
@@ -8048,11 +8059,10 @@ function addResurface() {
     if(!on){ if(today.innerHTML) today.innerHTML=''; return; }
     if(window.n28CalFeed) window.n28CalFeed();
     const d=new Date(), key=ymd(d), hr=d.getHours();
-    const hello=hr<10?'Dobré ráno':hr<18?'Pekný deň':'Dobrý večer';
     const evs=(window.n28CalItems?window.n28CalItems(key):[]).slice(0,4);
     const tasks=notes.filter(n=>!n._trash&&n.dueDate&&!n.dueDone&&String(n.dueDate)<=key).sort((a,b)=>(n28DueTs(a)||0)-(n28DueTs(b)||0)).slice(0,5);
     const pins=notes.filter(n=>n.pinned&&!n._trash);
-    let h='<div class="ft-hello"><small>'+escHtml(d.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'}))+'</small><b>'+hello+'</b></div>';
+    let h='<div class="ft-hello"><b>'+escHtml(d.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'}))+'</b></div>';
     h+='<div class="ft-today"><div class="ft-h"><span>Dnes</span><small>'+evs.length+' '+plural(evs.length,'udalosť','udalosti','udalostí')+' · '+tasks.length+' '+plural(tasks.length,'úloha','úlohy','úloh')+'</small></div>';
     h+=evs.map(e=>'<button type="button" class="ft-ev" data-cal="1"><span class="ft-t">'+escHtml(e.time?(e.end?e.time+'–'+e.end:e.time):'celý deň')+'</span><span class="ft-n">'+escHtml(e.title)+'</span><i style="background:'+escHtml(e.c)+'"></i></button>').join('');
     h+=tasks.map(n=>{ const late=String(n.dueDate)<key; const lbl=late?('zmeškané · '+n28FmtDue(n.dueDate,'')):(n.dueTime||'dnes');
