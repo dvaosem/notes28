@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v181">
+<meta name="n28-build" content="n28-v182">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -1078,13 +1078,13 @@ html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(n+6){animation
 /* ═══ Flow na PC: editor ukotvený vpravo, zoznam v strede ═══ */
 #flow-pc-empty{display:none;}
 @media(min-width:1000px){
-  html[data-layout="flow"]{--pc-ed:min(44vw,700px);}
+  html[data-layout="flow"]{--pc-ed:min(42vw,680px);}
   html[data-layout="flow"] #app-screen .notes-wrap{padding-right:calc(var(--pc-ed) + 2rem)!important;}
   html[data-layout="flow"] #notes-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))!important;}
-  html[data-layout="flow"] #modal.open{position:fixed!important;inset:1rem 1rem 1rem auto!important;width:var(--pc-ed)!important;height:auto!important;max-height:none!important;padding:0!important;
+  html[data-layout="flow"] #modal.open{position:fixed!important;inset:.65rem .65rem .65rem auto!important;width:var(--pc-ed)!important;height:auto!important;max-height:none!important;padding:0!important;
     background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;align-items:stretch!important;justify-content:stretch!important;z-index:200!important;animation:none!important;}
   html[data-layout="flow"] #modal.open .modal-box{width:100%!important;max-width:100%!important;height:100%!important;max-height:100%!important;border-radius:24px!important;box-shadow:var(--elev3),inset 0 0 0 1px color-mix(in srgb,var(--text) 7%,transparent)!important;animation:none!important;}
-  html[data-layout="flow"] #flow-pc-empty{display:flex;position:fixed;top:1rem;bottom:1rem;right:1rem;width:var(--pc-ed);z-index:150;align-items:center;justify-content:center;text-align:center;
+  html[data-layout="flow"] #flow-pc-empty{display:flex;position:fixed;top:.65rem;bottom:.65rem;right:.65rem;width:var(--pc-ed);z-index:150;align-items:center;justify-content:center;text-align:center;
     border-radius:24px;background:color-mix(in srgb,var(--surface) 55%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--text) 7%,transparent);color:var(--text2);}
   #flow-pc-empty>div{display:flex;flex-direction:column;align-items:center;gap:.55rem;max-width:320px;padding:1rem;}
   #flow-pc-empty svg{opacity:.5;}
@@ -1095,6 +1095,14 @@ html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(n+6){animation
   body.logged-out #flow-pc-empty,html:not(.app-ready) #flow-pc-empty{display:none!important;}
   html[data-layout="flow"] #fab{display:none!important;}
   html[data-layout="flow"] #app-screen #flow-today{margin-left:200px;}
+}
+/* Flow na PC + panel Rýchla poznámka vpravo: panel je pravý stĺpec, otvorená poznámka ho prekryje (nič sa neodsúva dvakrát) */
+@media(min-width:1100px){
+  html[data-layout="flow"] body.n28-sp-on{--pc-ed:max(var(--sp-w,330px),380px);}
+  html[data-layout="flow"] body.n28-sp-on #app-screen{padding-right:0!important;}
+  html[data-layout="flow"] body.n28-sp-on #n28-scratch{width:var(--pc-ed)!important;}
+  html[data-layout="flow"] body.n28-sp-on #flow-pc-empty{display:none!important;}
+  html[data-layout="flow"] #modal.open{z-index:260!important;}
 }
 </style>
 <style id="nhl-bounce">button{-webkit-tap-highlight-color:transparent}button:active:not(:disabled){scale:.94}</style>
