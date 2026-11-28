@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v177">
+<meta name="n28-build" content="n28-v178">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -8048,7 +8048,7 @@ function addResurface() {
   const I=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
   const nav=document.createElement('nav'); nav.id='flow-nav'; nav.setAttribute('aria-label','Navigácia');
   nav.innerHTML=
-    '<button type="button" data-a="notes" class="on" aria-label="Poznámky">'+I('<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>')+'<span>Poznámky</span></button>'+
+    '<button type="button" data-a="notes" class="on" aria-label="Záložky">'+I('<path d="M12 3 2.5 8 12 13l9.5-5L12 3Z"/><path d="m2.5 12.5 9.5 5 9.5-5"/><path d="m2.5 17 9.5 5 9.5-5"/>')+'<span>Záložky</span></button>'+
     '<button type="button" data-a="cal" aria-label="Kalendár">'+I('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>')+'</button>'+
     '<button type="button" data-a="add" class="fn-plus" aria-label="Nová poznámka">'+I('<path d="M12 5v14M5 12h14"/>')+'</button>'+
     '<button type="button" data-a="search" aria-label="Hľadať">'+I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')+'</button>'+
@@ -8062,8 +8062,7 @@ function addResurface() {
     if(a==='notes'){
       document.querySelectorAll('.n28-modal.open').forEach(x=>x.classList.remove('open'));
       if(searchInput.value){ searchInput.value=''; searchInput.dispatchEvent(new Event('input')); }
-      const t=document.querySelector('#tabs .tab[data-tab="'+CSS.escape(LAST_TAB)+'"]'); if(t&&currentTab!==LAST_TAB) t.click();
-      const w=document.querySelector('.notes-wrap'); if(w) w.scrollTo({top:0,behavior:'smooth'});
+      document.getElementById('flow-tabs-btn')?.click();
     }
     else if(a==='cal') document.getElementById('cal-btn')?.click();
     else if(a==='add') openSheet();
