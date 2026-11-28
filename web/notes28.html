@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v175">
+<meta name="n28-build" content="n28-v176">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -938,7 +938,11 @@ html[data-layout="flow"] #flow-today{display:block;}
 .ft-hello{display:flex;margin:.5rem .25rem .7rem;}
 .ft-hello b{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);}
 #flow-fade-top,#flow-fade-bot{display:none;}
-.ft-today{background:var(--sage,color-mix(in srgb,var(--surface2) 80%,transparent));border-radius:22px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem;}
+.ft-today{background:var(--sage,color-mix(in srgb,var(--surface2) 80%,transparent));border-radius:20px;padding:.5rem;display:flex;flex-direction:column;gap:.4rem;}
+.ft-add{display:flex;align-items:center;gap:.4rem;justify-content:flex-end;padding:.05rem .1rem 0;}
+.ft-add .ft-empty{flex:1;padding:0 .3rem;}
+.ft-add button{border:none;cursor:pointer;font:inherit;font-size:.74rem;font-weight:600;color:var(--text2);background:color-mix(in srgb,var(--text) 6%,transparent);border-radius:999px;padding:.32rem .7rem;transition:background .15s,color .15s;}
+.ft-add button:active{background:color-mix(in srgb,var(--text) 12%,transparent);color:var(--text);}
 .ft-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;color:var(--text);padding:0 .15rem;}
 .ft-h small{font-size:.72rem;color:var(--text2);font-weight:500;}
 .ft-ev{display:flex;align-items:center;gap:.6rem;border:none;cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--text);background:var(--card,var(--surface));border-radius:15px;padding:.6rem .7rem;box-shadow:0 10px 22px -18px rgba(0,0,0,.5);}
@@ -951,7 +955,7 @@ html[data-layout="flow"] #flow-today{display:block;}
 .ft-tn{flex:1;min-width:0;border:none;background:none;text-align:left;font:inherit;font-size:.86rem;color:var(--text);cursor:pointer;padding:.25rem 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .ft-task em{font-style:normal;font-size:.68rem;font-weight:600;color:var(--text2);white-space:nowrap;}
 .ft-task em.late{color:#e5484d;}
-.ft-empty{font-size:.82rem;color:var(--text2);padding:.2rem .2rem .1rem;}
+.ft-empty{font-size:.8rem;color:var(--text2);}
 .ft-sec{font-weight:600;color:var(--text);margin:1rem .2rem .55rem;font-size:.92rem;}
 .ft-pins{display:flex;gap:.55rem;overflow-x:auto;scrollbar-width:none;padding:0 .1rem .3rem;}
 .ft-pins::-webkit-scrollbar{display:none;}
@@ -988,6 +992,16 @@ html[data-layout="flow"] .note-card.has-color .card-tab-badge{background:color-m
   body.logged-out #flow-fade-top,body.logged-out #flow-fade-bot,html:not(.app-ready) #flow-fade-top,html:not(.app-ready) #flow-fade-bot{display:none!important;}
 }
 body.logged-out #flow-nav,html:not(.app-ready) #flow-nav{display:none!important;}
+/* liquid glass – horná a spodná lišta vo Flow (telefón) */
+@media(max-width:999px){
+  html[data-layout="flow"] #topbar-sticky{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 62%,transparent),color-mix(in srgb,var(--surface) 42%,transparent))!important;
+    backdrop-filter:blur(26px) saturate(190%) brightness(1.04)!important;-webkit-backdrop-filter:blur(26px) saturate(190%) brightness(1.04)!important;
+    border:1px solid color-mix(in srgb,#fff 16%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.05),0 14px 34px -20px rgba(0,0,0,.55)!important;}
+  html[data-layout="flow"] #flow-nav{background:linear-gradient(180deg,color-mix(in srgb,var(--surface2) 58%,transparent),color-mix(in srgb,var(--surface2) 38%,transparent))!important;
+    backdrop-filter:blur(26px) saturate(190%) brightness(1.04)!important;-webkit-backdrop-filter:blur(26px) saturate(190%) brightness(1.04)!important;
+    border:1px solid color-mix(in srgb,#fff 16%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.05),0 18px 36px -16px rgba(0,0,0,.6)!important;}
+  html[data-layout="flow"][data-theme="sage"] #flow-nav{background:linear-gradient(180deg,color-mix(in srgb,var(--accent-default) 82%,transparent),color-mix(in srgb,var(--accent-default) 66%,transparent))!important;}
+}
 /* Šalvia: lišta tmavá olivová ako v návrhu */
 [data-theme="sage"] #flow-nav{background:var(--accent-default)!important;}
 [data-theme="sage"] #flow-nav button{color:color-mix(in srgb,var(--accent-text) 62%,transparent);}
@@ -1029,8 +1043,9 @@ html[data-layout="flow"] .note-card .card-accent-bar{display:none!important;}
 html[data-layout="flow"] .note-card{position:relative;overflow:hidden;}
 html[data-layout="flow"] .note-card .card-body{position:relative;}
 html[data-layout="flow"] .note-card.has-color .card-body{background-image:radial-gradient(110% 70% at 100% 0%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 60%);}
-html[data-layout="flow"] .card-tab-badge{position:absolute!important;top:auto;bottom:-.35rem;right:-.15rem;z-index:0;pointer-events:none;background:none!important;padding:0!important;border-radius:0!important;font-size:2.5rem!important;font-weight:800!important;letter-spacing:-.04em!important;text-transform:uppercase;line-height:1;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:clip;color:var(--accent)!important;opacity:.1;}
-html[data-layout="flow"] .note-card:not(.has-color) .card-tab-badge{color:var(--text2)!important;opacity:.08;}
+html[data-layout="flow"] .card-tab-badge{position:absolute!important;top:auto;bottom:-.35rem;right:-.15rem;z-index:0;pointer-events:none;background:none!important;padding:0!important;border-radius:0!important;font-size:1.7rem!important;font-weight:800!important;letter-spacing:-.03em!important;text-transform:uppercase;line-height:1;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:clip;color:#fff!important;opacity:.07;}
+html[data-layout="flow"] .note-card:not(.has-color) .card-tab-badge{color:#fff!important;opacity:.07;}
+html[data-layout="flow"][data-theme="light"] .card-tab-badge,html[data-layout="flow"][data-theme="sage"] .card-tab-badge{color:var(--text)!important;opacity:.05;}
 html[data-layout="flow"] .card-tab-badge:has(>span[style]){display:none!important;}
 html[data-layout="flow"] .note-card .card-body{padding-bottom:1.1rem;}
 html[data-layout="flow"] .card-tab-badge span{opacity:1!important;}
@@ -7989,6 +8004,7 @@ function addResurface() {
   E('ce-from').addEventListener('change',()=>{ const f=E('ce-from').value, t=E('ce-to').value; if(f&&(!t||t<=f)){ const [h,mi]=f.split(':').map(Number); E('ce-to').value=p2(Math.min(23,h+1))+':'+p2(mi); } });
   E('ce-x').onclick=closeEv; E('ce-cancel').onclick=closeEv; em.addEventListener('click',e=>{ if(e.target===em) closeEv(); });
   $('cal-fab').onclick=()=>openEv(null);
+  window.n28NewEvent=()=>{ const n=new Date(); sel=ymd(n); y=n.getFullYear(); mo=n.getMonth(); openEv(null); };
   E('ce-del').onclick=async()=>{ if(!editId) return; try{ await deleteDoc(doc(db,'users',currentUser.uid,'events',editId)); closeEv(); }catch(err){ showToast('Nepodarilo sa zmazať','warn'); } };
   E('ce-save').onclick=async()=>{
     const title=E('ce-title').value.trim(); if(!title){ E('ce-title').focus(); return; }
@@ -8063,11 +8079,11 @@ function addResurface() {
     const tasks=notes.filter(n=>!n._trash&&n.dueDate&&!n.dueDone&&String(n.dueDate)<=key).sort((a,b)=>(n28DueTs(a)||0)-(n28DueTs(b)||0)).slice(0,5);
     const pins=notes.filter(n=>n.pinned&&!n._trash);
     let h='<div class="ft-hello"><b>'+escHtml(d.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'}))+'</b></div>';
-    h+='<div class="ft-today"><div class="ft-h"><span>Dnes</span><small>'+evs.length+' '+plural(evs.length,'udalosť','udalosti','udalostí')+' · '+tasks.length+' '+plural(tasks.length,'úloha','úlohy','úloh')+'</small></div>';
+    h+='<div class="ft-today">';
     h+=evs.map(e=>'<button type="button" class="ft-ev" data-cal="1"><span class="ft-t">'+escHtml(e.time?(e.end?e.time+'–'+e.end:e.time):'celý deň')+'</span><span class="ft-n">'+escHtml(e.title)+'</span><i style="background:'+escHtml(e.c)+'"></i></button>').join('');
     h+=tasks.map(n=>{ const late=String(n.dueDate)<key; const lbl=late?('zmeškané · '+n28FmtDue(n.dueDate,'')):(n.dueTime||'dnes');
       return '<div class="ft-task"><button type="button" class="ft-cb" data-done="'+escHtml(n.id)+'" aria-label="Označiť ako hotové"></button><button type="button" class="ft-tn" data-open="'+escHtml(n.id)+'">'+escHtml(n.title||plain(n.content).slice(0,60)||'Bez názvu')+'</button><em class="'+(late?'late':'')+'">'+escHtml(String(lbl).trim())+'</em></div>'; }).join('');
-    if(!evs.length&&!tasks.length) h+='<div class="ft-empty">Na dnes nič naplánované.</div>';
+    h+='<div class="ft-add">'+(!evs.length&&!tasks.length?'<span class="ft-empty">Na dnes nič naplánované.</span>':'')+'<button type="button" data-new="ev">+ Udalosť</button><button type="button" data-new="task">+ Úloha</button></div>';
     h+='</div>';
     if(pins.length){
       h+='<div class="ft-sec">Pripnuté</div><div class="ft-pins">'+pins.map(n=>{ const t=n.id===QUICKNOTE_ID?'Rýchla poznámka':(n.title||'Bez názvu');
@@ -8078,6 +8094,11 @@ function addResurface() {
   }
   today.addEventListener('click',async e=>{
     if(e.target.closest('[data-cal]')){ document.getElementById('cal-btn')?.click(); return; }
+    const nw=e.target.closest('[data-new]');
+    if(nw){ haptic(8);
+      if(nw.dataset.new==='ev'){ if(window.n28NewEvent) window.n28NewEvent(); else document.getElementById('cal-btn')?.click(); }
+      else { openModal(); setTimeout(()=>{ try{ inputDue.value=ymd(new Date()); inputDue.dispatchEvent(new Event('change')); inputTitle.focus(); }catch(err){} },80); }
+      return; }
     const dn=e.target.closest('[data-done]');
     if(dn){ const n=notes.find(x=>x.id===dn.dataset.done); if(!n) return; dn.classList.add('on'); haptic(15);
       try{ await updateDoc(doc(db,'users',currentUser.uid,'notes',n.id),{dueDone:true}); showToast('Hotovo','ok',1800); }catch(err){ dn.classList.remove('on'); showToast('Nepodarilo sa uložiť','warn'); } return; }
