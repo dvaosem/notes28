@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v176">
+<meta name="n28-build" content="n28-v177">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -938,14 +938,22 @@ html[data-layout="flow"] #flow-today{display:block;}
 .ft-hello{display:flex;margin:.5rem .25rem .7rem;}
 .ft-hello b{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);}
 #flow-fade-top,#flow-fade-bot{display:none;}
-.ft-today{background:var(--sage,color-mix(in srgb,var(--surface2) 80%,transparent));border-radius:20px;padding:.5rem;display:flex;flex-direction:column;gap:.4rem;}
+.ft-today{position:relative;background:var(--sage,color-mix(in srgb,var(--surface2) 80%,transparent));border-radius:18px;padding:.4rem;display:flex;flex-direction:column;gap:.3rem;margin:.1rem 0 .6rem;}
+.ft-plus{position:absolute;right:.5rem;bottom:-.75rem;width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;font:inherit;font-size:1.05rem;line-height:1;font-weight:600;display:flex;align-items:center;justify-content:center;
+  color:var(--text);background:color-mix(in srgb,var(--surface2) 70%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 6px 14px -6px rgba(0,0,0,.5);z-index:2;}
+.ft-menu{position:absolute;right:.5rem;bottom:-.75rem;transform:translateY(100%);margin-top:.3rem;z-index:3;display:flex;flex-direction:column;min-width:130px;padding:.3rem;border-radius:14px;background:var(--surface);box-shadow:var(--elev3);}
+.ft-menu[hidden]{display:none;}
+.ft-menu button{border:none;background:none;text-align:left;font:inherit;font-size:.84rem;color:var(--text);padding:.55rem .7rem;border-radius:10px;cursor:pointer;}
+.ft-menu button:active{background:var(--state-press);}
+#flow-date{display:none;}
+html[data-layout="flow"] #flow-date{display:inline;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text2);margin-left:.15rem;white-space:nowrap;}
 .ft-add{display:flex;align-items:center;gap:.4rem;justify-content:flex-end;padding:.05rem .1rem 0;}
 .ft-add .ft-empty{flex:1;padding:0 .3rem;}
 .ft-add button{border:none;cursor:pointer;font:inherit;font-size:.74rem;font-weight:600;color:var(--text2);background:color-mix(in srgb,var(--text) 6%,transparent);border-radius:999px;padding:.32rem .7rem;transition:background .15s,color .15s;}
 .ft-add button:active{background:color-mix(in srgb,var(--text) 12%,transparent);color:var(--text);}
 .ft-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;color:var(--text);padding:0 .15rem;}
 .ft-h small{font-size:.72rem;color:var(--text2);font-weight:500;}
-.ft-ev{display:flex;align-items:center;gap:.6rem;border:none;cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--text);background:var(--card,var(--surface));border-radius:15px;padding:.6rem .7rem;box-shadow:0 10px 22px -18px rgba(0,0,0,.5);}
+.ft-ev{display:flex;align-items:center;gap:.6rem;border:none;cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--text);background:var(--card,var(--surface));border-radius:13px;padding:.42rem .6rem;box-shadow:0 10px 22px -18px rgba(0,0,0,.5);}
 .ft-t{background:var(--surface2);border-radius:9px;padding:.15rem .45rem;font-size:.72rem;color:var(--text2);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .ft-n{flex:1;min-width:0;font-size:.86rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .ft-ev i{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
@@ -963,6 +971,9 @@ html[data-layout="flow"] #flow-today{display:block;}
 .ft-pin b{font-size:.84rem;font-weight:600;}
 .ft-pin span{font-size:.72rem;color:var(--text2);line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 html.flow-home[data-layout="flow"] #notes-grid .note-card.card-pinned{display:none!important;}
+html[data-layout="flow"] #notes-grid{gap:.45rem!important;}
+html[data-layout="flow"] .ft-sec{margin:.6rem .2rem .4rem;font-size:.85rem;}
+html[data-layout="flow"] .ft-pins{margin-bottom:.5rem;}
 /* karty vo Flow: štítok záložky hore */
 html[data-layout="flow"] .card-meta{order:-1;margin:0 0 .15rem;flex-direction:row-reverse;justify-content:flex-end;gap:.4rem;}
 html[data-layout="flow"] .card-meta>span:empty{display:none;}
@@ -1143,7 +1154,7 @@ html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(n+6){animation
   <div class="notes-wrap">
     <div id="topbar-sticky">
       <header>
-        <div class="logo">N<span>28</span></div>
+        <div class="logo">N<span>28</span></div><span id="flow-date" aria-hidden="true"></span>
         <div class="search-wrap">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input id="search-input" type="search" placeholder="Hľadať v poznámkach…">
@@ -7476,7 +7487,7 @@ renderGlobalSearch = function (q) {
   let y0 = null, x0 = 0, done = false;
   wrap.addEventListener('touchstart', e => {
     done = false;
-    y0 = (wrap.scrollTop <= 0 && e.touches.length === 1 && !modal.classList.contains('open') && !bulkMode) ? e.touches[0].clientY : null;
+    y0 = (document.documentElement.dataset.layout !== 'flow' && wrap.scrollTop <= 0 && e.touches.length === 1 && !modal.classList.contains('open') && !bulkMode) ? e.touches[0].clientY : null;
     x0 = e.touches[0].clientX;
   }, { passive: true });
   wrap.addEventListener('touchmove', e => {
@@ -8078,22 +8089,22 @@ function addResurface() {
     const evs=(window.n28CalItems?window.n28CalItems(key):[]).slice(0,4);
     const tasks=notes.filter(n=>!n._trash&&n.dueDate&&!n.dueDone&&String(n.dueDate)<=key).sort((a,b)=>(n28DueTs(a)||0)-(n28DueTs(b)||0)).slice(0,5);
     const pins=notes.filter(n=>n.pinned&&!n._trash);
-    let h='<div class="ft-hello"><b>'+escHtml(d.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'}))+'</b></div>';
-    h+='<div class="ft-today">';
+    const fd=document.getElementById('flow-date'); if(fd) fd.textContent=d.toLocaleDateString('sk-SK',{weekday:'short',day:'numeric',month:'numeric'});
+    let h='';
+    if(evs.length||tasks.length) h+='<div class="ft-today">';
     h+=evs.map(e=>'<button type="button" class="ft-ev" data-cal="1"><span class="ft-t">'+escHtml(e.time?(e.end?e.time+'–'+e.end:e.time):'celý deň')+'</span><span class="ft-n">'+escHtml(e.title)+'</span><i style="background:'+escHtml(e.c)+'"></i></button>').join('');
     h+=tasks.map(n=>{ const late=String(n.dueDate)<key; const lbl=late?('zmeškané · '+n28FmtDue(n.dueDate,'')):(n.dueTime||'dnes');
       return '<div class="ft-task"><button type="button" class="ft-cb" data-done="'+escHtml(n.id)+'" aria-label="Označiť ako hotové"></button><button type="button" class="ft-tn" data-open="'+escHtml(n.id)+'">'+escHtml(n.title||plain(n.content).slice(0,60)||'Bez názvu')+'</button><em class="'+(late?'late':'')+'">'+escHtml(String(lbl).trim())+'</em></div>'; }).join('');
-    h+='<div class="ft-add">'+(!evs.length&&!tasks.length?'<span class="ft-empty">Na dnes nič naplánované.</span>':'')+'<button type="button" data-new="ev">+ Udalosť</button><button type="button" data-new="task">+ Úloha</button></div>';
-    h+='</div>';
+    if(evs.length||tasks.length) h+='<button type="button" class="ft-plus" data-menu="1" aria-label="Pridať udalosť alebo úlohu">+</button><div class="ft-menu" hidden><button type="button" data-new="ev">Udalosť</button><button type="button" data-new="task">Úloha</button></div></div>';
     if(pins.length){
       h+='<div class="ft-sec">Pripnuté</div><div class="ft-pins">'+pins.map(n=>{ const t=n.id===QUICKNOTE_ID?'Rýchla poznámka':(n.title||'Bez názvu');
         return '<button type="button" class="ft-pin" data-open="'+escHtml(n.id)+'"><b>'+escHtml(t)+'</b><span>'+escHtml(plain(n.content).slice(0,110))+'</span></button>'; }).join('')+'</div>';
     }
-    h+='<div class="ft-sec">Poznámky</div>';
     today.innerHTML=h;
   }
   today.addEventListener('click',async e=>{
     if(e.target.closest('[data-cal]')){ document.getElementById('cal-btn')?.click(); return; }
+    if(e.target.closest('[data-menu]')){ const mn=today.querySelector('.ft-menu'); if(mn) mn.hidden=!mn.hidden; return; }
     const nw=e.target.closest('[data-new]');
     if(nw){ haptic(8);
       if(nw.dataset.new==='ev'){ if(window.n28NewEvent) window.n28NewEvent(); else document.getElementById('cal-btn')?.click(); }
