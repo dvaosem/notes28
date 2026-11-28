@@ -1,6 +1,6 @@
 <?php
 /* N28: načíta súkromný iCal (Google Kalendár) pre appku – CORS proxy.
-   Pustí LEN adresy https://calendar.google.com/calendar/ical/.../*.ics (žiadny otvorený proxy).
+   Pustí LEN adresy Google (calendar.google.com/calendar/ical/...) a Outlook/Office 365 (outlook.office365.com/owa/calendar/....ics) (žiadny otvorený proxy).
    URL ide v tele POST (nie v query), aby sa tajná adresa nezapisovala do access logov. */
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if ($origin === 'https://dvaosem.com' || $origin === 'https://www.dvaosem.com') {
@@ -17,7 +17,9 @@ $in = json_decode(file_get_contents('php://input'), true);
 $url = is_array($in) ? trim((string)($in['url'] ?? '')) : '';
 // webcal:// → https://
 $url = preg_replace('~^webcal://~i', 'https://', $url);
-if (!preg_match('~^https://calendar\.google\.com/calendar/ical/[A-Za-z0-9%@._\-]+/[A-Za-z0-9%@._\-]+/basic\.ics$~', $url)) {
+$okGoogle = preg_match('~^https://calendar\.google\.com/calendar/ical/[A-Za-z0-9%@._\-]+/[A-Za-z0-9%@._\-]+/basic\.ics$~', $url);
+$okOutlook = preg_match('~^https://outlook\.(office365|office|live)\.com/owa/calendar/[A-Za-z0-9%@._\-]+(/[A-Za-z0-9%@._\-]+){1,4}\.ics$~', $url);
+if (!$okGoogle && !$okOutlook) {
   http_response_code(400); exit('bad url');
 }
 
