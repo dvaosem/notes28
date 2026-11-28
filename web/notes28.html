@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v173">
+<meta name="n28-build" content="n28-v174">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -984,6 +984,59 @@ body.logged-out #flow-nav,html:not(.app-ready) #flow-nav{display:none!important;
 [data-theme="sage"] #flow-nav button{color:color-mix(in srgb,var(--accent-text) 62%,transparent);}
 [data-theme="sage"] #flow-nav button.on{color:var(--accent-text);background:color-mix(in srgb,var(--accent-text) 14%,transparent);}
 [data-theme="sage"] #flow-nav .fn-plus{background:var(--accent-text);color:var(--accent-default);}
+</style>
+<style id="n28-layout-flow2">
+/* ═══ Flow v174: záložky pod tlačidlom, karty bez prúžku, názov záložky ako vodoznak ═══ */
+#flow-tabs-btn,#flow-tabs-sheet{display:none;}
+@media(max-width:999px){
+  html[data-layout="flow"] .tabs-bar{display:none!important;}
+  html[data-layout="flow"] #flow-tabs-btn{display:inline-flex!important;width:auto!important;height:38px!important;border-radius:999px!important;padding:0 .7rem 0 .6rem!important;gap:.4rem;align-items:center;font:inherit;font-size:.84rem;font-weight:600;color:var(--text)!important;background:var(--surface2)!important;margin-right:.2rem;max-width:46vw;}
+  #flow-tabs-btn .ftb-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #flow-tabs-btn .ftb-dot{width:8px;height:8px;border-radius:50%;background:var(--ftb-c);display:none;flex-shrink:0;}
+  #flow-tabs-btn.has-c .ftb-dot{display:block;}
+  html[data-layout="flow"] #flow-tabs-sheet{display:flex;position:fixed;inset:0;z-index:380;align-items:flex-end;background:rgba(10,12,9,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .22s ease;}
+  html[data-layout="flow"] #flow-tabs-sheet.open{opacity:1;pointer-events:auto;}
+  .fts-box{width:100%;max-height:78dvh;overflow-y:auto;background:var(--surface);border-radius:28px 28px 0 0;padding:.7rem 1rem calc(1.2rem + env(safe-area-inset-bottom,0px));transform:translateY(40px);transition:transform .38s cubic-bezier(.2,.9,.2,1.05);box-shadow:0 -20px 50px -20px rgba(0,0,0,.5);}
+  #flow-tabs-sheet.open .fts-box{transform:none;}
+  .fts-grip{width:40px;height:4px;border-radius:9px;background:var(--border);margin:0 auto .8rem;}
+  .fts-head{display:flex;align-items:center;justify-content:space-between;margin:0 .2rem .8rem;}
+  .fts-head b{font-size:1.2rem;letter-spacing:-.02em;color:var(--text);font-family:var(--font-head);}
+  .fts-manage{border:none;background:var(--surface2);color:var(--text2);border-radius:999px;padding:.35rem .8rem;font:inherit;font-size:.78rem;font-weight:600;cursor:pointer;}
+  .fts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;}
+  .fts-tile{position:relative;overflow:hidden;border:none;cursor:pointer;text-align:left;font:inherit;color:var(--text);min-height:84px;border-radius:20px;padding:.8rem .9rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.15rem;
+    background:radial-gradient(130% 90% at 100% 0%,color-mix(in srgb,var(--c) 30%,transparent),transparent 60%),var(--card,var(--surface2));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 18%,transparent),0 12px 26px -20px rgba(0,0,0,.6);opacity:0;transform:translateY(10px) scale(.98);}
+  #flow-tabs-sheet.open .fts-tile{animation:ftsIn .42s cubic-bezier(.2,.9,.2,1) both;}
+  @keyframes ftsIn{to{opacity:1;transform:none;}}
+  .fts-tile::after{content:'';position:absolute;top:.8rem;right:.8rem;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent);}
+  .fts-tile.on{box-shadow:inset 0 0 0 2px var(--c),0 14px 30px -18px color-mix(in srgb,var(--c) 60%,transparent);}
+  .fts-name{font-weight:700;font-size:.98rem;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:1.2rem;}
+  .fts-n{font-size:.72rem;color:var(--text2);}
+  .fts-add{--c:var(--text2);justify-content:center;align-items:center;background:none;box-shadow:inset 0 0 0 1.5px var(--border);}
+  .fts-add::after{display:none;}
+  .fts-add .fts-name{padding:0;font-weight:600;color:var(--text2);}
+}
+/* karty vo Flow: bez prúžku, názov záložky ako tichý vodoznak vpravo hore + jemná žiara farby */
+html[data-layout="flow"] .note-card .card-accent-bar{display:none!important;}
+html[data-layout="flow"] .note-card{position:relative;overflow:hidden;}
+html[data-layout="flow"] .note-card .card-body{position:relative;}
+html[data-layout="flow"] .note-card.has-color .card-body{background-image:radial-gradient(110% 70% at 100% 0%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 60%);}
+html[data-layout="flow"] .card-tab-badge{position:absolute!important;top:auto;bottom:-.35rem;right:-.15rem;z-index:0;pointer-events:none;background:none!important;padding:0!important;border-radius:0!important;font-size:2.5rem!important;font-weight:800!important;letter-spacing:-.04em!important;text-transform:uppercase;line-height:1;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:clip;color:var(--accent)!important;opacity:.1;}
+html[data-layout="flow"] .note-card:not(.has-color) .card-tab-badge{color:var(--text2)!important;opacity:.08;}
+html[data-layout="flow"] .card-tab-badge:has(>span[style]){display:none!important;}
+html[data-layout="flow"] .note-card .card-body{padding-bottom:1.1rem;}
+html[data-layout="flow"] .card-tab-badge span{opacity:1!important;}
+html[data-layout="flow"] .card-title,html[data-layout="flow"] .card-content,html[data-layout="flow"] .card-meta>*:not(.card-tab-badge){position:relative;z-index:1;}
+html[data-layout="flow"] .card-title{padding-right:.2rem;}
+html[data-layout="flow"] .card-meta{order:2;margin:.25rem 0 0;justify-content:flex-start;}
+/* prechod pri zmene záložky */
+html[data-layout="flow"] #notes-grid.ft-anim .note-card{animation:ftCardIn .5s cubic-bezier(.2,.9,.2,1) both;}
+html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(2){animation-delay:40ms}
+html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(3){animation-delay:80ms}
+html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(4){animation-delay:120ms}
+html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(5){animation-delay:160ms}
+html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(n+6){animation-delay:200ms}
+@keyframes ftCardIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#flow-tabs-sheet .fts-tile,#notes-grid.ft-anim .note-card{animation:none!important;opacity:1!important;transform:none!important;}}
 </style>
 <style id="nhl-bounce">button{-webkit-tap-highlight-color:transparent}button:active:not(:disabled){scale:.94}</style>
 <script id="nhl-bounce-js">(function(){if(!Element.prototype.animate)return;var rm=window.matchMedia?matchMedia('(prefers-reduced-motion:reduce)'):null;var cur=null;document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('button'):null;cur=(b&&!b.disabled)?b:null},true);document.addEventListener('pointerup',function(){var b=cur;cur=null;if(!b||!b.isConnected||(rm&&rm.matches))return;try{b.animate([{scale:.94},{scale:1.06,offset:.45},{scale:.985,offset:.75},{scale:1}],{duration:380,easing:'ease-out'})}catch(_){}},true);document.addEventListener('pointercancel',function(){cur=null},true)})();</script>
@@ -8031,6 +8084,48 @@ function addResurface() {
   }
   document.getElementById('settings-layout-select')?.addEventListener('change',e=>{ try{ localStorage.setItem(LKEY,e.target.value); }catch(err){} apply(); });
   apply();
+})();
+
+
+// ═══ FLOW: výber záložiek cez tlačidlo v hlavičke (v174) ═══════════════════════
+(function(){
+  const actions=document.querySelector('header .header-actions'); if(!actions) return;
+  const btn=document.createElement('button'); btn.type='button'; btn.id='flow-tabs-btn'; btn.setAttribute('aria-label','Vybrať záložku'); btn.setAttribute('aria-haspopup','dialog');
+  btn.innerHTML='<i class="ftb-dot"></i><span class="ftb-name">Všetko</span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  actions.insertBefore(btn,actions.firstChild);
+  const sh=document.createElement('div'); sh.id='flow-tabs-sheet'; sh.setAttribute('role','dialog'); sh.setAttribute('aria-label','Záložky');
+  sh.innerHTML='<div class="fts-box"><div class="fts-grip"></div><div class="fts-head"><b>Záložky</b><button type="button" class="fts-manage">Upraviť</button></div><div class="fts-grid"></div></div>';
+  document.body.appendChild(sh);
+  const grid=sh.querySelector('.fts-grid');
+  const tabsEl=document.getElementById('tabs');
+  const label=t=>t===LAST_TAB?'Všetko':t===TRASH_TAB?'Kôš':t===AI_TAB?'AI':String(t).startsWith('shared:')?((sharedTabs.find(x=>'shared:'+x.id===t)||{}).name||'Zdieľané'):t;
+  const colorOf=el=>{ const c=el&&el.style.getPropertyValue('--tab-color'); return c&&c.trim()||''; };
+  const count=t=>t===LAST_TAB?notes.filter(n=>!n._trash).length:t===TRASH_TAB?notes.filter(n=>n._trash).length:t===AI_TAB?'':notes.filter(n=>!n._trash&&n.tab===t).length;
+  function syncBtn(){
+    const a=tabsEl.querySelector('.tab.active'); const t=a?a.dataset.tab:currentTab;
+    btn.querySelector('.ftb-name').textContent=label(t||LAST_TAB);
+    const c=colorOf(a); btn.style.setProperty('--ftb-c',c||'transparent'); btn.classList.toggle('has-c',!!c);
+  }
+  function open(){
+    const items=[...tabsEl.querySelectorAll('.tab[data-tab]')];
+    grid.innerHTML=items.map((el,i)=>{ const t=el.dataset.tab, c=colorOf(el), n=count(t);
+      return '<button type="button" class="fts-tile'+(el.classList.contains('active')?' on':'')+'" data-i="'+i+'" style="--c:'+(c||'var(--text2)')+';animation-delay:'+(i*25)+'ms"><span class="fts-name">'+escHtml(label(t))+'</span><span class="fts-n">'+(n===''?'':n+' '+(n===1?'poznámka':n>1&&n<5?'poznámky':'poznámok'))+'</span></button>'; }).join('')+
+      '<button type="button" class="fts-tile fts-add" data-add="1"><span class="fts-name">+ Nová záložka</span></button>';
+    sh.classList.add('open'); haptic(8);
+  }
+  const close=()=>sh.classList.remove('open');
+  btn.addEventListener('click',open);
+  sh.addEventListener('click',e=>{
+    if(e.target===sh){ close(); return; }
+    if(e.target.closest('.fts-manage')){ close(); document.getElementById('manage-tabs-btn')?.click(); return; }
+    if(e.target.closest('[data-add]')){ close(); document.getElementById('add-tab-btn')?.click(); return; }
+    const t=e.target.closest('.fts-tile[data-i]'); if(!t) return;
+    const el=tabsEl.querySelectorAll('.tab[data-tab]')[+t.dataset.i]; close();
+    if(el){ const g=document.getElementById('notes-grid'); g.classList.remove('ft-anim'); el.click(); requestAnimationFrame(()=>{ g.classList.add('ft-anim'); setTimeout(()=>g.classList.remove('ft-anim'),900); }); const w=document.querySelector('.notes-wrap'); if(w) w.scrollTo({top:0}); }
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+  new MutationObserver(syncBtn).observe(tabsEl,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  syncBtn();
 })();
 
 // účet / záložky / odhlásenie presunuté do Nastavení (pôvodné tlačidlá v hlavičke sú skryté, ale ich handlery ostávajú)
