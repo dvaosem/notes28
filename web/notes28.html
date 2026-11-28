@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v180">
+<meta name="n28-build" content="n28-v181">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -1073,6 +1073,29 @@ html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(5){animation-d
 html[data-layout="flow"] #notes-grid.ft-anim .note-card:nth-child(n+6){animation-delay:200ms}
 @keyframes ftCardIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){#flow-tabs-sheet .fts-tile,#notes-grid.ft-anim .note-card{animation:none!important;opacity:1!important;transform:none!important;}}
+</style>
+<style id="n28-layout-flow-pc">
+/* ═══ Flow na PC: editor ukotvený vpravo, zoznam v strede ═══ */
+#flow-pc-empty{display:none;}
+@media(min-width:1000px){
+  html[data-layout="flow"]{--pc-ed:min(44vw,700px);}
+  html[data-layout="flow"] #app-screen .notes-wrap{padding-right:calc(var(--pc-ed) + 2rem)!important;}
+  html[data-layout="flow"] #notes-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))!important;}
+  html[data-layout="flow"] #modal.open{position:fixed!important;inset:1rem 1rem 1rem auto!important;width:var(--pc-ed)!important;height:auto!important;max-height:none!important;padding:0!important;
+    background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;align-items:stretch!important;justify-content:stretch!important;z-index:200!important;animation:none!important;}
+  html[data-layout="flow"] #modal.open .modal-box{width:100%!important;max-width:100%!important;height:100%!important;max-height:100%!important;border-radius:24px!important;box-shadow:var(--elev3),inset 0 0 0 1px color-mix(in srgb,var(--text) 7%,transparent)!important;animation:none!important;}
+  html[data-layout="flow"] #flow-pc-empty{display:flex;position:fixed;top:1rem;bottom:1rem;right:1rem;width:var(--pc-ed);z-index:150;align-items:center;justify-content:center;text-align:center;
+    border-radius:24px;background:color-mix(in srgb,var(--surface) 55%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--text) 7%,transparent);color:var(--text2);}
+  #flow-pc-empty>div{display:flex;flex-direction:column;align-items:center;gap:.55rem;max-width:320px;padding:1rem;}
+  #flow-pc-empty svg{opacity:.5;}
+  #flow-pc-empty b{color:var(--text);font-size:1.05rem;font-weight:600;}
+  #flow-pc-empty span{font-size:.82rem;line-height:1.6;}
+  #flow-pc-empty kbd{font-family:inherit;font-size:.72rem;font-weight:600;background:var(--surface2);border-radius:6px;padding:.05rem .35rem;color:var(--text);}
+  #flow-pc-new{margin-top:.4rem;border:none;cursor:pointer;font:inherit;font-weight:600;font-size:.84rem;border-radius:999px;padding:.55rem 1.1rem;background:var(--accent-default);color:var(--accent-text);}
+  body.logged-out #flow-pc-empty,html:not(.app-ready) #flow-pc-empty{display:none!important;}
+  html[data-layout="flow"] #fab{display:none!important;}
+  html[data-layout="flow"] #app-screen #flow-today{margin-left:200px;}
+}
 </style>
 <style id="nhl-bounce">button{-webkit-tap-highlight-color:transparent}button:active:not(:disabled){scale:.94}</style>
 <script id="nhl-bounce-js">(function(){if(!Element.prototype.animate)return;var rm=window.matchMedia?matchMedia('(prefers-reduced-motion:reduce)'):null;var cur=null;document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('button'):null;cur=(b&&!b.disabled)?b:null},true);document.addEventListener('pointerup',function(){var b=cur;cur=null;if(!b||!b.isConnected||(rm&&rm.matches))return;try{b.animate([{scale:.94},{scale:1.06,offset:.45},{scale:.985,offset:.75},{scale:1}],{duration:380,easing:'ease-out'})}catch(_){}},true);document.addEventListener('pointercancel',function(){cur=null},true)})();</script>
@@ -8168,6 +8191,32 @@ function addResurface() {
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
   new MutationObserver(syncBtn).observe(tabsEl,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
   syncBtn();
+})();
+
+
+// ═══ FLOW na PC: 3 stĺpce – záložky | poznámky | otvorená poznámka (v181) ═════
+(function(){
+  const isPc=()=>document.documentElement.dataset.layout==='flow'&&matchMedia('(min-width:1000px)').matches;
+  const empty=document.createElement('div'); empty.id='flow-pc-empty';
+  empty.innerHTML='<div><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><b>Vyber poznámku</b><span>Otvorí sa tu vedľa zoznamu.<br><kbd>N</kbd> nová poznámka · <kbd>Ctrl</kbd>+<kbd>K</kbd> hľadať · <kbd>Esc</kbd> zavrieť</span><button type="button" id="flow-pc-new">+ Nová poznámka</button></div>';
+  document.body.appendChild(empty);
+  empty.querySelector('#flow-pc-new').addEventListener('click',()=>openModal());
+  // klik na inú poznámku, keď je jedna otvorená: najprv uložiť rozpísané a zavrieť, potom otvoriť novú
+  let reclick=false;
+  const intercept=e=>{
+    if(reclick||!isPc()||!modal.classList.contains('open')) return;
+    const t=e.target.closest('.note-card,.ft-pin,.ft-tn,[data-open]'); if(!t) return;
+    if(e.target.closest('button.card-map,.order-btn,.ft-cb')) return;
+    e.stopPropagation(); e.preventDefault();
+    flushAndClose().then(()=>{ reclick=true; try{ t.click(); } finally{ reclick=false; } });
+  };
+  document.getElementById('notes-grid').addEventListener('click',intercept,true);
+  document.getElementById('flow-today')?.addEventListener('click',intercept,true);
+  document.addEventListener('keydown',e=>{
+    if(!isPc()||e.ctrlKey||e.metaKey||e.altKey) return;
+    const a=document.activeElement; if(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+    if(e.key==='n'||e.key==='N'){ e.preventDefault(); if(modal.classList.contains('open')) flushAndClose().then(()=>openModal()); else openModal(); }
+  });
 })();
 
 // účet / záložky / odhlásenie presunuté do Nastavení (pôvodné tlačidlá v hlavičke sú skryté, ale ich handlery ostávajú)
