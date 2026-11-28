@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f0f0f">
-<meta name="n28-build" content="n28-v172">
+<meta name="n28-build" content="n28-v173">
 <title>N28</title>
 <link rel="icon" type="image/png" href="https://dvaosem.com/n28-icon-v3-192.png">
 <link rel="apple-touch-icon" href="https://dvaosem.com/n28-icon-v3.png">
@@ -929,6 +929,62 @@ body{background-image:none!important;}
 [data-theme^="sage"] .card-cover{height:72px;}
 [data-theme^="sage"] .note-card.has-color .card-tab-badge{background:color-mix(in srgb,var(--accent) 15%,transparent);color:color-mix(in srgb,var(--accent) 75%,var(--text));}
 </style>
+<style id="n28-layout-flow">
+/* ═══ Rozloženie Flow ═══ */
+#flow-nav,#flow-today{display:none;}
+html[data-layout="flow"] #flow-today{display:block;}
+#flow-today:empty{display:none!important;}
+#flow-today{padding:.2rem .1rem 0;}
+.ft-hello{display:flex;flex-direction:column;margin:.35rem .2rem .8rem;}
+.ft-hello small{font-size:.76rem;color:var(--text2);}
+.ft-hello b{font-size:1.35rem;letter-spacing:-.02em;color:var(--text);font-family:var(--font-head);}
+.ft-today{background:var(--sage,color-mix(in srgb,var(--surface2) 80%,transparent));border-radius:22px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem;}
+.ft-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;color:var(--text);padding:0 .15rem;}
+.ft-h small{font-size:.72rem;color:var(--text2);font-weight:500;}
+.ft-ev{display:flex;align-items:center;gap:.6rem;border:none;cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--text);background:var(--card,var(--surface));border-radius:15px;padding:.6rem .7rem;box-shadow:0 10px 22px -18px rgba(0,0,0,.5);}
+.ft-t{background:var(--surface2);border-radius:9px;padding:.15rem .45rem;font-size:.72rem;color:var(--text2);white-space:nowrap;font-variant-numeric:tabular-nums;}
+.ft-n{flex:1;min-width:0;font-size:.86rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ft-ev i{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ft-task{display:flex;align-items:center;gap:.55rem;padding:.1rem .2rem;}
+.ft-cb{width:20px;height:20px;border-radius:7px;border:1.6px solid var(--text2);background:none;flex-shrink:0;cursor:pointer;padding:0;transition:background .15s;}
+.ft-cb.on{background:var(--accent-default);border-color:var(--accent-default);}
+.ft-tn{flex:1;min-width:0;border:none;background:none;text-align:left;font:inherit;font-size:.86rem;color:var(--text);cursor:pointer;padding:.25rem 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ft-task em{font-style:normal;font-size:.68rem;font-weight:600;color:var(--text2);white-space:nowrap;}
+.ft-task em.late{color:#e5484d;}
+.ft-empty{font-size:.82rem;color:var(--text2);padding:.2rem .2rem .1rem;}
+.ft-sec{font-weight:600;color:var(--text);margin:1rem .2rem .55rem;font-size:.92rem;}
+.ft-pins{display:flex;gap:.55rem;overflow-x:auto;scrollbar-width:none;padding:0 .1rem .3rem;}
+.ft-pins::-webkit-scrollbar{display:none;}
+.ft-pin{flex:0 0 150px;border:none;cursor:pointer;text-align:left;font:inherit;color:var(--text);background:var(--card,var(--surface));border-radius:18px;padding:.7rem;box-shadow:0 12px 24px -20px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:.25rem;}
+.ft-pin b{font-size:.84rem;font-weight:600;}
+.ft-pin span{font-size:.72rem;color:var(--text2);line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+html.flow-home[data-layout="flow"] #notes-grid .note-card.card-pinned{display:none!important;}
+/* karty vo Flow: štítok záložky hore */
+html[data-layout="flow"] .card-meta{order:-1;margin:0 0 .15rem;flex-direction:row-reverse;justify-content:flex-end;gap:.4rem;}
+html[data-layout="flow"] .card-meta>span:empty{display:none;}
+html[data-layout="flow"] .card-tab-badge{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .5rem;border-radius:999px;background:var(--surface2);}
+html[data-layout="flow"] .card-tab-badge::before{display:none;}
+html[data-layout="flow"] .note-card.has-color .card-tab-badge{background:color-mix(in srgb,var(--accent) 16%,transparent);color:color-mix(in srgb,var(--accent) 75%,var(--text));}
+@media(max-width:999px){
+  html[data-layout="flow"] #flow-nav{display:flex;position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));height:62px;z-index:250;align-items:center;justify-content:space-around;padding:0 .4rem;border-radius:22px;
+    background:color-mix(in srgb,var(--surface2) 88%,transparent);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 16px 34px -14px rgba(0,0,0,.6);}
+  #flow-nav button{border:none;background:none;cursor:pointer;color:var(--text2);display:flex;align-items:center;gap:.4rem;height:46px;min-width:46px;justify-content:center;padding:0 .7rem;border-radius:15px;font:inherit;font-size:.8rem;font-weight:600;}
+  #flow-nav button svg{width:21px;height:21px;}
+  #flow-nav button span{display:none;}
+  #flow-nav button.on{color:var(--text);background:var(--state-press);}
+  #flow-nav button.on span{display:inline;}
+  #flow-nav .fn-plus{width:50px;height:50px;padding:0;border-radius:17px;background:var(--earth,var(--accent-default));color:var(--earth-text,var(--accent-text));}
+  #flow-nav .fn-plus svg{width:24px;height:24px;}
+  html[data-layout="flow"] #fab,html[data-layout="flow"] #fab2,html[data-layout="flow"] #search-toggle,html[data-layout="flow"] #cal-btn,html[data-layout="flow"] #settings-btn{display:none!important;}
+  html[data-layout="flow"] .notes-wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important;}
+}
+body.logged-out #flow-nav,html:not(.app-ready) #flow-nav{display:none!important;}
+/* Šalvia: lišta tmavá olivová ako v návrhu */
+[data-theme="sage"] #flow-nav{background:var(--accent-default)!important;}
+[data-theme="sage"] #flow-nav button{color:color-mix(in srgb,var(--accent-text) 62%,transparent);}
+[data-theme="sage"] #flow-nav button.on{color:var(--accent-text);background:color-mix(in srgb,var(--accent-text) 14%,transparent);}
+[data-theme="sage"] #flow-nav .fn-plus{background:var(--accent-text);color:var(--accent-default);}
+</style>
 <style id="nhl-bounce">button{-webkit-tap-highlight-color:transparent}button:active:not(:disabled){scale:.94}</style>
 <script id="nhl-bounce-js">(function(){if(!Element.prototype.animate)return;var rm=window.matchMedia?matchMedia('(prefers-reduced-motion:reduce)'):null;var cur=null;document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('button'):null;cur=(b&&!b.disabled)?b:null},true);document.addEventListener('pointerup',function(){var b=cur;cur=null;if(!b||!b.isConnected||(rm&&rm.matches))return;try{b.animate([{scale:.94},{scale:1.06,offset:.45},{scale:.985,offset:.75},{scale:1}],{duration:380,easing:'ease-out'})}catch(_){}},true);document.addEventListener('pointercancel',function(){cur=null},true)})();</script>
 <body class="logged-out">
@@ -1216,6 +1272,13 @@ body{background-image:none!important;}
             <option value="sage">Šalvia (svetlá)</option>
             <option value="sage-dark">Šalvia (tmavá)</option>
             <option value="light">Svetlá</option>
+          </select>
+        </div>
+        <div class="set-row">
+          <span class="set-t">Rozloženie<small class="set-d">Flow: spodná lišta, prehľad Dnes, pripnuté hore (telefón)</small></span>
+          <select id="settings-layout-select" class="meta-pill" aria-label="Rozloženie" style="min-width:8.5rem;">
+            <option value="classic">Klasické</option>
+            <option value="flow">Flow (nové)</option>
           </select>
         </div>
         <div class="set-row">
@@ -7615,7 +7678,7 @@ function addResurface() {
       showToast('Zápis do: '+(c.summaryOverride||c.summary),'ok');
     }catch(e){ showToast('Google: '+e.message,'warn',5000); }
   }
-  function refresh(){ if(m.classList.contains('open')) render(); renderBox(); }
+  function refresh(){ if(m.classList.contains('open')) render(); renderBox(); if(window.n28FlowRefresh) window.n28FlowRefresh(); }
   function renderBox(){ const sb=document.getElementById('set-cal-box'); if(sb) sb.innerHTML=gcalBox(); }
   // kompaktný riadok v kalendári: aktívne kalendáre + odkaz na správu v Nastaveniach
   function calFooter(){
@@ -7765,6 +7828,12 @@ function addResurface() {
       calFooter();
   }
   function resetForm(){ editId=null; }
+  // trvalý odber udalostí pre prehľad „Dnes“ (rozloženie Flow)
+  let feedUnsub=null;
+  window.n28CalFeed=()=>{ if(!currentUser||feedUnsub) return; feedUnsub=onSnapshot(evRef(),snap=>{ events=snap.docs.map(d=>({id:d.id,...d.data()})); if(window.n28FlowRefresh) window.n28FlowRefresh(); },()=>{}); loadGcal(false); };
+  window.n28CalItems=key=>events.filter(e=>e.date===key).map(e=>({time:e.time||'',end:e.endTime||'',title:e.title,c:'var(--text2)'}))
+    .concat(gEvents.filter(e=>e.date===key).map(e=>({time:e.time||'',title:e.title,c:e.hol?'#e5484d':(e.c||'#5b9bd5'),hol:!!e.hol})))
+    .sort((a,b)=>(a.time||'00').localeCompare(b.time||'00'));
   function open(){
     if(!currentUser){ showToast('Najprv sa prihlás','warn'); return; }
     const n=new Date(); y=n.getFullYear(); mo=n.getMonth(); sel=ymd(n); resetForm(); render(); m.classList.add('open');
@@ -7880,6 +7949,88 @@ function addResurface() {
     try{ await addDoc(evRef(),{title,date,time:time||'',createdAt:serverTimestamp()}); showToast('📅 Pridané do kalendára','ok'); }
     catch(err){ showToast('Udalosť sa neuložila','warn'); }
   };
+})();
+
+
+// ═══ ROZLOŽENIE FLOW – spodná lišta, prehľad Dnes, pripnuté (v173) ═══════════
+(function(){
+  const LKEY='n28-layout';
+  const layout=()=>{ try{ return localStorage.getItem(LKEY)==='flow'?'flow':'classic'; }catch(e){ return 'classic'; } };
+  const I=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+  const nav=document.createElement('nav'); nav.id='flow-nav'; nav.setAttribute('aria-label','Navigácia');
+  nav.innerHTML=
+    '<button type="button" data-a="notes" class="on" aria-label="Poznámky">'+I('<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>')+'<span>Poznámky</span></button>'+
+    '<button type="button" data-a="cal" aria-label="Kalendár">'+I('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>')+'</button>'+
+    '<button type="button" data-a="add" class="fn-plus" aria-label="Nová poznámka">'+I('<path d="M12 5v14M5 12h14"/>')+'</button>'+
+    '<button type="button" data-a="search" aria-label="Hľadať">'+I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')+'</button>'+
+    '<button type="button" data-a="set" aria-label="Nastavenia">'+I('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>')+'</button>';
+  document.body.appendChild(nav);
+  nav.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return; haptic(8);
+    const a=b.dataset.a;
+    if(a==='notes'){
+      document.querySelectorAll('.n28-modal.open').forEach(x=>x.classList.remove('open'));
+      if(searchInput.value){ searchInput.value=''; searchInput.dispatchEvent(new Event('input')); }
+      const t=document.querySelector('#tabs .tab[data-tab="'+CSS.escape(LAST_TAB)+'"]'); if(t&&currentTab!==LAST_TAB) t.click();
+      const w=document.querySelector('.notes-wrap'); if(w) w.scrollTo({top:0,behavior:'smooth'});
+    }
+    else if(a==='cal') document.getElementById('cal-btn')?.click();
+    else if(a==='add') openSheet();
+    else if(a==='search'){ document.getElementById('search-toggle')?.click(); setTimeout(()=>{ try{ searchInput.focus(); }catch(err){} },80); }
+    else if(a==='set') document.getElementById('settings-btn')?.click();
+  });
+
+  // prehľad Dnes nad poznámkami
+  const today=document.createElement('section'); today.id='flow-today'; today.setAttribute('aria-label','Dnes');
+  const grid=document.getElementById('notes-grid'); grid.parentNode.insertBefore(today,grid);
+  const p2=n=>String(n).padStart(2,'0'), ymd=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+  const plain=h=>String(h||'').replace(/<(br|\/div|\/p|\/li)[^>]*>/gi,' ').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
+  const plural=(n,a,b,c)=>n===1?a:(n>1&&n<5?b:c);
+  let tm=null;
+  function refreshToday(){ clearTimeout(tm); tm=setTimeout(renderToday,80); }
+  window.n28FlowRefresh=refreshToday;
+  function renderToday(){
+    const on=layout()==='flow'&&!!currentUser&&currentTab===LAST_TAB&&!searchInput.value&&!activeTag&&!activeSmart&&!activeShareId;
+    document.documentElement.classList.toggle('flow-home',on);
+    if(!on){ if(today.innerHTML) today.innerHTML=''; return; }
+    if(window.n28CalFeed) window.n28CalFeed();
+    const d=new Date(), key=ymd(d), hr=d.getHours();
+    const hello=hr<10?'Dobré ráno':hr<18?'Pekný deň':'Dobrý večer';
+    const evs=(window.n28CalItems?window.n28CalItems(key):[]).slice(0,4);
+    const tasks=notes.filter(n=>!n._trash&&n.dueDate&&!n.dueDone&&String(n.dueDate)<=key).sort((a,b)=>(n28DueTs(a)||0)-(n28DueTs(b)||0)).slice(0,5);
+    const pins=notes.filter(n=>n.pinned&&!n._trash);
+    let h='<div class="ft-hello"><small>'+escHtml(d.toLocaleDateString('sk-SK',{weekday:'long',day:'numeric',month:'long'}))+'</small><b>'+hello+'</b></div>';
+    h+='<div class="ft-today"><div class="ft-h"><span>Dnes</span><small>'+evs.length+' '+plural(evs.length,'udalosť','udalosti','udalostí')+' · '+tasks.length+' '+plural(tasks.length,'úloha','úlohy','úloh')+'</small></div>';
+    h+=evs.map(e=>'<button type="button" class="ft-ev" data-cal="1"><span class="ft-t">'+escHtml(e.time?(e.end?e.time+'–'+e.end:e.time):'celý deň')+'</span><span class="ft-n">'+escHtml(e.title)+'</span><i style="background:'+escHtml(e.c)+'"></i></button>').join('');
+    h+=tasks.map(n=>{ const late=String(n.dueDate)<key; const lbl=late?('zmeškané · '+n28FmtDue(n.dueDate,'')):(n.dueTime||'dnes');
+      return '<div class="ft-task"><button type="button" class="ft-cb" data-done="'+escHtml(n.id)+'" aria-label="Označiť ako hotové"></button><button type="button" class="ft-tn" data-open="'+escHtml(n.id)+'">'+escHtml(n.title||plain(n.content).slice(0,60)||'Bez názvu')+'</button><em class="'+(late?'late':'')+'">'+escHtml(String(lbl).trim())+'</em></div>'; }).join('');
+    if(!evs.length&&!tasks.length) h+='<div class="ft-empty">Na dnes nič naplánované.</div>';
+    h+='</div>';
+    if(pins.length){
+      h+='<div class="ft-sec">Pripnuté</div><div class="ft-pins">'+pins.map(n=>{ const t=n.id===QUICKNOTE_ID?'Rýchla poznámka':(n.title||'Bez názvu');
+        return '<button type="button" class="ft-pin" data-open="'+escHtml(n.id)+'"><b>'+escHtml(t)+'</b><span>'+escHtml(plain(n.content).slice(0,110))+'</span></button>'; }).join('')+'</div>';
+    }
+    h+='<div class="ft-sec">Poznámky</div>';
+    today.innerHTML=h;
+  }
+  today.addEventListener('click',async e=>{
+    if(e.target.closest('[data-cal]')){ document.getElementById('cal-btn')?.click(); return; }
+    const dn=e.target.closest('[data-done]');
+    if(dn){ const n=notes.find(x=>x.id===dn.dataset.done); if(!n) return; dn.classList.add('on'); haptic(15);
+      try{ await updateDoc(doc(db,'users',currentUser.uid,'notes',n.id),{dueDone:true}); showToast('Hotovo','ok',1800); }catch(err){ dn.classList.remove('on'); showToast('Nepodarilo sa uložiť','warn'); } return; }
+    const op=e.target.closest('[data-open]'); if(op){ const n=notes.find(x=>x.id===op.dataset.open); if(n) openModal(n); }
+  });
+  new MutationObserver(refreshToday).observe(grid,{childList:true});
+  searchInput.addEventListener('input',refreshToday);
+  setInterval(()=>{ if(layout()==='flow') refreshToday(); },5*60e3);
+
+  function apply(){
+    document.documentElement.setAttribute('data-layout',layout());
+    const s=document.getElementById('settings-layout-select'); if(s) s.value=layout();
+    refreshToday();
+  }
+  document.getElementById('settings-layout-select')?.addEventListener('change',e=>{ try{ localStorage.setItem(LKEY,e.target.value); }catch(err){} apply(); });
+  apply();
 })();
 
 // účet / záložky / odhlásenie presunuté do Nastavení (pôvodné tlačidlá v hlavičke sú skryté, ale ich handlery ostávajú)
